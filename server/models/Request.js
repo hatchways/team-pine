@@ -1,28 +1,47 @@
 const mongoose = require("mongoose");
 
+const petSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    maxLength: 50,
+    required: true
+  },
+  description: {
+    type: String,
+    maxLength: 200,
+    required: true
+  }
+})
+
 const requestSchema = new mongoose.Schema({
-  user_id: { type: String, max: 50, required: true },
-  sitter_id: { type: String, max: 50, required: true },
-  pet_ids: { type: [String], max: 50, required: true },
-  start_date: {
+  requester: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
+  sitter: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
+  pets: {
+    // See petSchema above this schema for more details
+    type: [petSchema],
+    maxLength: 30,
+    minLength: [1, 'Must include at least one pet in a request']
+  },
+  startDate: {
     type: Date,
     validate: {
-		validator: function(startDate) { return startDate < this.end_date },
-		message: 'Start date must begin before the end date.'
+      validator: function(startDate) { return startDate < this.end_date },
+      message: 'Start date must begin before the end date.'
     },
-	required: [true, 'Must have a start date.']
+    required: [true, 'Must have a start date.']
   },
-  end_date: {
+  endDate: {
     type: Date,
     validate: {
-		validator: function(endDate) { return this.start_date < endDate },
-		message: 'Start date must begin before the end date.'
+      validator: function(endDate) { return this.start_date < endDate },
+      message: 'Start date must begin before the end date.'
     },
-	required: [true, 'Must have an end date.']
+    required: [true, 'Must have an end date.']
   },
-  accepted: { type: Boolean, default: False },
-  declined: { type: Boolean, default: False },
+  // Tracks if a request has yet been accepted or declined
+  status: { type: String, default: 'new', enum: ['accepted', 'declined', 'new'] },
   paid: { type: Boolean, default: False }
-});
+},
+{ timestamps: true });
 
 module.exports = Request = mongoose.model("Request", requestSchema);
