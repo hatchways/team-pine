@@ -9,6 +9,7 @@ const notificationSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: ['request', 'payment', 'message'],
+    lowercase: true,
     required: true
   },
   title: {
@@ -21,16 +22,11 @@ const notificationSchema = new mongoose.Schema({
     default: "",
         required: true
   },
-  date: {
-    type: Date,
-    required: true,
-    default: () => Date.now() + 7*24*60*60*1000
-  },
   read: {
     type: Boolean,
     default: false,
     required: true
 }
-});
+}, { timestamps: true });
 
 module.exports = Notification = mongoose.model("Notification", notificationSchema);
