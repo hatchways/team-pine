@@ -16,7 +16,7 @@ const petSchema = new mongoose.Schema({
 const requestSchema = new mongoose.Schema({
   requester: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
   sitter: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
-  pets: {
+  petIds: {
     // See petSchema above this schema for more details
     type: [petSchema],
     maxLength: 30,
@@ -39,7 +39,7 @@ const requestSchema = new mongoose.Schema({
     required: [true, 'Must have an end date.']
   },
   // Tracks if a request has yet been accepted or declined
-  status: { type: String, default: 'new', enum: ['accepted', 'declined', 'new'] },
+  status: { type: String, default: 'pending', enum: ['accepted', 'declined', 'pending', 'completed'] },
   paid: { type: Boolean, default: False }
 },
 { timestamps: true });
