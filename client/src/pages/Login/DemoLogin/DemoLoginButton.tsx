@@ -1,11 +1,19 @@
 import { ReactElement, useState } from 'react';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
+import { Button, Box, CircularProgress } from '@mui/material';
 import useStyles from './useStyles';
 import { useAuth } from '../../../context/useAuthContext';
 import { useSnackBar } from '../../../context/useSnackbarContext';
 import login from '../../../helpers/APICalls/login';
+
+interface User {
+  email: string;
+  password: string;
+}
+
+const testUser: User = {
+  email: 'testuser@gmail.com',
+  password: 'testpassword',
+};
 
 export default function DemoLoginButton(): ReactElement {
   const classes = useStyles();
@@ -13,9 +21,6 @@ export default function DemoLoginButton(): ReactElement {
   const [isSubmitting, setSubmitting] = useState<boolean>(false);
   const { updateLoginContext } = useAuth();
   const { updateSnackBarMessage } = useSnackBar();
-
-  const testUser = 'testuser@gmail.com';
-  const testPassword = 'testpassword';
 
   const handleSubmit = (email: string, password: string) => {
     setSubmitting(true);
@@ -44,9 +49,9 @@ export default function DemoLoginButton(): ReactElement {
         color="primary"
         className={classes.submit}
         disableElevation
-        onClick={() => handleSubmit(testUser, testPassword)}
+        onClick={() => handleSubmit(testUser.email, testUser.password)}
       >
-        {isSubmitting ? <CircularProgress style={{ color: 'white' }} /> : 'Demo Login'}
+        {isSubmitting ? <CircularProgress color="inherit" /> : 'Demo Login'}
       </Button>
     </Box>
   );
