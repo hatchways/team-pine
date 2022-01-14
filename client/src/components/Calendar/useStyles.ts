@@ -3,6 +3,7 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   calendar: {
+    // We need z-index so we can fit the active::before highlight circle in between the day number and the calendar itself
     zIndex: '-2',
     fontFamily: 'inherit',
     '& .react-calendar__navigation__label': {
