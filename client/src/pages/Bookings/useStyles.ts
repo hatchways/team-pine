@@ -2,10 +2,7 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    justifyContent: 'center',
-  },
-  upcomingBookings: {
+  bookings: {
     '@media(min-width: 600px)': {
       order: -1,
     },
@@ -17,9 +14,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       textTransform: 'uppercase',
       fontSize: '.7rem',
       fontWeight: 'bold',
-    },
-    '& .MuiGrid-root': {
-      flexDirection: 'column',
     },
   },
 }));
