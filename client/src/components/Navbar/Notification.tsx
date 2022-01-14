@@ -98,7 +98,7 @@ export const Notification: React.FC = () => {
               alignItems="flex-start"
             >
               <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                <Avatar alt="change this later to users name" src="/static/images/avatar/1.jpg" />
               </ListItemAvatar>
               <ListItemText
                 primary={`${notification.title}`}
