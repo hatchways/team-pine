@@ -11,8 +11,11 @@ import {
   Menu,
   MenuItem as DropdownMenuItem,
   styled,
+  AppBar,
+  Toolbar,
 } from '@mui/material';
 import { AccountType } from '../../types/AccountType';
+import { Notification } from './Notification';
 
 import lovingSitterLogo from '../../images/logo.svg';
 import { useStyles } from './useStyles';
@@ -134,56 +137,56 @@ const Navbar: React.FC = () => {
       </Grid>
       <Grid xs={8} md={6} item>
         <Grid container alignItems="center" gap={2} justifyContent="flex-end">
+          <Notification />
           {renderMenuItems()}
           {loggedInUser && (
             <Grid xs={2} item>
-              <>
-                <IconButton
-                  size="large"
-                  aria-label="account profile picture"
-                  aria-controls="menu-navbar"
-                  arais-haspopup="true"
-                  onClick={handleMenuOpen}
-                  color="inherit"
-                >
-                  <img style={{ width: 50 }} src={`https://robohash.org/${loggedInUser.email}`} />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={handleClose}
-                >
-                  <DropdownMenuItem component={NavLink} to="/profile/settings" onClick={handleClose}>
-                    <ListItemIcon>
-                      <Settings fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Settings</ListItemText>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleClose}>
-                    <ListItemIcon>
-                      <Person fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Profile</ListItemText>
-                  </DropdownMenuItem>
-                  <Divider />
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <ListItemIcon>
-                      <Logout fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Logout</ListItemText>
-                  </DropdownMenuItem>
-                </Menu>
-              </>
+              <IconButton
+                size="large"
+                aria-label="account profile picture"
+                aria-controls="menu-navbar"
+                arais-haspopup="true"
+                onClick={handleMenuOpen}
+                color="inherit"
+              >
+                <img style={{ width: 50 }} src={`https://robohash.org/${loggedInUser.email}`} />
+              </IconButton>
+
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={handleClose}
+              >
+                <DropdownMenuItem component={NavLink} to="/profile/settings" onClick={handleClose}>
+                  <ListItemIcon>
+                    <Settings fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Settings</ListItemText>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleClose}>
+                  <ListItemIcon>
+                    <Person fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Profile</ListItemText>
+                </DropdownMenuItem>
+                <Divider />
+                <DropdownMenuItem onClick={handleLogout}>
+                  <ListItemIcon>
+                    <Logout fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Logout</ListItemText>
+                </DropdownMenuItem>
+              </Menu>
             </Grid>
           )}
         </Grid>
