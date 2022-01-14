@@ -9,13 +9,13 @@ export default function Bookings(): JSX.Element {
 
   return (
     <PageContainer>
-      <Grid container classes={{ root: classes.root }}>
+      <Grid container classes={{ root: classes.root }} spacing={{ md: 5 }}>
         <Grid xs={10} md={4} item>
           <Calendar className={classes.calendar} />
         </Grid>
-        <Grid xs={10} md={4} direction="column" container className={classes.upcomingBookings}>
-          <Box>Your next booking</Box>
-          <Box>Other bookings</Box>
+        <Grid xs={10} md={3} direction="column" item container className={classes.upcomingBookings}>
+          <Box>Your next booking:</Box>
+          <Box>Current bookings:</Box>
         </Grid>
       </Grid>
     </PageContainer>
