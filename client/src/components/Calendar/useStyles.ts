@@ -27,18 +27,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderRadius: '50%',
       position: 'relative',
     },
-    '& .react-calendar__tile--active::before': {
+    '& .react-calendar__tile--active > abbr::before': {
       position: 'absolute',
-      top: '12%',
-      left: '12%',
+      top: '-50%',
+      left: '-50%',
       display: 'inline-block',
       content: '""',
       backgroundColor: theme.palette.primary.main,
       padding: '15px 15px',
       borderRadius: '50%',
-      '@media(min-width: 600px)': {
-        left: '21%',
-      },
+      zIndex: '-1',
     },
     '& .react-calendar__tile--active:enabled': {
       backgroundColor: 'inherit',
@@ -58,6 +56,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     '@media(min-width: 600px)': {
       padding: theme.spacing(3),
       width: '400px',
+    },
+  },
+  activeTile: {
+    color: '#fff',
+    '& ::before': {
+      position: 'absolute',
+      top: '-50%',
+      left: '-50%',
+      display: 'inline-block',
+      content: '""',
+      backgroundColor: theme.palette.primary.main,
+      padding: '15px 15px',
+      borderRadius: '50%',
+      zIndex: '-1',
     },
   },
 }));

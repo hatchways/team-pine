@@ -5,6 +5,7 @@ import Calendar from '../../components/Calendar/Calendar';
 import BookingCard from '../../components/BookingCard/BookingCard';
 import 'react-calendar/dist/Calendar.css';
 import { Booking } from '../../interface/Booking';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 export default function Bookings(): JSX.Element {
   const classes = useStyles();
@@ -71,31 +72,53 @@ export default function Bookings(): JSX.Element {
     });
   }
 
-  // We need to get past bookings out of the bookings array into its own variable
   const pastBookings = getPastBookings(mockBookings);
 
-  // This is where we will pass in the real bookings when we have them
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const nextBooking: Booking = mockBookings.shift()!;
+
   const sortedBookings = sortBookingDates(mockBookings);
 
   return (
     <PageContainer>
       <Grid justifyContent="center" container spacing={{ md: 5 }}>
         <Grid xs={10} md={4} item>
-          <Calendar />
+          <Calendar firstBooking={nextBooking} upcomingBookings={sortedBookings} />
         </Grid>
         <Grid xs={10} md={3} direction="column" item container className={classes.bookings}>
-          <Box>
-            Your next booking:
+          <Box sx={{ padding: '24px', marginBottom: '16px' }}>
+            <div className={classes.bookingSectionLabel}>
+              <p>Your next booking:</p>
+              <SettingsIcon color="disabled" />
+            </div>
             <Card sx={{ boxShadow: 'none' }}>
-              <CardContent sx={{ padding: 0 }}>
-                <BookingCard booking={sortedBookings[0]} />
+              <CardContent sx={{ padding: '.1rem 0' }}>
+                <BookingCard isNextBooking booking={nextBooking} />
               </CardContent>
             </Card>
           </Box>
-          <Box>
-            Current bookings:
+          <Box sx={{ padding: '24px' }}>
+            <p>Current bookings:</p>
+            {sortedBookings.map((booking, i) => {
+              return (
+                <Card className={classes.bookingCard} key={i} variant="outlined">
+                  <CardContent className={classes.bookingCardContent}>
+                    <BookingCard booking={booking} />
+                  </CardContent>
+                </Card>
+              );
+            })}
             <br />
-            Past bookings:
+            <p>Past bookings:</p>
+            {pastBookings.map((booking, i) => {
+              return (
+                <Card className={classes.bookingCard} key={i} variant="outlined">
+                  <CardContent className={classes.bookingCardContent}>
+                    <BookingCard booking={booking} />
+                  </CardContent>
+                </Card>
+              );
+            })}
           </Box>
         </Grid>
       </Grid>
