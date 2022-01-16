@@ -12,6 +12,6 @@ const {
 router.route("/").post(protect, createNotification);
 router.route("/all").get(protect, retrieveUsersNotifications);
 router.route("/unread").get(protect, retrieveUsersUnreadNotifications);
-router.route("/mark-read/:notificationId").patch(protect, markAsRead);
+router.route("/:notificationId/mark-read").patch(protect, markAsRead);
 
 module.exports = router;

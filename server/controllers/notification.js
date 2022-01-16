@@ -7,10 +7,9 @@ const asyncHandler = require("express-async-handler");
 // @access Public
 
 exports.createNotification = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user.id);
   const { type, title, description } = req.body;
   const notification = await Notification.create({
-    user,
+    user: req.user.id,
     type,
     title,
     description,
@@ -23,7 +22,7 @@ exports.createNotification = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route PUT /notification/mark-read/:notificationId
+// @route PATCH /notification/mark-read/:notificationId
 // @desc changes mark as read property to true on a notification
 // @access Private
 
@@ -33,7 +32,7 @@ exports.markAsRead = asyncHandler(async (req, res, next) => {
 
   if (foundNotification.user.toString() !== req.user.id) {
     res.status(403);
-    throw new Error("Forbidden");
+    throw new Error("The user doesn't have the correct privileges or permissions to modify this notification");
   }
 
   foundNotification.read = true;
@@ -47,7 +46,7 @@ exports.markAsRead = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route POST /notification/all
+// @route GET /notification/all
 // @desc Retrieves all notifications for a user
 // @access Private
 
@@ -62,7 +61,7 @@ exports.retrieveUsersNotifications = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route POST /notification/unread
+// @route GET /notification/unread
 // @desc Retrieves all unread notifications for a user
 // @access Private
 
