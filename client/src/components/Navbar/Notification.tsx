@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Divider,
   Grid,
-  IconButton,
   ListItemText,
   Menu,
   ListItem,
@@ -17,6 +16,7 @@ import { useStyles } from './useStyles';
 import { NavLink } from 'react-router-dom';
 import moment from 'moment';
 import getNotifications from '../../helpers/APICalls/getNotifications';
+import markNotificationAsRead from '../../helpers/APICalls/markNotificationAsRead';
 
 interface Notification {
   user: string;
@@ -30,9 +30,12 @@ interface Notification {
   __v: number;
 }
 
+type Notifications = Notification[];
+
 export const Notification: React.FC = () => {
   const classes = useStyles();
-  const [notifications, setNotifications] = useState([] as any[]);
+  const [notifications, setNotifications] = useState<Notifications>([]);
+
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -49,7 +52,6 @@ export const Notification: React.FC = () => {
     getNotifications().then((res) => {
       const notifications = res.success.notifications;
       setNotifications(notifications);
-      console.log(notifications);
 
       const unreadNotifications = notifications.filter((notification: Notification) => notification.read !== true);
 
@@ -69,7 +71,7 @@ export const Notification: React.FC = () => {
         className={classes.navbarItem}
       >
         {unreadNotificationCount != 0 ? (
-          <Badge badgeContent={unreadNotificationCount} color="secondary">
+          <Badge badgeContent={unreadNotificationCount} color="Green">
             {'Notifications'}
           </Badge>
         ) : (
@@ -93,13 +95,13 @@ export const Notification: React.FC = () => {
         onClose={handleClose}
       >
         <List sx={{ width: '100%', minWidth: 360, bgcolor: 'background.paper' }}>
-          {notifications.map((notification, index) => (
+          {notifications.map((notification) => (
             <ListItem
-              className={classes.navbarItem}
-              // sx={{ bgcolor: notification.read ? 'text.disabled' : 'background.paper' }}
+              className={notification.read ? classes.readNotification : classes.unreadNotification}
               key={notification._id}
               component={NavLink}
               to={`/messages/${notification._id}`}
+              onClick={() => markNotificationAsRead(notification._id)}
               alignItems="flex-start"
             >
               <ListItemAvatar>
@@ -112,7 +114,7 @@ export const Notification: React.FC = () => {
                     <Typography sx={{ display: 'inline' }} component="span" variant="body2" color="text.primary">
                       {`${notification.description}`}
                       <Divider />
-                      {`${moment(notification.updatedAt).format('MM-DD-YYYY HH:mm')}`}
+                      {`${moment(notification.updatedAt).format('MM-DD-YYYY')}`}
                     </Typography>
                   </React.Fragment>
                 }
