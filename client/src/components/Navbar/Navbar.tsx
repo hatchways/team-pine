@@ -133,7 +133,9 @@ const Navbar: React.FC = () => {
       container
     >
       <Grid xs={4} md={6} item>
-        <img className={classes.navbarLogo} src={lovingSitterLogo} />
+        <NavLink className={classes.navbarItem} to={'/'}>
+          <img className={classes.navbarLogo} src={lovingSitterLogo} />
+        </NavLink>
       </Grid>
       <Grid xs={8} md={6} item>
         <Grid container alignItems="center" gap={2} justifyContent="flex-end">
