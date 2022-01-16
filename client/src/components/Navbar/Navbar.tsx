@@ -137,7 +137,7 @@ const Navbar: React.FC = () => {
       </Grid>
       <Grid xs={8} md={6} item>
         <Grid container alignItems="center" gap={2} justifyContent="flex-end">
-          <Notification />
+          {loggedInUser && <Notification />}
           {renderMenuItems()}
           {loggedInUser && (
             <Grid xs={2} item>
