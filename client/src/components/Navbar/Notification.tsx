@@ -11,10 +11,24 @@ import {
   Typography,
   ListItemAvatar,
   Badge,
+  Button,
 } from '@mui/material';
-import { FetchOptions } from '../../interface/FetchOptions';
 import { useStyles } from './useStyles';
 import { NavLink } from 'react-router-dom';
+import moment from 'moment';
+import getNotifications from '../../helpers/APICalls/getNotifications';
+
+interface Notification {
+  user: string;
+  type: string;
+  title: string;
+  description: string;
+  read: boolean;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 
 export const Notification: React.FC = () => {
   const classes = useStyles();
@@ -32,46 +46,36 @@ export const Notification: React.FC = () => {
   };
 
   useEffect(() => {
-    const getData = async () => {
-      const fetchOptions: FetchOptions = {
-        method: 'GET',
-        credentials: 'include',
-      };
-      const fetchdata = await fetch(`/notification/all`, fetchOptions)
-        .then((res) => res.json())
-        .then((res) => {
-          const notifications = res.success.notifications;
-          setNotifications(notifications);
-          let count = 0;
+    getNotifications().then((res) => {
+      const notifications = res.success.notifications;
+      setNotifications(notifications);
+      console.log(notifications);
 
-          for (const notification of notifications) {
-            if (!notification.read) {
-              count++;
-            }
-          }
-          setUnreadNotificationCount(count);
-        })
-        .catch(() => ({
-          error: { message: 'Unable to connect to server. Please try again' },
-        }));
-    };
-    getData();
+      const unreadNotifications = notifications.filter((notification: Notification) => notification.read !== true);
+
+      setUnreadNotificationCount(unreadNotifications.length);
+    });
   }, []);
 
   return (
     <Grid xs={2} item>
-      <Badge badgeContent={unreadNotificationCount} color={unreadNotificationCount > 0 ? 'success' : 'error'}>
-        <IconButton
-          aria-label="Notification Menu"
-          aria-controls="menu-navbar"
-          arais-haspopup="true"
-          onClick={handleMenuOpen}
-          color="inherit"
-          className={classes.navbarItem}
-        >
-          {'Notifications'}
-        </IconButton>
-      </Badge>
+      <Button
+        id="notification-menu"
+        aria-label="Notification Menu"
+        aria-controls="notifications"
+        arais-haspopup="true"
+        onClick={handleMenuOpen}
+        color="inherit"
+        className={classes.navbarItem}
+      >
+        {unreadNotificationCount != 0 ? (
+          <Badge badgeContent={unreadNotificationCount} color="secondary">
+            {'Notifications'}
+          </Badge>
+        ) : (
+          'Notifications'
+        )}
+      </Button>
 
       <Menu
         id="menu-appbar"
@@ -91,8 +95,9 @@ export const Notification: React.FC = () => {
         <List sx={{ width: '100%', minWidth: 360, bgcolor: 'background.paper' }}>
           {notifications.map((notification, index) => (
             <ListItem
-              sx={{ bgcolor: notification.read ? 'text.disabled' : 'background.paper' }}
-              key={index}
+              className={classes.navbarItem}
+              // sx={{ bgcolor: notification.read ? 'text.disabled' : 'background.paper' }}
+              key={notification._id}
               component={NavLink}
               to={`/messages/${notification._id}`}
               alignItems="flex-start"
@@ -107,7 +112,7 @@ export const Notification: React.FC = () => {
                     <Typography sx={{ display: 'inline' }} component="span" variant="body2" color="text.primary">
                       {`${notification.description}`}
                       <Divider />
-                      {`${notification.updatedAt}`}
+                      {`${moment(notification.updatedAt).format('MM-DD-YYYY HH:mm')}`}
                     </Typography>
                   </React.Fragment>
                 }
