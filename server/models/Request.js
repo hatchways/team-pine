@@ -38,7 +38,7 @@ const requestSchema = new mongoose.Schema({
     },
     required: [true, 'Must have an end date.']
   },
-  status: { type: String, default: 'pending', enum: ['accepted', 'declined', 'pending', 'completed'] },
+  status: { type: String, default: 'pending', trim: true, enum: ['accepted', 'declined', 'pending', 'completed'] },
   paid: { type: Boolean, default: False }
 },
 { timestamps: true });
