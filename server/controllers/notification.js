@@ -2,7 +2,7 @@ const Notification = require("../models/Notification");
 const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
 
-// @route POST /notification/
+// @route POST /notifications/
 // @desc create a new notification
 // @access Public
 
@@ -22,7 +22,7 @@ exports.createNotification = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route PATCH /notification/mark-read/:notificationId
+// @route PATCH /notifications/:notificationId/mark-read/
 // @desc changes mark as read property to true on a notification
 // @access Private
 
@@ -46,7 +46,7 @@ exports.markAsRead = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route GET /notification/all
+// @route GET /notifications/all
 // @desc Retrieves all notifications for a user
 // @access Private
 
@@ -61,7 +61,7 @@ exports.retrieveUsersNotifications = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route GET /notification/unread
+// @route GET /notifications/unread
 // @desc Retrieves all unread notifications for a user
 // @access Private
 
