@@ -25,7 +25,7 @@ const requestSchema = new mongoose.Schema({
   startDate: {
     type: Date,
     validate: {
-      validator: function(startDate) { return startDate < this.end_date },
+      validator: function(startDate) { return startDate < this.endDate },
       message: 'Start date must begin before the end date.'
     },
     required: [true, 'Must have a start date.']
@@ -33,14 +33,13 @@ const requestSchema = new mongoose.Schema({
   endDate: {
     type: Date,
     validate: {
-      validator: function(endDate) { return this.start_date < endDate },
+      validator: function(endDate) { return this.startDate < endDate },
       message: 'Start date must begin before the end date.'
     },
     required: [true, 'Must have an end date.']
   },
-  // Tracks if a request has yet been accepted or declined
   status: { type: String, default: 'pending', enum: ['accepted', 'declined', 'pending', 'completed'] },
-  paid: { type: Boolean, default: False }
+  paid: { type: Boolean, default: false }
 },
 { timestamps: true });
 
