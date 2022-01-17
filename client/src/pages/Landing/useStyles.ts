@@ -2,11 +2,15 @@ import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  dogImage: {},
+  dogImage: {
+    zIndex: 1,
+    objectFit: 'cover',
+    width: '100%',
+    top: 100,
+  },
   form: {
-    width: '50%', // Fix IE 11 issue.
+    width: '50%',
     margin: '40px auto',
-    // marginTop: theme.spacing(1),
     marginLeft: theme.spacing(10),
   },
   label: {

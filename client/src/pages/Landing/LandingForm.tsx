@@ -78,7 +78,7 @@ export default function LandingForm({ handleSubmit }: Props): JSX.Element {
                       margin="normal"
                       type="date"
                       name="dropIn"
-                      placeholder={'Your password'}
+                      placeholder={'mm/dd/yyyy'}
                       autoComplete="dropIn"
                       helperText={touched.dropIn ? errors.dropIn : ''}
                       error={touched.dropIn && Boolean(errors.dropIn)}
@@ -94,7 +94,7 @@ export default function LandingForm({ handleSubmit }: Props): JSX.Element {
                       margin="normal"
                       type="date"
                       name="dropOff"
-                      placeholder="Your password"
+                      placeholder="mm/dd/yyyy"
                       autoComplete="dropOff"
                       helperText={touched.dropOff ? errors.dropOff : ''}
                       error={touched.dropOff && Boolean(errors.dropOff)}
