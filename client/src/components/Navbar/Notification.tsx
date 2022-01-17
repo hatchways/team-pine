@@ -17,24 +17,17 @@ import { NavLink } from 'react-router-dom';
 import moment from 'moment';
 import getNotifications from '../../helpers/APICalls/getNotifications';
 import markNotificationAsRead from '../../helpers/APICalls/markNotificationAsRead';
+import NotificationInterface from '../../interface/Notification';
+import { useSnackBar } from '../../context/useSnackbarContext';
+import CircularProgress from '@mui/material/CircularProgress';
 
-interface Notification {
-  user: string;
-  type: string;
-  title: string;
-  description: string;
-  read: boolean;
-  _id: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
-type Notifications = Notification[];
+type Notifications = NotificationInterface[];
 
 export const Notification: React.FC = () => {
   const classes = useStyles();
   const [notifications, setNotifications] = useState<Notifications>([]);
+  const { updateSnackBarMessage } = useSnackBar();
+  const [isSubmitting, setSubmitting] = useState(false);
 
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -49,38 +42,56 @@ export const Notification: React.FC = () => {
   };
 
   useEffect(() => {
-    getNotifications().then((res) => {
-      const notifications = res.success.notifications;
-      setNotifications(notifications);
+    setSubmitting(true);
 
-      const unreadNotifications = notifications.filter((notification: Notification) => notification.read !== true);
+    getNotifications().then((data) => {
+      if (data.error) {
+        setSubmitting(false);
+        updateSnackBarMessage(data.error.message);
+      } else if (data.success) {
+        const notifications = data.success.notifications;
+        setNotifications(notifications);
 
-      setUnreadNotificationCount(unreadNotifications.length);
+        const unreadNotifications = notifications.filter(
+          (notification: NotificationInterface) => notification.read !== true,
+        );
+
+        setUnreadNotificationCount(unreadNotifications.length);
+        setSubmitting(false);
+      } else {
+        console.error({ data });
+        setSubmitting(false);
+        updateSnackBarMessage('An unexpected error occurred. Please try again');
+      }
     });
-  }, []);
+  }, [updateSnackBarMessage]);
 
   return (
     <Grid xs={2} item>
-      <Button
-        id="notification-menu"
-        aria-label="Notification Menu"
-        aria-controls="notifications"
-        arais-haspopup="true"
-        onClick={handleMenuOpen}
-        color="inherit"
-        className={classes.navbarItem}
-      >
-        {unreadNotificationCount != 0 ? (
-          <Badge badgeContent={unreadNotificationCount} color="Green">
+      {isSubmitting ? (
+        <CircularProgress style={{ color: 'white' }} />
+      ) : (
+        <Button
+          id="notification-menu"
+          aria-label="Notification Menu"
+          aria-controls="notifications"
+          arais-haspopup="true"
+          onClick={handleMenuOpen}
+          color="inherit"
+          className={classes.navbarItem}
+        >
+          <Badge
+            invisible={unreadNotificationCount !== 0 ? false : true}
+            badgeContent={unreadNotificationCount}
+            className={classes.badge}
+          >
             {'Notifications'}
           </Badge>
-        ) : (
-          'Notifications'
-        )}
-      </Button>
+        </Button>
+      )}
 
       <Menu
-        id="menu-appbar"
+        id="notification-menu"
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: 'bottom',
@@ -100,7 +111,7 @@ export const Notification: React.FC = () => {
               className={notification.read ? classes.readNotification : classes.unreadNotification}
               key={notification._id}
               component={NavLink}
-              to={`/messages/${notification._id}`}
+              to={`/${notification.type}/${notification._id}`}
               onClick={() => markNotificationAsRead(notification._id)}
               alignItems="flex-start"
             >

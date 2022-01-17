@@ -31,7 +31,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
     textDecoration: 'none',
   },
   badge: {
-    color: '#008000',
+    '& .MuiBadge-badge': {
+      backgroundColor: '#4caf50',
+    },
   },
   navbarLogo: {
     width: 180,
