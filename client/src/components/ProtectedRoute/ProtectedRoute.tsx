@@ -4,7 +4,7 @@ import { useSocket } from '../../context/useSocketContext';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Route, Redirect, RouteProps, RouteComponentProps } from 'react-router-dom';
 
-const ProtectedRoute: React.FC<RouteProps> = ({ component, render, ...routeProps }) => {
+const ProtectedRoute = ({ component: Component, ...rest }: RouteProps) : JSX.Element  => {
   const { loggedInUser } = useAuth();
   const { initSocket } = useSocket();
 
