@@ -48,7 +48,7 @@ exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
 
       profile.set({ photo: req.file.location });
       profile.save().then((profile) => {
-        res.status(201);
+        res.status(200);
         res.json({ profile });
       });
     });
