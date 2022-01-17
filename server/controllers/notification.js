@@ -7,9 +7,16 @@ const asyncHandler = require("express-async-handler");
 // @access Public
 
 exports.createNotification = asyncHandler(async (req, res, next) => {
-  const { type, title, description } = req.body;
+  const { type, title, description, receiver } = req.body;
+  
+  if (!type || !title || !description || !receiver){
+    res.status(400);
+    throw new Error("Bad request! Missing type, title, description or receiver!");
+  }
+
   const notification = await Notification.create({
-    user: req.user.id,
+    sender: req.user.id,
+    receiver,
     type,
     title,
     description,
@@ -30,7 +37,7 @@ exports.markAsRead = asyncHandler(async (req, res, next) => {
   const { notificationId } = req.params;
   const foundNotification = await Notification.findById(notificationId);
 
-  if (foundNotification.user.toString() !== req.user.id) {
+  if (foundNotification.user.toString() !== req.receiver.id) {
     res.status(403);
     throw new Error("The user doesn't have the correct privileges or permissions to modify this notification");
   }
@@ -52,7 +59,7 @@ exports.markAsRead = asyncHandler(async (req, res, next) => {
 
 exports.retrieveUsersNotifications = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
-  const foundNotifications = await Notification.find({ user: userId });
+  const foundNotifications = await Notification.find({ receiver: userId });
 
   res.status(200).json({
     success: {
@@ -69,7 +76,7 @@ exports.retrieveUsersUnreadNotifications = asyncHandler(
   async (req, res, next) => {
     const userId = req.user.id;
     const foundNotifications = await Notification.find({
-      user: userId,
+      receiver: userId,
       read: false,
     });
 
