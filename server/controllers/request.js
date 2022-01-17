@@ -37,7 +37,7 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route GET /requests
+// @route GET /requests/?userType=
 // @desc get requests of logged in user
 // @access Private
 exports.getUserRequests = asyncHandler(async (req, res, next) => {
