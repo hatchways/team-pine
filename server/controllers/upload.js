@@ -3,12 +3,13 @@ const { s3 } = require("../cloud storage/amazonS3");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const Profile = require("../models/Profile");
+const { deleteFileFromS3bucket } = require("./delete");
 
 const imageFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image")) {
     cb(null, true);
   } else {
-    cb(new Error("Not an image! Please upload images only."));
+    cb("Not an image! Please upload images only.", false);
   }
 };
 
@@ -28,6 +29,9 @@ const upload = (bucketName, filename) =>
     fileFilter: imageFilter,
   });
 
+// @route POST /upload/profile-pic
+// @desc upload profile photo
+// @access Private
 exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findOne({ userId: req.user.id });
   if (!profile) {
@@ -35,23 +39,43 @@ exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
     throw new Error("Profile doesn't exist");
   }
 
-  const filename = `${req.user.id}-profile-pic.jpg`;
+  const filename = `profile-pics/${Date.now()}`;
   const bucket = process.env.AWS_BUCKET_NAME;
 
   try {
     const uploadSingle = upload(bucket, filename).single("image");
 
     uploadSingle(req, res, (err) => {
-      if (err) return res.status(400).json(err);
+      if (err) return res.status(400).json({ error: { message: err } });
 
+      // now can saftly delete old photo
+      if (profile.photo !== "") {
+        try {
+          deleteFileFromS3bucket(bucket, profile.photo);
+        } catch (err) {
+          console.error(err);
+        }
+      }
       profile.set({ photo: req.file.location });
       profile.save().then((profile) => {
         res.status(200);
-        res.json({ profile });
+        res.json({
+          success: {
+            profile: {
+              address: profile.address,
+              birthday: profile.birthday,
+              description: profile.description,
+              gender: profile.gender,
+              name: profile.name,
+              photo: profile.photo,
+              telephone: profile.telephone,
+            },
+          },
+        });
       });
     });
   } catch (err) {
     res.status(500);
-    throw new Error({ error: err });
+    throw new Error(err);
   }
 });
