@@ -4,11 +4,14 @@ import { AuthApiData, AuthApiDataSuccess } from '../interface/AuthApiData';
 import { User } from '../interface/User';
 import loginWithCookies from '../helpers/APICalls/loginWithCookies';
 import logoutAPI from '../helpers/APICalls/logout';
+import { ProfileApiDataSuccess } from '../interface/ProfileApiData';
+import { Profile } from '../interface/Profile';
 
 interface IAuthContext {
   profile: any;
   loggedInUser: User | null | undefined;
   updateLoginContext: (data: AuthApiDataSuccess) => void;
+  updateProfileContext: (data: ProfileApiDataSuccess) => void;
   logout: () => void;
 }
 
@@ -16,13 +19,14 @@ export const AuthContext = createContext<IAuthContext>({
   profile: undefined,
   loggedInUser: undefined,
   updateLoginContext: () => null,
+  updateProfileContext: () => null,
   logout: () => null,
 });
 
 export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
   // default undefined before loading, once loaded provide user or null if logged out
   const [loggedInUser, setLoggedInUser] = useState<User | null | undefined>();
-  const [profile, setProfile] = useState();
+  const [profile, setProfile] = useState<Profile | null | undefined>();
   const history = useHistory();
 
   const updateLoginContext = useCallback(
@@ -36,6 +40,10 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
     },
     [history],
   );
+
+  const updateProfileContext = useCallback((data: ProfileApiDataSuccess) => {
+    setProfile(data.profile);
+  }, []);
 
   const logout = useCallback(async () => {
     // needed to remove token cookie
@@ -67,7 +75,7 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
   }, [updateLoginContext, history]);
 
   return (
-    <AuthContext.Provider value={{ loggedInUser, profile, updateLoginContext, logout }}>
+    <AuthContext.Provider value={{ loggedInUser, profile, updateLoginContext, updateProfileContext, logout }}>
       {children}
     </AuthContext.Provider>
   );
