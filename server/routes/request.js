@@ -4,10 +4,10 @@ const { validateUserTypeQuery } = require("../validate")
 const protect = require("../middleware/auth");
 const { createRequest, editRequest, getUserRequests } = require("../controllers/request");
 
-router.route("/create").post(protect, createRequest);
+router.route("/").post(protect, createRequest);
 
-router.route("/edit/:requestId").put(protect, editRequest);
+router.route("/edit/:requestId").put(protect, validateUserTypeQuery, editRequest);
 
-router.route("/").get(protect, validateUserTypeQuery, getUserRequests)
+router.route("/:userId").get(protect, validateUserTypeQuery, getUserRequests)
 
 module.exports = router;
