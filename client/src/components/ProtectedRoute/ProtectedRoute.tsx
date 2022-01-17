@@ -31,7 +31,7 @@ const ProtectedRoute = ({ component: Component, ...rest }: RouteProps) : JSX.Ele
   }
 
   return (
-    <Route
+    return <Route {... rest} render={(props) => (loggedInUser ? <Component {...props} /> : <Redirect to="/login" />)} />;
       {...routeProps}
       render={(props: RouteComponentProps) => {
         if (loggedInUser) {
