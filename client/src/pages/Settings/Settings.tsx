@@ -1,6 +1,6 @@
 import { cloneElement } from 'react';
 import { useAuth } from '../../context/useAuthContext';
-import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { NavLink, Redirect, Route, Switch } from 'react-router-dom';
 import { Box, CircularProgress, Grid, Link } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import { makeStyles } from '@mui/styles';
