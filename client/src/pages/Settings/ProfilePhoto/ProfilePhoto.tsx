@@ -5,9 +5,10 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AvatarDisplay from '../../../components/AvatarDisplay/AvatarDisplay';
 import SettingHeader from '../../../components/SettingsHeader/SettingsHeader';
 import { User } from '../../../interface/User';
-
 import { makeStyles } from '@mui/styles';
 import { useSnackBar } from '../../../context/useSnackbarContext';
+import { profilePhotoUpload, profilePhotoDelete } from '../../../helpers/APICalls/profilePhoto';
+import { useAuth } from '../../../context/useAuthContext';
 
 const useStyles = makeStyles({
   root: {
@@ -36,10 +37,20 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
   const fileInputButton = React.useRef<HTMLInputElement>(null);
   const classes = useStyles();
   const { updateSnackBarMessage } = useSnackBar();
+  const { updateProfileContext } = useAuth();
 
   const fileChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      updateSnackBarMessage('Profile Photo uploaded successfuly!!!');
+      profilePhotoUpload(event.target.files[0]).then((data) => {
+        if (data.error) {
+          updateSnackBarMessage(data.error.message);
+        } else if (data.success) {
+          updateProfileContext(data.success);
+          updateSnackBarMessage('Profile Photo is uploaded successfuly!!!');
+        } else {
+          updateSnackBarMessage('An unexpected error occurred. Please try again');
+        }
+      });
     }
   };
   const fileSelectHandler = () => {
@@ -48,7 +59,14 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
     }
   };
   const deleteClickHandler = () => {
-    updateSnackBarMessage('Deleted profile photo!!!');
+    profilePhotoDelete().then((data) => {
+      if (data.error) {
+        updateSnackBarMessage(data.error.message);
+      } else if (data.success) {
+        updateProfileContext(data.success);
+        updateSnackBarMessage('Deleted profile photo!!!');
+      }
+    });
   };
   return (
     <Box
