@@ -29,7 +29,6 @@ const upload = (bucketName, filename) =>
   });
 
 exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
-  // get the profile
   const profile = await Profile.findOne({ userId: req.user.id });
   if (!profile) {
     res.status(404);
