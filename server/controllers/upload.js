@@ -41,7 +41,6 @@ exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
   const bucket = process.env.AWS_BUCKET_NAME;
 
   try {
-    // upload image
     const uploadSingle = upload(bucket, filename).single("image");
 
     uploadSingle(req, res, (err) => {
