@@ -35,7 +35,6 @@ exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
     throw new Error("Profile doesn't exist");
   }
 
-  //get the image from request
   const filename = `${req.user.id}-profile-pic.jpg`;
   const bucket = process.env.AWS_BUCKET_NAME;
 

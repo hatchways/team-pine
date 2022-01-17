@@ -11,15 +11,3 @@ exports.s3 = new AWS.S3({
   region,
   credentials: creds,
 });
-
-// // upload file to bucket
-// exports.uploadFileToBucket = (file, key) => {
-//   const fileStream = fs.createReadStream(file.path);
-
-//   const uploadParams = {
-//     Bucket: bucket,
-//     Body: fileStream,
-//     Key: `${key}/${file.filename}`,
-//   };
-//   return s3.upload(uploadParams).promise();
-// };
