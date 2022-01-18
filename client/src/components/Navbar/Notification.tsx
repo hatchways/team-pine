@@ -1,25 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Divider,
-  Grid,
-  ListItemText,
-  Menu,
-  ListItem,
-  List,
-  Avatar,
-  Typography,
-  ListItemAvatar,
-  Badge,
-  Button,
-} from '@mui/material';
+import React, { useState, useEffect, Fragment } from 'react';
+import { Grid, Menu, List, Badge, Button } from '@mui/material';
 import { useStyles } from './useStyles';
-import { NavLink } from 'react-router-dom';
-import moment from 'moment';
 import getNotifications from '../../helpers/APICalls/getNotifications';
-import markNotificationAsRead from '../../helpers/APICalls/markNotificationAsRead';
 import NotificationInterface from '../../interface/Notification';
 import { useSnackBar } from '../../context/useSnackbarContext';
 import CircularProgress from '@mui/material/CircularProgress';
+
+import UnreadNotification from './Notification/UnreadNotification';
+import ReadNotification from './Notification/ReadNotification';
 
 type Notifications = NotificationInterface[];
 
@@ -107,30 +95,13 @@ export const Notification: React.FC = () => {
       >
         <List sx={{ width: '100%', minWidth: 360, bgcolor: 'background.paper' }}>
           {notifications.map((notification) => (
-            <ListItem
-              className={notification.read ? classes.readNotification : classes.unreadNotification}
-              key={notification._id}
-              component={NavLink}
-              to={`/${notification.type}/${notification._id}`}
-              onClick={() => markNotificationAsRead(notification._id)}
-              alignItems="flex-start"
-            >
-              <ListItemAvatar>
-                <Avatar alt="change this later to users name" src="/static/images/avatar/1.jpg" />
-              </ListItemAvatar>
-              <ListItemText
-                primary={`${notification.title}`}
-                secondary={
-                  <React.Fragment>
-                    <Typography sx={{ display: 'inline' }} component="span" variant="body2" color="text.primary">
-                      {`${notification.description}`}
-                      <Divider />
-                      {`${moment(notification.updatedAt).format('MM-DD-YYYY')}`}
-                    </Typography>
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
+            <Fragment key={notification._id}>
+              {notification.read ? (
+                <UnreadNotification notification={notification} />
+              ) : (
+                <ReadNotification notification={notification} />
+              )}
+            </Fragment>
           ))}
         </List>
       </Menu>
