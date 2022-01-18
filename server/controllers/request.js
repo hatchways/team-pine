@@ -50,11 +50,11 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route GET /requests/:userId?userType=
+// @route GET /requests/?userType=
 // @desc get requests of logged in user
 // @access Private
 exports.getUserRequests = asyncHandler(async (req, res, next) => {
-  const requests = await Request.where(req.query.userType, req.params.userId);
+  const requests = await Request.where(req.query.userType, req.user.id);
 
   res.status(200).json({
     success: {
