@@ -31,9 +31,11 @@ exports.validateLogin = [
   }
 ];
 
-exports.validateUserTypeQuery = [
-  query("userType", "User type must either be requester or sitter").isIn(["requester", "sitter"]),
-  query("userType", "User type must be specified").not().isEmpty(),
+exports.validateCreateRequest = [
+  check("petIds.*.name", "Must include pet name").not().isEmpty(),
+  check("petIds.*.description", "Must include a pet description").not().isEmpty(),
+  check("startDate", "Invalid starting time").isNumeric(),
+  check("endDate", "Invalid ending time").isNumeric(),
   (req, res, next) => {
     const errors = validationResult(req);
 
