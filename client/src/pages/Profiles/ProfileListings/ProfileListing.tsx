@@ -40,50 +40,28 @@ type Profiles = Profile[];
 
 export default function ProfileListing({}: Props): ReactElement {
   //currently fake profiles for state
-  const [profiles, setProfiles] = useState<Profiles>([
-    {
-      userId: '61df3960442e349d92bad441',
-      name: 'Roland Matheson',
-      title: 'Pet Lover',
-      description: 'I love dogcats',
-      address: 'Tokyo, Japan',
-      pay: '$99/Hour',
-      _id: '61df3960442e349d9200000',
-      photo: 'fakeimage',
-    },
-    {
-      userId: '61df3960442e349d92bad441',
-      name: 'Roland Matheson',
-      title: 'Pet Lover',
-      description: 'I love dogcats',
-      address: 'Tokyo, Japan',
-      pay: '$99/Hour',
-      _id: '61df3960442e349d9200000',
-      photo: 'fakeimage',
-    },
-    {
-      userId: '61df3960442e349d92bad441',
-      name: 'Roland Matheson',
-      title: 'Pet Lover',
-      description: 'I love dogcats',
-      address: 'Tokyo, Japan',
-      pay: '$99/Hour',
-      _id: '61df3960442e349d9200000',
-      photo: 'fakeimage',
-    },
-  ]);
+  const [profiles, setProfiles] = useState<Profiles>([]);
 
-  console.log(profiles);
+  console.log(profiles[0]);
 
   // use this later when we can integrate
-  //   useEffect(() => {
-  //     getProfiles().then((res) => {
+  useEffect(() => {
+    //   getProfiles().then((res) => {
+    //   });
 
-  //       const profiles = res.success.profiles;
-  //       setProfiles(profiles);
-
-  //     });
-  //   }, []);
+    const profile = {
+      userId: '61df3960442e349d92bad441',
+      name: 'Roland Matheson',
+      title: 'Pet Lover',
+      description: 'I love dogcats',
+      address: 'Tokyo, Japan',
+      pay: '$99/Hour',
+      _id: '61df3960442e349d9200000',
+      photo: 'fakeimage',
+    };
+    const profiles = [profile];
+    setProfiles(profiles);
+  }, []);
 
   return (
     <PageContainer>
@@ -91,10 +69,10 @@ export default function ProfileListing({}: Props): ReactElement {
         <Typography gutterBottom variant="h2" component="div">
           {`Your search results`}
         </Typography>
-        {profiles.length &&
+        {profiles.length > 0 &&
           profiles.map((profile) => {
-            <Grid key={profile.userId} item xs={4}>
-              <Card sx={{ maxWidth: 345 }}>
+            <Grid key={profile.userId} item xs={3}>
+              <Card>
                 <CardActionArea component={RouterLink} target="_blank" to={`/profile${profile._id}`}>
                   <CardMedia>
                     {' '}
