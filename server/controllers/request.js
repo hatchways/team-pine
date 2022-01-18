@@ -19,39 +19,37 @@ exports.createRequest = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @route PUT /requests/edit/:requestId?userType=
+// @route PUT /requests/edit/:requestId
 // @desc edit request
 // @access Public
 exports.editRequest = asyncHandler(async (req, res, next) => {
-  // Until we implement cancelling bookings, owners shouldn't be able to edit bookings
-  if (req.query.userType != "sitter") {
-    res.status(401);
-    throw new Error ("Invalid user type for this operation")
-  }
   const request = await Request.findById(req.params.requestId)
-  
+
   if (!request) {
     res.status(404);
     throw new Error("Request doesn't exist");
   }
-
-  const { status } = req.body
-  if (status) {
+  // Until we implement cancelling bookings, owners shouldn't be able to edit bookings
+  if (request.sitter == req.user.id) {
+    const { status } = req.body
     request.set({status})
+    const updatedRequest = await request.save();
+    res.status(200).json({
+      success: {
+        request: updatedRequest
+      },
+    });
+  } else {
+    res.status(403);
+    throw new Error ("You are not authorized to perform this operation")
   }
-  const updatedRequest = await request.save();
-  res.status(200).json({
-    success: {
-      request: updatedRequest
-    },
-  });
 });
 
-// @route GET /requests/?userType=
+// @route GET /requests
 // @desc get requests of logged in user
 // @access Private
 exports.getUserRequests = asyncHandler(async (req, res, next) => {
-  const requests = await Request.where(req.query.userType, req.user.id);
+  const requests = await Request.where({$or: [{sitter: req.user.id}, {requester: req.user.id}]});
 
   res.status(200).json({ requests: requests })
 })
