@@ -85,7 +85,7 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
           variant="outlined"
           size="large"
           className={classes.uploadButton}
-          onClick={() => {
+          onClick={fileSelectHandler}
             fileSelectHnadler();
           }}
         >
