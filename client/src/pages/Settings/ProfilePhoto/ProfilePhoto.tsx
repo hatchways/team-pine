@@ -42,7 +42,7 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
       updateSnackBarMessage('Profile Photo uploaded successfuly!!!');
     }
   };
-  const fileSelectHnadler = () => {
+  const fileSelectHandler = () => {
     if (fileInputButton.current) {
       fileInputButton.current.click();
     }
