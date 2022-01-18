@@ -1,4 +1,4 @@
-const { check, validationResult } = require("express-validator");
+const { query, check, validationResult } = require("express-validator");
 
 exports.validateRegister = [
   check("name", "Please enter a name").not().isEmpty(),
@@ -30,3 +30,17 @@ exports.validateLogin = [
     next();
   }
 ];
+
+exports.validateCreateRequest = [
+  check("petIds.*.name", "Must include pet name").not().isEmpty(),
+  check("petIds.*.description", "Must include a pet description").not().isEmpty(),
+  check("startDate", "Invalid starting time").isNumeric(),
+  check("endDate", "Invalid ending time").isNumeric(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
+    next();
+  }
+]
