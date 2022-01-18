@@ -13,10 +13,9 @@ import {
   Button,
 } from '@mui/material';
 import useStyles from './useStyles';
-import { Theme } from '@mui/material/styles';
 import PageContainer from '../../../components/PageContainer/PageContainer';
 import { Link as RouterLink } from 'react-router-dom';
-import { PinDrop, Search } from '@mui/icons-material';
+import { PinDrop } from '@mui/icons-material';
 
 interface Props {
   location: string;
@@ -24,7 +23,7 @@ interface Props {
   dropOff: Date;
 }
 
-//we have an interface Profile in another branch so this is just temporary
+//we have an interface Profile in another branch so this is just temporary, change this to import a Profile interface when its on main branch.
 
 interface Profile {
   userId: string;
@@ -88,22 +87,18 @@ export default function ProfileListing({}: Props): ReactElement {
                     </CardMedia>
 
                     <CardContent>
-                      <Typography className={classes.profileName} gutterBottom variant="h4" component="div">
+                      <Typography gutterBottom variant="h4" component="div">
                         {`${profile.name}`}
                       </Typography>
-                      <Typography
-                        className={classes.profileTitle}
-                        gutterBottom
-                        variant="h5"
-                        color="text.secondary"
-                        component="div"
-                      >
+                      <Typography gutterBottom variant="h5" color="text.secondary" component="div">
                         {`${profile.title}`}
                       </Typography>
 
-                      <Rating name="half-rating" className={classes.profileRating} defaultValue={2.5} precision={0.5} />
+                      <Rating name="half-rating" defaultValue={2.5} precision={0.5} />
 
-                      <Typography className={classes.profileDescription}>{`${profile.description}`}</Typography>
+                      <Typography
+                        sx={{ fontWeight: 500, paddingTop: '5px', paddingBottom: '5px' }}
+                      >{`${profile.description}`}</Typography>
                       <Divider />
                       <Grid container spacing={2}>
                         {' '}
@@ -116,7 +111,7 @@ export default function ProfileListing({}: Props): ReactElement {
                           </Typography>
                         </Grid>
                         <Grid item xs={6}>
-                          <Typography className={classes.profilePay} color="text.secondary">
+                          <Typography sx={{ fontWeight: 1000 }} className={classes.profilePay} color="text.secondary">
                             {`${profile.pay}`}
                           </Typography>
                         </Grid>

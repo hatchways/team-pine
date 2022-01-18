@@ -14,12 +14,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   profileAvatar: {
     margin: 'auto',
   },
-  profileName: {},
-  profileTitle: {},
-  profileRating: {},
-  profileDescription: {},
   profileAddress: { textAlign: 'left' },
-  profilePay: { fontWeight: 'bolder', textAlign: 'right' },
+  profilePay: { textAlign: 'right' },
   button: {
     fontSize: 16,
     fontWeight: 'bold',
