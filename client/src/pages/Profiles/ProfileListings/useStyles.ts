@@ -6,15 +6,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '350px',
     margin: '30px',
     textAlign: 'center',
-    display: 'flex',
   },
   header: {
     gutterBottom: true,
     textAlign: 'center',
   },
   profileAvatar: {
-    margin: '30px',
-    justifyContent: 'center',
+    margin: 'auto',
   },
   profileName: {},
   profileTitle: {},
@@ -23,7 +21,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   profileAddress: { textAlign: 'left' },
   profilePay: { fontWeight: 'bolder', textAlign: 'right' },
   button: {
-    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
+    boxShadow: '4px 4px 13px 7px rgba(217,217,217,0.26)',
+    background: 'white',
+    transition: 'color 120ms ease-in-out',
+    '&:hover': {
+      color: theme.palette.primary.main,
+    },
   },
 }));
 

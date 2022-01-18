@@ -13,15 +13,18 @@ import {
   Button,
 } from '@mui/material';
 import useStyles from './useStyles';
+import { Theme } from '@mui/material/styles';
 import PageContainer from '../../../components/PageContainer/PageContainer';
 import { Link as RouterLink } from 'react-router-dom';
-import { PinDrop } from '@mui/icons-material';
+import { PinDrop, Search } from '@mui/icons-material';
 
 interface Props {
   location: string;
   dropIn: Date;
   dropOff: Date;
 }
+
+//we have an interface Profile in another branch so this is just temporary
 
 interface Profile {
   userId: string;
@@ -41,10 +44,8 @@ export default function ProfileListing({}: Props): ReactElement {
   const [profiles, setProfiles] = useState<Profiles>([]);
   const classes = useStyles();
 
-  console.log(profiles);
-
-  // use this later when we can integrate
   useEffect(() => {
+    // use this later when we can integrate, this is an example of getting an API resp and then setting state with it
     //   getProfiles().then((res) => {
     //   });
 
@@ -65,7 +66,7 @@ export default function ProfileListing({}: Props): ReactElement {
 
   return (
     <PageContainer>
-      <Box>
+      <Box margin={{ md: 10 }}>
         <Typography className={classes.header} variant="h3" component="div">
           {`Your search results`}
         </Typography>
@@ -73,12 +74,13 @@ export default function ProfileListing({}: Props): ReactElement {
         <Grid container spacing={2}>
           {profiles.length > 0 &&
             profiles.map((profile) => (
-              <Grid key={profile.userId} item xs={4}>
+              <Grid key={profile.userId} item md={'auto'}>
                 <Card className={classes.profileCard}>
                   <CardActionArea component={RouterLink} target="_blank" to={`/profile${profile._id}`}>
                     <CardMedia>
                       {' '}
                       <Avatar
+                        sx={{ width: 80, height: 80 }}
                         className={classes.profileAvatar}
                         alt={`${profile.name} profile picture`}
                         src={`someimageurl/${profile.photo}`}
@@ -106,7 +108,7 @@ export default function ProfileListing({}: Props): ReactElement {
                       <Grid container spacing={2}>
                         {' '}
                         <Grid item xs={1}>
-                          <PinDrop />
+                          <PinDrop color="primary" />
                         </Grid>
                         <Grid item xs={4}>
                           <Typography className={classes.profileAddress} color="text.secondary">
@@ -125,8 +127,12 @@ export default function ProfileListing({}: Props): ReactElement {
               </Grid>
             ))}
         </Grid>
-
-        <Button className={classes.button} onClick={() => window.alert('I was clicked')}>
+        <Button
+          sx={{ margin: 'auto', display: 'block' }}
+          color="inherit"
+          className={classes.button}
+          onClick={() => window.alert('I was clicked')}
+        >
           {' '}
           Show more{' '}
         </Button>
