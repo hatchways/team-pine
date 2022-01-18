@@ -97,9 +97,9 @@ export const Notification: React.FC = () => {
           {notifications.map((notification) => (
             <Fragment key={notification._id}>
               {notification.read ? (
-                <UnreadNotification notification={notification} />
-              ) : (
                 <ReadNotification notification={notification} />
+              ) : (
+                <UnreadNotification notification={notification} />
               )}
             </Fragment>
           ))}
