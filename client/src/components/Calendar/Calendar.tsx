@@ -1,11 +1,11 @@
 import { isSameDay } from 'date-fns';
 import { default as ReactCalendar } from 'react-calendar';
-import { Booking } from '../../interface/Booking';
+import { Request } from '../../interface/Request';
 import useStyles from './useStyles';
 
 interface Props {
-  firstBooking?: Booking;
-  upcomingBookings?: Booking[];
+  firstBooking?: Request;
+  upcomingBookings?: Request[];
 }
 
 export default function Calendar({ firstBooking, upcomingBookings }: Props): JSX.Element {

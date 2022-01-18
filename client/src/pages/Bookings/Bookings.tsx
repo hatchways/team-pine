@@ -4,8 +4,9 @@ import useStyles from './useStyles';
 import Calendar from '../../components/Calendar/Calendar';
 import BookingCard from '../../components/BookingCard/BookingCard';
 import 'react-calendar/dist/Calendar.css';
-import { Booking } from '../../interface/Booking';
+import { Request } from '../../interface/Request';
 import SettingsIcon from '@mui/icons-material/Settings';
+import getRequests from '../../helpers/APICalls/getRequests';
 
 const boxShadow =
   '0px 0px 1.9px rgba(0, 0, 0, 0.007),0px 0px 4.9px rgba(0, 0, 0, 0.014),0px 0px 9.9px rgba(0, 0, 0, 0.021),0px 0px 20.4px rgba(0, 0, 0, 0.031),0px 0px 56px rgba(0, 0, 0, 0.05)';
@@ -14,48 +15,17 @@ export default function Bookings(): JSX.Element {
   const classes = useStyles();
   // We expect to receive Date objects from the database for all times and dates, and we will build functions to handle conversion in the BookingCard component.
 
-  // This mock will be replaced with database information once implemented
-  const mockBookings: Booking[] = [
-    {
-      user: {
-        name: 'Norma Byers',
-        email: 'example@example.com',
-      },
-      startTime: new Date(Date.parse('2022-01-25T12:00:00.000Z')),
-      endTime: new Date(Date.parse('2022-01-25T14:00:00.000Z')),
-      status: 'accepted',
-    },
-    {
-      user: {
-        name: 'Charles Compton',
-        email: 'example@example.com',
-      },
-      startTime: new Date(Date.parse('2022-01-28T15:00:00.000Z')),
-      endTime: new Date(Date.parse('2022-01-28T18:00:00.000Z')),
-      status: 'accepted',
-    },
-    {
-      user: {
-        name: 'Joan Blakeney',
-        email: 'example@example.com',
-      },
-      startTime: new Date(Date.parse('2022-02-11T08:00:00.000Z')),
-      endTime: new Date(Date.parse('2022-02-11T10:00:00.000Z')),
-      status: 'declined',
-    },
-    {
-      user: {
-        name: 'Michael Carnahan',
-        email: 'example@example.com',
-      },
-      startTime: new Date(Date.parse('2022-01-12T14:00:00.000Z')),
-      endTime: new Date(Date.parse('2022-01-12T16:00:00.000Z')),
-      status: 'accepted',
-    },
-  ];
+  const userBookings: Request[] = [];
+  getRequests('sitter').then((res) => {
+    if (res) {
+      for (let i = 0; i < res.requests.length; i++) {
+        userBookings[i] = res.requests[i];
+      }
+      console.log(userBookings);
+    }
+  });
 
-  // return a filtered array AND remove filtered values from the original
-  function getPastBookings(bookingsArray: Booking[]) {
+  function getPastBookings(bookingsArray: Request[]) {
     bookingsArray = bookingsArray.filter((value, index, arr) => {
       if (value.startTime < new Date(Date.now())) {
         arr.splice(index, 1);
@@ -65,7 +35,7 @@ export default function Bookings(): JSX.Element {
     return bookingsArray;
   }
 
-  function sortBookingDates(bookingsArray: Booking[]) {
+  function sortBookingDates(bookingsArray: Request[]) {
     return bookingsArray.sort((booking1, booking2) => {
       if (booking1.startTime < booking2.startTime) {
         return -1;
@@ -75,11 +45,13 @@ export default function Bookings(): JSX.Element {
     });
   }
 
-  const pastBookings = getPastBookings(mockBookings);
+  const pastBookings = getPastBookings(userBookings);
 
-  const nextBooking = mockBookings.shift();
+  const nextBooking = userBookings.shift();
 
-  const sortedBookings = sortBookingDates(mockBookings);
+  const sortedBookings = sortBookingDates(userBookings);
+
+  console.log(pastBookings, nextBooking, sortedBookings);
 
   return (
     <PageContainer>

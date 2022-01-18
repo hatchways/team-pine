@@ -2,10 +2,10 @@ import { Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AvatarDisplay from '../AvatarDisplay/AvatarDisplay';
 import { Box } from '@mui/material';
-import { Booking } from '../../interface/Booking';
+import { Request } from '../../interface/Request';
 
 interface Props {
-  booking: Booking;
+  booking: Request;
   isNextBooking?: boolean;
 }
 

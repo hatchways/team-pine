@@ -35,12 +35,9 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
     throw new Error("Request doesn't exist");
   }
 
-  const { status, paid } = req.body
+  const { status } = req.body
   if (status) {
     request.set({status})
-  }
-  if (paid != null) {
-    request.set({paid})
   }
   const updatedRequest = await request.save();
   res.status(200).json({
@@ -50,15 +47,11 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route GET /requests/:userId?userType=
+// @route GET /requests/?userType=
 // @desc get requests of logged in user
 // @access Private
 exports.getUserRequests = asyncHandler(async (req, res, next) => {
-  const requests = await Request.where(req.query.userType, req.params.userId);
+  const requests = await Request.where(req.query.userType, req.user.id);
 
-  res.status(200).json({
-    success: {
-      requests: requests
-    }
-  })
+  res.status(200).json({ requests: requests })
 })
