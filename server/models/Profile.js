@@ -4,7 +4,7 @@ const profileSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'User'
+    ref: "User",
   },
   name: {
     type: String,
@@ -16,7 +16,7 @@ const profileSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ['male', 'female', 'other'],
+    enum: ["male", "female", "other"],
   },
   address: {
     type: String,
@@ -28,11 +28,15 @@ const profileSchema = new mongoose.Schema({
   },
   birthday: {
     type: Date,
-    default: null
+    default: null,
   },
   photo: {
     type: String,
     default: "",
+  },
+  isSitter: {
+    type: Boolean,
+    default: false,
   },
 });
 
