@@ -1,11 +1,14 @@
 import PageContainer from '../../components/PageContainer/PageContainer';
-import { Grid, Box, Card, CardContent } from '@mui/material';
+import { Grid, Box, Card, CardContent, Typography } from '@mui/material';
 import useStyles from './useStyles';
 import Calendar from '../../components/Calendar/Calendar';
 import BookingCard from '../../components/BookingCard/BookingCard';
 import 'react-calendar/dist/Calendar.css';
 import { Booking } from '../../interface/Booking';
 import SettingsIcon from '@mui/icons-material/Settings';
+
+const boxShadow =
+  '0px 0px 1.9px rgba(0, 0, 0, 0.007),0px 0px 4.9px rgba(0, 0, 0, 0.014),0px 0px 9.9px rgba(0, 0, 0, 0.021),0px 0px 20.4px rgba(0, 0, 0, 0.031),0px 0px 56px rgba(0, 0, 0, 0.05)';
 
 export default function Bookings(): JSX.Element {
   const classes = useStyles();
@@ -74,8 +77,7 @@ export default function Bookings(): JSX.Element {
 
   const pastBookings = getPastBookings(mockBookings);
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const nextBooking: Booking = mockBookings.shift()!;
+  const nextBooking = mockBookings.shift();
 
   const sortedBookings = sortBookingDates(mockBookings);
 
@@ -86,40 +88,63 @@ export default function Bookings(): JSX.Element {
           <Calendar firstBooking={nextBooking} upcomingBookings={sortedBookings} />
         </Grid>
         <Grid xs={10} md={3} direction="column" item container className={classes.bookings}>
-          <Box sx={{ padding: '24px', marginBottom: '16px' }}>
-            <div className={classes.bookingSectionLabel}>
-              <p>Your next booking:</p>
+          <Box sx={{ padding: '24px', marginBottom: '16px', boxShadow: boxShadow }}>
+            <Box className={classes.bookingSectionLabel}>
+              <Typography sx={{ fontSize: '.7rem', fontWeight: 'bold' }}>Your next booking:</Typography>
               <SettingsIcon color="disabled" />
-            </div>
+            </Box>
             <Card sx={{ boxShadow: 'none' }}>
               <CardContent sx={{ padding: '.1rem 0' }}>
-                <BookingCard isNextBooking booking={nextBooking} />
+                {nextBooking ? (
+                  <BookingCard isNextBooking booking={nextBooking} />
+                ) : (
+                  <Typography sx={{ fontSize: '.7rem', textTransform: 'none' }}>
+                    You have no upcoming bookings.
+                  </Typography>
+                )}
               </CardContent>
             </Card>
           </Box>
-          <Box sx={{ padding: '24px' }}>
-            <p>Current bookings:</p>
-            {sortedBookings.map((booking, i) => {
-              return (
-                <Card className={classes.bookingCard} key={i} variant="outlined">
-                  <CardContent className={classes.bookingCardContent}>
-                    <BookingCard booking={booking} />
-                  </CardContent>
-                </Card>
-              );
-            })}
-            <br />
-            <p>Past bookings:</p>
-            {pastBookings.map((booking, i) => {
-              return (
-                <Card className={classes.bookingCard} key={i} variant="outlined">
-                  <CardContent className={classes.bookingCardContent}>
-                    <BookingCard booking={booking} />
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </Box>
+          {pastBookings.length > 0 || sortedBookings.length > 0 ? (
+            <Box sx={{ padding: '24px', boxShadow: boxShadow }}>
+              {sortedBookings.length > 0 ? (
+                <>
+                  <Typography sx={{ fontSize: '.7rem', fontWeight: 'bold' }}>Current bookings:</Typography>
+                  {sortedBookings.map((booking, i) => {
+                    return (
+                      <Card className={classes.bookingCard} key={i} variant="outlined">
+                        <CardContent className={classes.bookingCardContent}>
+                          <BookingCard booking={booking} />
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </>
+              ) : (
+                ''
+              )}
+              <br />
+              {pastBookings.length > 0 ? (
+                <>
+                  {' '}
+                  <Typography sx={{ fontSize: '.7rem', fontWeight: 'bold' }}>Past bookings:</Typography>
+                  {pastBookings.map((booking, i) => {
+                    return (
+                      <Card className={classes.bookingCard} key={i} variant="outlined">
+                        <CardContent className={classes.bookingCardContent}>
+                          <BookingCard booking={booking} />
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </>
+              ) : (
+                ''
+              )}
+            </Box>
+          ) : (
+            ''
+          )}
         </Grid>
       </Grid>
     </PageContainer>

@@ -29,10 +29,10 @@ export default function BookingCard({ booking, isNextBooking }: Props): JSX.Elem
 
   // The top line needs to be structured differently depending on if it is in the next-booking box or in the bottom box
   const topLine = () => {
-    if (isNextBooking) {
-      return <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>{date()}</Typography>;
-    } else {
-      return (
+    {
+      isNextBooking ? (
+        <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>{date()}</Typography>
+      ) : (
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>{date()}</Typography>
           <SettingsIcon color="disabled" sx={{ fontSize: '.8rem' }} />
