@@ -1,38 +1,19 @@
-import React, { useLayoutEffect } from 'react';
-import { Button, CircularProgress, IconButton, Typography, Skeleton, Grid } from '@mui/material';
+import React from 'react';
+import { Button, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { Formik, FormikHelpers } from 'formik';
 import AvatarDisplay from '../../../components/AvatarDisplay/AvatarDisplay';
 import SettingHeader from '../../../components/SettingsHeader/SettingsHeader';
 import { User } from '../../../interface/User';
 
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { makeStyles } from '@mui/styles';
-import editProfile from '../../../helpers/APICalls/editProfile';
 import { useSnackBar } from '../../../context/useSnackbarContext';
 
 const useStyles = makeStyles({
   root: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
     '& .MuiButton-root': {
       textTransform: 'none',
     },
-  },
-  displayWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-  },
-  displayPic: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignContent: 'center',
   },
   displayText: {
     maxWidth: 250,
@@ -42,9 +23,6 @@ const useStyles = makeStyles({
   uploadButton: {
     height: 70,
     textTransform: 'none',
-  },
-  deleteButton: {
-    color: 'black',
   },
 });
 
@@ -61,9 +39,6 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
 
   const fileChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      // event.target.files[0]
-      // call api to upload new profile picture
-      //on success or error
       updateSnackBarMessage('Profile Photo uploaded successfuly!!!');
     }
   };
@@ -73,8 +48,6 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
     }
   };
   const deleteClickHandler = () => {
-    // confirm the action
-    // call api to delete profile picture
     updateSnackBarMessage('Deleted profile photo!!!');
   };
   return (
@@ -82,11 +55,15 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
       sx={{
         margin: '0 auto',
       }}
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
       className={classes.root}
     >
       <SettingHeader header={header} />
-      <Box className={classes.displayWrapper}>
-        <Box className={classes.displayPic} py={2}>
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" textAlign="center">
+        <Box display="flex" justifyContent="center" alignContent="center" py={2}>
           {currentUser ? (
             <AvatarDisplay
               width={170}
@@ -127,7 +104,6 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
       <Box p={1}>
         <Button
           startIcon={<DeleteForeverIcon style={{ fill: 'black' }} />}
-          className={classes.deleteButton}
           onClick={() => {
             deleteClickHandler();
           }}
