@@ -44,7 +44,7 @@ exports.deleteProfilePic = asyncHandler(async (req, res, next) => {
       });
     });
   } catch (err) {
-    res.status(404);
+    res.status(500);
     throw new Error(err);
   }
 });
