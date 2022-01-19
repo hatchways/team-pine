@@ -1,7 +1,6 @@
 import { FormikHelpers } from 'formik';
 import getProfiles from '../../helpers/APICalls/getProfiles';
 import { useSnackBar } from '../../context/useSnackbarContext';
-import PageContainer from '../../components/PageContainer/PageContainer';
 import Landing from './LandingForm';
 
 export default function LandingPage(): JSX.Element {
@@ -18,7 +17,6 @@ export default function LandingPage(): JSX.Element {
       } else if (data.success) {
         // we will handle submit here during integration of profile search
         console.log('submitted');
-
       } else {
         // should not get here from backend but this catch is for an unknown issue
         console.error({ data });
@@ -29,9 +27,5 @@ export default function LandingPage(): JSX.Element {
     });
   };
 
-  return (
-    <PageContainer>
-      <Landing handleSubmit={handleSubmit} />
-    </PageContainer>
-  );
+  return <Landing handleSubmit={handleSubmit} />;
 }

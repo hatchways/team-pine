@@ -16,7 +16,6 @@ import {
 } from '@mui/material';
 import { AccountType } from '../../types/AccountType';
 import { Notification } from './Notification';
-
 import lovingSitterLogo from '../../images/logo.svg';
 import { useStyles } from './useStyles';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -87,7 +86,10 @@ const MenuItem: React.FC<{
 
   return (
     <Grid key={resource} sx={{ textAlign: 'center' }} xs={2} justifySelf="flex-end" item>
-      <NavLink className={classes.navbarItem} to={resource}>
+      <NavLink
+        className={clsx(classes.navbarItem, location.pathname === '/' && classes.navbarItemLanding)}
+        to={resource}
+      >
         {item}
       </NavLink>
     </Grid>

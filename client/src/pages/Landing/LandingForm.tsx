@@ -34,7 +34,12 @@ export default function LandingForm({ handleSubmit }: Props): JSX.Element {
   return (
     <Grid container>
       <Grid item xs={6}>
-        <Container>
+        <Container
+          sx={{
+            width: '95%',
+            marginTop: '200px',
+          }}
+        >
           <Typography className={classes.header} variant="h2" component={'h1'}>
             Find the care your <br />
             dog deserves
@@ -122,7 +127,7 @@ export default function LandingForm({ handleSubmit }: Props): JSX.Element {
         </Container>
       </Grid>
       <Grid item xs={6}>
-        <img className={classes.dogImage} src={dogs} />
+        <img alt="two golden labrador dogs" className={classes.dogImage} src={dogs} />
       </Grid>
     </Grid>
   );

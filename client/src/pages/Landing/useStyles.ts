@@ -1,16 +1,14 @@
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
+import dogs from '../../images/landing/dogs.jpg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dogImage: {
-    zIndex: 1,
-    objectFit: 'cover',
-    width: '100%',
-    top: 100,
+    maxWidth: '100%',
+    height: 'auto',
   },
   form: {
     width: '50%',
-    margin: '40px auto',
     marginLeft: theme.spacing(10),
   },
   label: {
