@@ -1,5 +1,4 @@
 const Conversation = require("../models/Conversation");
-const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
 
 // @route POST /create-conversation/
@@ -30,27 +29,36 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route GET /message/
+// @route GET /message/:conversationId
 // @desc get all messages from a single conversation
-// @access Private
+// @access Public
 
 exports.getAllMessages = asyncHandler(async (req, res, next) => {
-  const { conversationId } = req.body;
+  const { conversationId } = req.params;
 
-  const conversation = await Conversation.findById(conversationId).populate(
-    "messages"
-  );
+  const conversation = await Conversation.findById(conversationId).populate({
+    path: "messages",
+    sort: { timestamps: -1 },
+  });
 
   if (conversation.length === 0) {
     res.status(403);
     throw new Error("No conversation found!");
   }
 
-  res.status(200).json({
-    success: {
-      conversation: conversation,
-    },
-  });
+  if (
+    conversation.participants[0].toString() === req.user.id ||
+    conversation.participants[1].toString() === req.user.id
+  ) {
+    res.status(200).json({
+      success: {
+        conversation: conversation,
+      },
+    });
+  } else {
+    res.status(404);
+    throw new Error("Not authorized");
+  }
 });
 
 // @route POST /message/
@@ -65,24 +73,34 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
     throw new Error("Bad request!");
   }
 
-  const conversation = await Conversation.findById({ conversationId });
+  const conversation = await Conversation.findById(conversationId);
 
   if (conversation.length === 0) {
     res.status(403);
     throw new Error("Conversation not found!");
   }
 
-  conversation.messages.push({
-    sender: req.user.id,
-    receiver,
-    description,
-  });
+  if (
+    conversation.participants[0].toString() === req.user.id ||
+    conversation.participants[1].toString() === req.user.id
+  ) {
+    conversation.messages.push({
+      sender: req.user.id,
+      receiver,
+      description,
+    });
 
-  res.status(200).json({
-    success: {
-      conversation: conversation,
-    },
-  });
+    await conversation.save();
+
+    res.status(200).json({
+      success: {
+        conversation: conversation,
+      },
+    });
+  } else {
+    res.status(404);
+    throw new Error("Not authorized");
+  }
 });
 
 // @route GET /all/
