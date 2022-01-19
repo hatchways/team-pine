@@ -81,14 +81,7 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
         </Typography>
       </Box>
       <Box py={5} px={2}>
-        <Button
-          variant="outlined"
-          size="large"
-          className={classes.uploadButton}
-          onClick={fileSelectHandler}
-            fileSelectHnadler();
-          }}
-        >
+        <Button variant="outlined" size="large" className={classes.uploadButton} onClick={fileSelectHandler}>
           Upload a file from your device
         </Button>
         <input
@@ -104,9 +97,7 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
       <Box p={1}>
         <Button
           startIcon={<DeleteForeverIcon style={{ fill: 'black' }} />}
-          onClick={() => {
-            deleteClickHandler();
-          }}
+          onClick={deleteClickHandler}
           style={{ color: '#969696' }}
         >
           Delete photo
