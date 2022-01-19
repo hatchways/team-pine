@@ -10,7 +10,7 @@ const {
 
 router.route("/create-conversation").post(protect, createConversation);
 router.route("/message").post(protect, sendMessage);
-router.route("/message/:conversationId").get(protect, getAllMessages);
+router.route("/:conversationId/messages").get(protect, getAllMessages);
 router.route("/all").get(protect, getAllConversations);
 
 module.exports = router;
