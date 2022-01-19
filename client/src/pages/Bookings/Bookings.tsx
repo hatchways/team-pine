@@ -3,9 +3,9 @@ import { Grid, Box, Card, CardContent, Typography } from '@mui/material';
 import useStyles from './useStyles';
 import Calendar from '../../components/Calendar/Calendar';
 import BookingCard from '../../components/BookingCard/BookingCard';
+import RequestStatusButton from '../../components/RequestStatusButton/RequestStatusButton';
 import 'react-calendar/dist/Calendar.css';
 import { Request } from '../../interface/Request';
-import SettingsIcon from '@mui/icons-material/Settings';
 import getRequests from '../../helpers/APICalls/getRequests';
 import { useState, useEffect } from 'react';
 
@@ -23,14 +23,16 @@ export default function Bookings(): JSX.Element {
   useEffect(() => {
     if (!mounted) {
       setMounted(true);
-      getRequests('sitter').then((res) => {
+      getRequests().then((res) => {
         if (res) {
           const userBookings: Request[] = [];
+          console.log(res);
           for (let i = 0; i < res.requests.length; i++) {
             userBookings[i] = {
               // The API returns the Date object as a string, so we have to recreate it
               startDate: new Date(res.requests[i].startDate),
               endDate: new Date(res.requests[i].endDate),
+              id: res.requests[i]._id,
               status: res.requests[i].status,
               user: {
                 name: res.requestProfiles[i].name,
@@ -38,6 +40,7 @@ export default function Bookings(): JSX.Element {
               },
             };
           }
+          console.log(userBookings);
           if (userBookings.length > 0 && userBookings != undefined) {
             // The order of these operations is important
             setPastBookings(getPastBookings(userBookings));
@@ -79,7 +82,7 @@ export default function Bookings(): JSX.Element {
           <Box sx={{ padding: '24px', marginBottom: '16px', boxShadow: boxShadow }}>
             <Box className={classes.bookingSectionLabel}>
               <Typography sx={{ fontSize: '.7rem', fontWeight: 'bold' }}>Your next booking:</Typography>
-              <SettingsIcon color="disabled" />
+              {nextBooking ? <RequestStatusButton booking={nextBooking} /> : ''}
             </Box>
             <Card sx={{ boxShadow: 'none' }}>
               <CardContent sx={{ padding: '.1rem 0' }}>

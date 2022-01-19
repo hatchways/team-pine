@@ -1,16 +1,17 @@
 import { FetchOptions } from './../../interface/FetchOptions';
 
-const getRequests = async () => {
+const changeRequestStatus = async (requestId: string, status: string) => {
   const fetchOptions: FetchOptions = {
-    method: 'GET',
+    method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
+    body: JSON.stringify({ status }),
   };
-  return await fetch(`/requests/`, fetchOptions)
+  return await fetch(`/requests/${requestId}`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },
     }));
 };
 
-export default getRequests;
+export default changeRequestStatus;

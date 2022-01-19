@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
+import RequestStatusButton from '../RequestStatusButton/RequestStatusButton';
 import AvatarDisplay from '../AvatarDisplay/AvatarDisplay';
 import { Box } from '@mui/material';
 import { Request } from '../../interface/Request';
@@ -36,13 +36,12 @@ export default function BookingCard({ booking, isNextBooking }: Props): JSX.Elem
       <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>{date()}</Typography>
     ) : (
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>{date()}</Typography>
-        <SettingsIcon color="disabled" sx={{ fontSize: '.8rem' }} />
+        <Typography sx={{ textTransform: 'none', fontWeight: 'bold', marginLeft: '.5rem' }}>{date()}</Typography>
+        <RequestStatusButton booking={booking} fontSize=".8rem" />
       </Box>
     );
   };
 
-  console.log(booking.user);
   return (
     <>
       {topLine()}
