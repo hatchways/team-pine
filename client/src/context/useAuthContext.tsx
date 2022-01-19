@@ -8,7 +8,7 @@ import { ProfileApiDataSuccess } from '../interface/ProfileApiData';
 import { Profile } from '../interface/Profile';
 
 interface IAuthContext {
-  profile: any;
+  loggedInUserProfile: Profile | null | undefined;
   loggedInUser: User | null | undefined;
   updateLoginContext: (data: AuthApiDataSuccess) => void;
   updateProfileContext: (data: ProfileApiDataSuccess) => void;
@@ -16,7 +16,7 @@ interface IAuthContext {
 }
 
 export const AuthContext = createContext<IAuthContext>({
-  profile: undefined,
+  loggedInUserProfile: undefined,
   loggedInUser: undefined,
   updateLoginContext: () => null,
   updateProfileContext: () => null,
@@ -33,7 +33,7 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
     (data: AuthApiDataSuccess) => {
       console.log(data);
       setLoggedInUser(data.user);
-      setProfile(data.profile);
+      setLoggedInUserProfile(data.profile);
       if (data.user && (history.location.pathname === '/login' || history.location.pathname === '/signup')) {
         history.push('/dashboard');
       }
@@ -42,7 +42,7 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
   );
 
   const updateProfileContext = useCallback((data: ProfileApiDataSuccess) => {
-    setProfile(data.profile);
+    setLoggedInUserProfile(data.profile);
   }, []);
 
   const logout = useCallback(async () => {
@@ -51,7 +51,7 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
       .then(() => {
         history.push('/login');
         setLoggedInUser(null);
-        setProfile(undefined);
+        setLoggedInUserProfile(undefined);
       })
       .catch((error) => console.error(error));
   }, [history]);
@@ -75,7 +75,9 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
   }, [updateLoginContext, history]);
 
   return (
-    <AuthContext.Provider value={{ loggedInUser, profile, updateLoginContext, updateProfileContext, logout }}>
+    <AuthContext.Provider
+      value={{ loggedInUser, loggedInUserProfile, updateLoginContext, updateProfileContext, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

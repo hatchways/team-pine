@@ -40,10 +40,10 @@ const useStyles = makeStyles({
 });
 
 export default function Settings(): JSX.Element {
-  const { loggedInUser, profile } = useAuth();
+  const { loggedInUser, loggedInUserProfile } = useAuth();
   const classes = useStyles();
 
-  if (!profile) {
+  if (loggedInUserProfile === undefined) {
     return <CircularProgress />;
   }
 
@@ -91,7 +91,7 @@ export default function Settings(): JSX.Element {
                     cloneElement(item.component, {
                       ...props,
                       currentUser: loggedInUser,
-                      currentProfile: profile,
+                      currentProfile: loggedInUserProfile,
                     })
                   }
                 />
