@@ -3,12 +3,10 @@ import { Grid, Box, Card, CardContent, Typography } from '@mui/material';
 import useStyles from './useStyles';
 import Calendar from '../../components/Calendar/Calendar';
 import BookingCard from '../../components/BookingCard/BookingCard';
-import RequestStatusButton from '../../components/RequestStatusButton/RequestStatusButton';
 import 'react-calendar/dist/Calendar.css';
 import { Request } from '../../interface/Request';
 import getRequests from '../../helpers/APICalls/getRequests';
 import { useState, useEffect } from 'react';
-import changeRequestStatus from '../../helpers/APICalls/changeRequestStatus';
 
 const boxShadow =
   '0px 0px 1.9px rgba(0, 0, 0, 0.007),0px 0px 4.9px rgba(0, 0, 0, 0.014),0px 0px 9.9px rgba(0, 0, 0, 0.021),0px 0px 20.4px rgba(0, 0, 0, 0.031),0px 0px 56px rgba(0, 0, 0, 0.05)';
@@ -20,7 +18,6 @@ export default function Bookings(): JSX.Element {
   const [pastBookings, setPastBookings] = useState<Request[] | undefined>();
   const [nextBooking, setNextBooking] = useState<Request | undefined>();
   const [sortedBookings, setSortedBookings] = useState<Request[] | undefined>();
-  // const [statusChanged, setStatusChanged] = useState<boolean>(false);
 
   useEffect(() => {
     if (!mounted) {
@@ -51,15 +48,6 @@ export default function Bookings(): JSX.Element {
       });
     }
   }, [mounted, nextBooking, pastBookings, sortedBookings]);
-
-  const handleStatusChange = (status: string) => {
-    console.log('triggered');
-    {
-      nextBooking ? ((nextBooking.status = status), changeRequestStatus(nextBooking.id, status)) : null;
-    }
-    // setStatusChanged(!statusChanged);
-    // console.log(statusChanged);
-  };
 
   function getPastBookings(bookingsArray: Request[]) {
     bookingsArray = bookingsArray.filter((value, index, arr) => {
