@@ -110,7 +110,10 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
 exports.getAllConversations = asyncHandler(async (req, res, next) => {
   const conversations = await Conversation.find({
     participants: { $in: req.user.id },
-  }).populate("messages");
+  }).populate({
+    path: "messages",
+    sort: { timestamps: -1 },
+  });
 
   if (conversations.length === 0) {
     res.status(403);
