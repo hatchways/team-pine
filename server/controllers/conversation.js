@@ -56,7 +56,7 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
       },
     });
   } else {
-    res.status(404);
+    res.status(401);
     throw new Error("Not authorized");
   }
 });
@@ -68,7 +68,7 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
 exports.sendMessage = asyncHandler(async (req, res, next) => {
   const { conversationId, description, receiver } = req.body;
 
-  if (!description || !receiver) {
+  if (!description || !receiver || !conversationId) {
     res.status(400);
     throw new Error("Bad request!");
   }
@@ -98,7 +98,7 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
       },
     });
   } else {
-    res.status(404);
+    res.status(401);
     throw new Error("Not authorized");
   }
 });
