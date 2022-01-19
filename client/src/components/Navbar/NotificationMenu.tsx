@@ -66,13 +66,12 @@ export const NotificationMenu: React.FC = () => {
           color="inherit"
           className={classes.navbarItem}
         >
+          {'Notifications'}
           <Badge
             invisible={unreadNotificationCount !== 0 ? false : true}
             badgeContent={unreadNotificationCount}
             className={classes.badge}
-          >
-            {'Notifications'}
-          </Badge>
+          ></Badge>
         </Button>
       )}
 
