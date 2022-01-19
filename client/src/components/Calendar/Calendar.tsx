@@ -15,19 +15,19 @@ export default function Calendar({ firstBooking, upcomingBookings }: Props): JSX
     if (view === 'month') {
       // Check if the date matches either the first booking or any of the upcoming bookings (not declined), then return the class we want
       if (firstBooking) {
-        if (isSameDay(date, firstBooking.startDate)) {
+        if (isSameDay(date, firstBooking.startDate) && firstBooking.status == 'accepted') {
           return classes.activeTile;
         }
         if (upcomingBookings) {
           for (const booking of upcomingBookings) {
-            if (isSameDay(booking.startDate, date) && booking.status != 'declined') {
+            if (isSameDay(booking.startDate, date) && booking.status == 'accepted') {
               return classes.activeTile;
             }
           }
         }
       }
     }
-    return 'yes';
+    return 'none';
   }
 
   return <ReactCalendar className={classes.calendar} tileClassName={tileClassName} />;

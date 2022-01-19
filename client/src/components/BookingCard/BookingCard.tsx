@@ -3,13 +3,18 @@ import RequestStatusButton from '../RequestStatusButton/RequestStatusButton';
 import AvatarDisplay from '../AvatarDisplay/AvatarDisplay';
 import { Box } from '@mui/material';
 import { Request } from '../../interface/Request';
+import { useState } from 'react';
+import changeRequestStatus from '../../helpers/APICalls/changeRequestStatus';
 
 interface Props {
   booking: Request;
   isNextBooking?: boolean;
+  isPastBooking?: boolean;
 }
 
-export default function BookingCard({ booking, isNextBooking }: Props): JSX.Element {
+export default function BookingCard({ booking, isNextBooking, isPastBooking }: Props): JSX.Element {
+  const [status, setStatus] = useState<string>(booking.status);
+
   const date = () => {
     const startTime = booking.startDate.getHours();
     const endTime = booking.endDate.getHours();
@@ -30,14 +35,45 @@ export default function BookingCard({ booking, isNextBooking }: Props): JSX.Elem
     return formattedDate;
   };
 
+  const statusColor = () => {
+    if (status == 'accepted') {
+      return 'rgb(0,0,0)';
+    } else {
+      return 'rgba(0,0,0,0.26)';
+    }
+  };
+
+  const handleStatusChange = (status: string) => {
+    setStatus(status);
+    booking.status = status;
+    changeRequestStatus(booking.id, status);
+  };
+
   // The top line needs to be structured differently depending on if it is in the next-booking box or in the bottom box
   const topLine = () => {
     return isNextBooking ? (
-      <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>{date()}</Typography>
+      <>
+        {' '}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography sx={{ fontSize: '.7rem', fontWeight: 'bold' }}>Your next booking:</Typography>
+          <RequestStatusButton onStatusChange={handleStatusChange} booking={booking} />
+        </Box>
+        <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>{date()}</Typography>
+      </>
     ) : (
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography sx={{ textTransform: 'none', fontWeight: 'bold', marginLeft: '.5rem' }}>{date()}</Typography>
-        <RequestStatusButton booking={booking} fontSize=".8rem" />
+        {!isPastBooking ? (
+          <RequestStatusButton onStatusChange={handleStatusChange} booking={booking} fontSize=".8rem" />
+        ) : (
+          ''
+        )}
       </Box>
     );
   };
@@ -48,23 +84,19 @@ export default function BookingCard({ booking, isNextBooking }: Props): JSX.Elem
       <Box sx={{ padding: '0', display: 'flex', alignItems: 'center', marginBottom: 0 }}>
         <AvatarDisplay loggedIn={false} user={booking.user} />
         <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>{booking.user.name}</Typography>
-        {!isNextBooking ? (
-          <Typography
-            sx={{
-              alignSelf: 'flex-start',
-              marginLeft: 'auto',
-              marginRight: '1rem',
-              color: 'rgba(0,0,0,0.26)',
-              fontSize: '.6rem',
-              fontWeight: 'bold',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {booking.status}
-          </Typography>
-        ) : (
-          ''
-        )}
+        <Typography
+          sx={{
+            alignSelf: 'flex-start',
+            marginLeft: 'auto',
+            marginRight: '1rem',
+            color: statusColor(),
+            fontSize: '.6rem',
+            fontWeight: 'bold',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {status}
+        </Typography>
       </Box>
     </>
   );
