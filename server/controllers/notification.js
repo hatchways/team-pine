@@ -37,7 +37,7 @@ exports.markAsRead = asyncHandler(async (req, res, next) => {
   const { notificationId } = req.params;
   const foundNotification = await Notification.findById(notificationId);
 
-  if (foundNotification.user.toString() !== req.receiver.id) {
+  if (foundNotification.receiver.toString() !== req.user.id) {
     res.status(403);
     throw new Error("The user doesn't have the correct privileges or permissions to modify this notification");
   }
