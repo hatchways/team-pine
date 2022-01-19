@@ -30,30 +30,32 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @route GET /message/
+// @desc get all messages from a single conversation
+// @access Private
+
 exports.getAllMessages = asyncHandler(async (req, res, next) => {
-  const { type, title, description, receiver } = req.body;
+  const { conversationId } = req.body;
 
-  if (!type || !title || !description || !receiver) {
-    res.status(400);
-    throw new Error(
-      "Bad request! Missing type, title, description or receiver!"
-    );
+  const conversation = await Conversation.findById(conversationId).populate(
+    "messages"
+  );
+
+  if (conversation.length === 0) {
+    res.status(403);
+    throw new Error("No conversation found!");
   }
-
-  const notification = await Conversation.create({
-    sender: req.user.id,
-    receiver,
-    type,
-    title,
-    description,
-  });
 
   res.status(200).json({
     success: {
-      notification: notification,
+      conversation: conversation,
     },
   });
 });
+
+// @route POST /message/
+// @desc send a message to a conversation
+// @access Private
 
 exports.sendMessage = asyncHandler(async (req, res, next) => {
   const { conversationId, description, receiver } = req.body;
@@ -63,11 +65,9 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
     throw new Error("Bad request!");
   }
 
-  const conversation = await Conversation.findById({ conversationId }).populate(
-    "messages"
-  );
+  const conversation = await Conversation.findById({ conversationId });
 
-  if (!conversation) {
+  if (conversation.length === 0) {
     res.status(403);
     throw new Error("Conversation not found!");
   }
@@ -80,26 +80,28 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: {
-      conversation: notification,
+      conversation: conversation,
     },
   });
 });
 
+// @route GET /all/
+// @desc get all conversations for a user
+// @access Private
+
 exports.getAllConversations = asyncHandler(async (req, res, next) => {
-  const { type, title, description, receiver } = req.body;
+  const conversations = await Conversation.find({
+    participants: { $in: req.user.id },
+  }).populate("messages");
 
-  if (!type || !title || !description || !receiver) {
-    res.status(400);
-    throw new Error(
-      "Bad request! Missing type, title, description or receiver!"
-    );
+  if (conversations.length === 0) {
+    res.status(403);
+    throw new Error("No conversations found!");
   }
-
-  const conversation = await Conversation.findById({ participants });
 
   res.status(200).json({
     success: {
-      notification: notification,
+      conversations: conversations,
     },
   });
 });

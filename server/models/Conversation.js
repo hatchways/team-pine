@@ -32,12 +32,7 @@ const conversationSchema = new mongoose.Schema(
     },
     participants: [
       {
-        sender: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "User",
-      },
-      {
-        reciever: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "User",
       },
