@@ -5,6 +5,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AvatarDisplay from '../../../components/AvatarDisplay/AvatarDisplay';
 import SettingHeader from '../../../components/SettingsHeader/SettingsHeader';
 import { User } from '../../../interface/User';
+import { Profile } from '../../../interface/Profile';
 import { makeStyles } from '@mui/styles';
 import { useSnackBar } from '../../../context/useSnackbarContext';
 import { profilePhotoUpload, profilePhotoDelete } from '../../../helpers/APICalls/profilePhoto';
@@ -30,7 +31,7 @@ const useStyles = makeStyles({
 interface ProfilePhotoProps {
   header: string;
   currentUser?: User;
-  currentProfile?: any;
+  currentProfile?: Profile;
 }
 
 const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, currentProfile }) => {
@@ -87,7 +88,7 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
               width={170}
               height={170}
               user={currentUser}
-              photoUrl={currentProfile.photo}
+              photoUrl={currentProfile ? currentProfile.photo : ''}
               loggedIn={!!currentUser}
             />
           ) : (
