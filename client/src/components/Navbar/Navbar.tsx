@@ -134,7 +134,7 @@ const Navbar: React.FC = () => {
     >
       <Grid xs={4} md={6} item>
         <NavLink className={classes.navbarItem} to={'/'}>
-          <img className={classes.navbarLogo} src={lovingSitterLogo} />
+          <img alt={'Loving Sitter navbar logo'} className={classes.navbarLogo} src={lovingSitterLogo} />
         </NavLink>
       </Grid>
       <Grid xs={8} md={6} item>
@@ -151,7 +151,11 @@ const Navbar: React.FC = () => {
                 onClick={handleMenuOpen}
                 color="inherit"
               >
-                <img style={{ width: 50 }} src={`https://robohash.org/${loggedInUser.email}`} />
+                <img
+                  alt={'account profile picture'}
+                  style={{ width: 50 }}
+                  src={`https://robohash.org/${loggedInUser.email}`}
+                />
               </IconButton>
 
               <Menu
