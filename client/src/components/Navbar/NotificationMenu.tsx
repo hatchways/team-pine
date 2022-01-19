@@ -5,13 +5,11 @@ import getNotifications from '../../helpers/APICalls/getNotifications';
 import NotificationInterface from '../../interface/Notification';
 import { useSnackBar } from '../../context/useSnackbarContext';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import UnreadNotification from './Notification/UnreadNotification';
-import ReadNotification from './Notification/ReadNotification';
+import Notification from './Notification/Notification';
 
 type Notifications = NotificationInterface[];
 
-export const Notification: React.FC = () => {
+export const NotificationMenu: React.FC = () => {
   const classes = useStyles();
   const [notifications, setNotifications] = useState<Notifications>([]);
   const { updateSnackBarMessage } = useSnackBar();
@@ -96,11 +94,7 @@ export const Notification: React.FC = () => {
         <List sx={{ width: '100%', minWidth: 360, bgcolor: 'background.paper' }}>
           {notifications.map((notification) => (
             <Fragment key={notification._id}>
-              {notification.read ? (
-                <ReadNotification notification={notification} />
-              ) : (
-                <UnreadNotification notification={notification} />
-              )}
+              <Notification notification={notification} />
             </Fragment>
           ))}
         </List>

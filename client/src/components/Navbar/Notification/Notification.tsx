@@ -2,24 +2,22 @@ import React, { ReactElement } from 'react';
 import NotificationInterface from '../../../interface/Notification';
 import moment from 'moment';
 import { Divider, ListItemText, ListItem, Avatar, Typography, ListItemAvatar } from '@mui/material';
-import { useStyles } from '../useStyles';
+import { useStyles } from './useStyles';
 import { NavLink } from 'react-router-dom';
-import markNotificationAsRead from '../../../helpers/APICalls/markNotificationAsRead';
 
 interface Props {
   notification: NotificationInterface;
 }
 
-export default function UnreadNotification({ notification }: Props): ReactElement {
-  const classes = useStyles();
+export default function Notification({ notification }: Props): ReactElement {
+  const classes = useStyles(notification);
 
   return (
     <ListItem
-      className={classes.unreadNotification}
+      className={classes.root}
       key={notification._id}
       component={NavLink}
       to={`/messages/${notification._id}`}
-      onClick={() => markNotificationAsRead(notification._id)}
       alignItems="flex-start"
     >
       <ListItemAvatar>
