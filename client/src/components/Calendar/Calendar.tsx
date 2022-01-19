@@ -15,12 +15,12 @@ export default function Calendar({ firstBooking, upcomingBookings }: Props): JSX
     if (view === 'month') {
       // Check if the date matches either the first booking or any of the upcoming bookings (not declined), then return the class we want
       if (firstBooking) {
-        if (isSameDay(date, firstBooking.startTime)) {
+        if (isSameDay(date, firstBooking.startDate)) {
           return classes.activeTile;
         }
         if (upcomingBookings) {
           for (const booking of upcomingBookings) {
-            if (isSameDay(booking.startTime, date) && booking.status != 'declined') {
+            if (isSameDay(booking.startDate, date) && booking.status != 'declined') {
               return classes.activeTile;
             }
           }

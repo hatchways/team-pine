@@ -11,36 +11,38 @@ interface Props {
 
 export default function BookingCard({ booking, isNextBooking }: Props): JSX.Element {
   const date = () => {
-    return (
+    const startTime = booking.startDate.getHours();
+    const endTime = booking.endDate.getHours();
+
+    const formattedDate =
       '' +
-      booking.startTime.getDate() +
+      booking.startDate.getDate() +
       ' ' +
-      booking.startTime.toLocaleString('default', { month: 'long' }) +
+      booking.startDate.toLocaleString('default', { month: 'long' }) +
       ' ' +
-      booking.startTime.getFullYear() +
+      booking.startDate.getFullYear() +
       ', ' +
-      booking.startTime.getHours() +
-      '-' +
-      booking.endTime.getHours() +
-      ' ' +
-      (booking.endTime.getHours() >= 12 ? ' PM' : ' AM')
-    );
+      (startTime > 12 ? startTime - 12 : startTime) +
+      (startTime >= 12 ? 'PM' : 'AM') +
+      ' - ' +
+      (endTime > 12 ? endTime - 12 : endTime) +
+      (endTime >= 12 ? 'PM' : 'AM');
+    return formattedDate;
   };
 
   // The top line needs to be structured differently depending on if it is in the next-booking box or in the bottom box
   const topLine = () => {
-    {
-      isNextBooking ? (
+    return isNextBooking ? (
+      <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>{date()}</Typography>
+    ) : (
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>{date()}</Typography>
-      ) : (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>{date()}</Typography>
-          <SettingsIcon color="disabled" sx={{ fontSize: '.8rem' }} />
-        </Box>
-      );
-    }
+        <SettingsIcon color="disabled" sx={{ fontSize: '.8rem' }} />
+      </Box>
+    );
   };
 
+  console.log(booking.user);
   return (
     <>
       {topLine()}

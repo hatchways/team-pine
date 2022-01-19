@@ -1,8 +1,8 @@
 import { User } from './User';
 
 export interface Request {
-  startTime: Date;
-  endTime: Date;
+  startDate: Date;
+  endDate: Date;
   status: string;
   user: User;
 }

@@ -1,4 +1,5 @@
 const Request = require("../models/Request");
+const Profile = require("../models/Profile");
 const asyncHandler = require("express-async-handler")
 
 // @route POST /requests
@@ -49,7 +50,11 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
 // @desc get requests of logged in user
 // @access Private
 exports.getUserRequests = asyncHandler(async (req, res, next) => {
-  const requests = await Request.where({$or: [{sitter: req.user.id}, {requester: req.user.id}]});
+  const requests = await Request.where({ $or: [{ sitter: req.user.id }, { requester: req.user.id }] });
+  const requestProfiles = []
+  for (let i = 0; i < requests.length; i++) {
+    requestProfiles[i] = await Profile.findOne({$and: [{ $or: [{ userId: requests[i].sitter}, { userId: requests[i].requester}]}, { userId: { $ne: req.user.id }}]})
+  }
 
-  res.status(200).json({ requests: requests })
+  res.status(200).json({ requests: requests, requestProfiles: requestProfiles })
 })
