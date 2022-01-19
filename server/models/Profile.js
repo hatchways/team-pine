@@ -16,12 +16,8 @@ const profileSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["none", "male", "female", "other"],
     default: "none",
   },
-  address: {
-    type: String,
-    default: "",
   },
   telephone: {
     type: String,
@@ -34,6 +30,10 @@ const profileSchema = new mongoose.Schema({
   photo: {
     type: String,
     default: "",
+  },
+  isSitter: {
+    type: Boolean,
+    default: false,
   },
 });
 
