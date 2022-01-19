@@ -38,7 +38,7 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
 
   const conversation = await Conversation.findById(conversationId).populate({
     path: "messages",
-    sort: { timestamps: -1 },
+    sort: { updatedAt: "desc" },
   });
 
   if (conversation.length === 0) {
@@ -112,7 +112,7 @@ exports.getAllConversations = asyncHandler(async (req, res, next) => {
     participants: { $in: req.user.id },
   }).populate({
     path: "messages",
-    sort: { timestamps: -1 },
+    sort: { updatedAt: "desc" },
   });
 
   if (conversations.length === 0) {
