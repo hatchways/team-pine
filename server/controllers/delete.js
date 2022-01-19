@@ -12,7 +12,6 @@ const deleteFileFromS3bucket = (bucketName, fileName) => {
 // @desc Delete profile photo
 // @access Private
 exports.deleteProfilePic = asyncHandler(async (req, res, next) => {
-  // get the profile
   const profile = await Profile.findOne({ userId: req.user.id });
   if (!profile) {
     res.status(404);
@@ -27,21 +26,20 @@ exports.deleteProfilePic = asyncHandler(async (req, res, next) => {
   try {
     deleteFileFromS3bucket(bucket, filename);
     profile.set({ photo: "" });
-    profile.save().then((profile) => {
-      res.status(200);
-      res.json({
-        success: {
-          profile: {
-            address: profile.address,
-            birthday: profile.birthday,
-            description: profile.description,
-            gender: profile.gender,
-            name: profile.name,
-            photo: profile.photo,
-            telephone: profile.telephone,
-          },
+    const updatedProfile = await profile.save();
+    res.status(200);
+    res.json({
+      success: {
+        profile: {
+          address: updatedProfile.address,
+          birthday: updatedProfile.birthday,
+          description: updatedProfile.description,
+          gender: updatedProfile.gender,
+          name: updatedProfile.name,
+          photo: updatedProfile.photo,
+          telephone: updatedProfile.telephone,
         },
-      });
+      },
     });
   } catch (err) {
     res.status(500);

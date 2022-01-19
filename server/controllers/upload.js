@@ -45,10 +45,9 @@ exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
   try {
     const uploadSingle = upload(bucket, filename).single("image");
 
-    uploadSingle(req, res, (err) => {
+    uploadSingle(req, res, async (err) => {
       if (err) return res.status(400).json({ error: { message: err } });
 
-      // now can saftly delete old photo
       if (profile.photo !== "") {
         try {
           deleteFileFromS3bucket(bucket, profile.photo);
@@ -57,21 +56,20 @@ exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
         }
       }
       profile.set({ photo: req.file.location });
-      profile.save().then((profile) => {
-        res.status(200);
-        res.json({
-          success: {
-            profile: {
-              address: profile.address,
-              birthday: profile.birthday,
-              description: profile.description,
-              gender: profile.gender,
-              name: profile.name,
-              photo: profile.photo,
-              telephone: profile.telephone,
-            },
+      const updatedProfile = await profile.save();
+      res.status(200);
+      res.json({
+        success: {
+          profile: {
+            address: updatedProfile.address,
+            birthday: updatedProfile.birthday,
+            description: updatedProfile.description,
+            gender: updatedProfile.gender,
+            name: updatedProfile.name,
+            photo: updatedProfile.photo,
+            telephone: updatedProfile.telephone,
           },
-        });
+        },
       });
     });
   } catch (err) {
