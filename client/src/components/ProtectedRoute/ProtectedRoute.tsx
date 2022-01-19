@@ -10,7 +10,6 @@ const ProtectedRoute = ({ component: Component, ...rest }: ProtectedRouteProps):
   const { loggedInUser } = useAuth();
 
   if (loggedInUser === undefined) {
-    // show progress circule until we have some value for user
     return <CircularProgress />;
   }
 
