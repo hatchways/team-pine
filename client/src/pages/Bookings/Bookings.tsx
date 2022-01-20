@@ -27,7 +27,6 @@ export default function Bookings(): JSX.Element {
           const userBookings: Request[] = [];
           for (let i = 0; i < res.requests.length; i++) {
             userBookings[i] = {
-              // The API returns the Date object as a string, so we have to recreate it
               startDate: new Date(res.requests[i].startDate),
               endDate: new Date(res.requests[i].endDate),
               id: res.requests[i]._id,
@@ -39,7 +38,6 @@ export default function Bookings(): JSX.Element {
             };
           }
           if (userBookings.length > 0 && userBookings != undefined) {
-            // The order of these operations is important
             setPastBookings(getPastBookings(userBookings));
             setNextBooking(userBookings.shift());
             setSortedBookings(sortBookingDates(userBookings));

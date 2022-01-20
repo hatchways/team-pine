@@ -30,7 +30,6 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
     res.status(404);
     throw new Error("Request doesn't exist");
   }
-  // Until we implement cancelling bookings, owners shouldn't be able to edit bookings
   if (request.sitter == req.user.id) {
     const { status } = req.body
     request.set({status})
