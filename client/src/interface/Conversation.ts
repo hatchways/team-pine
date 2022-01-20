@@ -10,6 +10,7 @@ export interface Message {
 interface User {
   email: string;
   name: string;
+  _id: string;
 }
 
 export default interface Conversation {
