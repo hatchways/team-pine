@@ -14,8 +14,9 @@ import {
 } from '@mui/material';
 import useStyles from './useStyles';
 import PageContainer from '../../../components/PageContainer/PageContainer';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import { PinDrop } from '@mui/icons-material';
+import listProfiles from '../../../helpers/APICalls/listProfiles';
 
 interface Props {
   location: string;
@@ -28,8 +29,8 @@ interface Profile {
   name: string;
   title: string;
   description: string;
-  address: string;
-  pay: string;
+  location: string;
+  payRate: string;
   _id: string;
   photo: string;
 }
@@ -40,21 +41,18 @@ export default function ProfileListing({}: Props): ReactElement {
   const [profiles, setProfiles] = useState<Profiles>([]);
   const classes = useStyles();
 
+  const { availability, location } = useParams<{ availability?: string; location?: string }>();
+
   useEffect(() => {
-    const profile = {
-      userId: '61df3960442e349d92bad441',
-      name: 'Roland Matheson',
-      title: 'Pet Lover',
-      description:
-        'I love dogcats Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis assumenda omnis obcaecati, cumque, nisi animi quam voluptatum tempora enim illo at id iusto! Iure eveniet cum in a, accusamus earum!',
-      address: 'Tokyo, Japan',
-      pay: '$99/Hour',
-      _id: '61df3960442e349d9200000',
-      photo: 'fakeimage',
-    };
-    const fakeProfiles = [profile, profile, profile, profile, profile];
-    setProfiles(fakeProfiles);
-  }, []);
+    if (availability && location) {
+      listProfiles(availability, location).then((res) => {
+        const profiles = res.success.profiles;
+        setProfiles(profiles);
+      });
+    } else {
+      console.log('no profiles');
+    }
+  }, [availability, location]);
 
   return (
     <PageContainer>
@@ -100,12 +98,12 @@ export default function ProfileListing({}: Props): ReactElement {
                         </Grid>
                         <Grid item xs={4}>
                           <Typography className={classes.profileAddress} color="text.secondary">
-                            {`${profile.address}`}
+                            {`${profile.location}`}
                           </Typography>
                         </Grid>
                         <Grid item xs={6}>
                           <Typography sx={{ fontWeight: 1000 }} className={classes.profilePay} color="text.secondary">
-                            {`${profile.pay}`}
+                            {profile.payRate ? `${profile.payRate}$ /hr` : ''}
                           </Typography>
                         </Grid>
                       </Grid>
