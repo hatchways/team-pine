@@ -7,14 +7,15 @@ export interface Message {
   updatedAt: string;
 }
 
-interface userId {
-  _id: string;
+interface User {
+  email: string;
+  name: string;
 }
 
 export default interface Conversation {
   user: string;
   messages: [Message];
-  participants: [userId];
+  participants: [User, User];
   _id: string;
   createdAt: string;
   updatedAt: string;
