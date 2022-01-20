@@ -23,8 +23,6 @@ interface Props {
   dropOff: Date;
 }
 
-//we have an interface Profile in another branch so this is just temporary, change this to import a Profile interface when its on main branch.
-
 interface Profile {
   userId: string;
   name: string;
@@ -39,15 +37,10 @@ interface Profile {
 type Profiles = Profile[];
 
 export default function ProfileListing({}: Props): ReactElement {
-  //currently fake profiles for state
   const [profiles, setProfiles] = useState<Profiles>([]);
   const classes = useStyles();
 
   useEffect(() => {
-    // use this later when we can integrate, this is an example of getting an API resp and then setting state with it
-    //   getProfiles().then((res) => {
-    //   });
-
     const profile = {
       userId: '61df3960442e349d92bad441',
       name: 'Roland Matheson',
