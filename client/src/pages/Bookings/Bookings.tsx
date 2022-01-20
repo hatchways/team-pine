@@ -26,7 +26,7 @@ export default function Bookings(): JSX.Element {
         if (res) {
           const userBookings: Request[] = [];
           for (let i = 0; i < res.requests.length; i++) {
-            userBookings[i] = {
+            userBookings.push({
               startDate: new Date(res.requests[i].startDate),
               endDate: new Date(res.requests[i].endDate),
               id: res.requests[i]._id,
@@ -35,7 +35,7 @@ export default function Bookings(): JSX.Element {
                 name: res.requestProfiles[i].name,
                 email: res.requestProfiles[i].email,
               },
-            };
+            });
           }
           if (userBookings.length > 0 && userBookings != undefined) {
             setPastBookings(getPastBookings(userBookings));

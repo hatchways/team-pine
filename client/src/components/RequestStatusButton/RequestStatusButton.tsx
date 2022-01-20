@@ -1,6 +1,6 @@
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Menu, MenuItem, IconButton } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Request } from '../../interface/Request';
 
 interface Props {
@@ -9,9 +9,8 @@ interface Props {
   onStatusChange: (status: string) => void;
 }
 
-export default function RequestStatusButton({ fontSize, booking, onStatusChange }: Props): JSX.Element {
+export default function RequestStatusButton({ fontSize, onStatusChange }: Props): JSX.Element {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [status, setStatus] = useState<string>(booking.status);
 
   const open = Boolean(anchorEl);
   const handleClick = (event: any) => {
@@ -21,16 +20,13 @@ export default function RequestStatusButton({ fontSize, booking, onStatusChange 
     setAnchorEl(null);
   };
   const acceptRequest = () => {
-    setStatus('accepted');
+    onStatusChange('accepted');
     handleClose();
   };
   const declineRequest = () => {
-    setStatus('declined');
+    onStatusChange('declined');
     handleClose();
   };
-  useEffect(() => {
-    onStatusChange(status);
-  }, [status, onStatusChange]);
 
   return (
     <>

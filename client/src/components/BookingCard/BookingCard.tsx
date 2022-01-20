@@ -4,7 +4,9 @@ import AvatarDisplay from '../AvatarDisplay/AvatarDisplay';
 import { Box } from '@mui/material';
 import { Request } from '../../interface/Request';
 import { useState } from 'react';
+import { useSnackBar } from '../../context/useSnackbarContext';
 import changeRequestStatus from '../../helpers/APICalls/changeRequestStatus';
+import clsx from 'clsx';
 
 interface Props {
   booking: Request;
@@ -13,40 +15,33 @@ interface Props {
 }
 
 export default function BookingCard({ booking, isNextBooking, isPastBooking }: Props): JSX.Element {
+  const { updateSnackBarMessage } = useSnackBar();
   const [status, setStatus] = useState<string>(booking.status);
 
   const date = () => {
     const startTime = booking.startDate.getHours();
     const endTime = booking.endDate.getHours();
 
-    const formattedDate =
-      '' +
-      booking.startDate.getDate() +
-      ' ' +
-      booking.startDate.toLocaleString('default', { month: 'long' }) +
-      ' ' +
-      booking.startDate.getFullYear() +
-      ', ' +
-      (startTime > 12 ? startTime - 12 : startTime) +
-      (startTime >= 12 ? 'PM' : 'AM') +
-      ' - ' +
-      (endTime > 12 ? endTime - 12 : endTime) +
-      (endTime >= 12 ? 'PM' : 'AM');
+    const formattedDate = `${booking.startDate.getDate()} ${booking.startDate.toLocaleString('default', {
+      month: 'long',
+    })} ${booking.startDate.getFullYear()}, ${startTime > 12 ? startTime - 12 : startTime} ${
+      startTime >= 12 ? 'PM' : 'AM'
+    } - ${endTime > 12 ? endTime - 12 : endTime} ${endTime >= 12 ? 'PM' : 'AM'}`;
     return formattedDate;
   };
 
-  const statusColor = () => {
-    if (status == 'accepted') {
-      return 'rgb(0,0,0)';
-    } else {
-      return 'rgba(0,0,0,0.26)';
-    }
-  };
-
-  const handleStatusChange = (status: string) => {
-    setStatus(status);
+  const handleStatusChange = (newStatus: string) => {
+    setStatus(newStatus);
     booking.status = status;
-    changeRequestStatus(booking.id, status);
+    changeRequestStatus(booking.id, status).then((data) => {
+      console.log(data);
+      if (data.error) {
+        console.error({ error: data.error.message });
+        updateSnackBarMessage(data.error);
+      } else if (data.success) {
+        updateSnackBarMessage('Status successfully changed');
+      }
+    });
   };
 
   // The top line needs to be structured differently depending on if it is in the next-booking box or in the bottom box
@@ -89,7 +84,7 @@ export default function BookingCard({ booking, isNextBooking, isPastBooking }: P
             alignSelf: 'flex-start',
             marginLeft: 'auto',
             marginRight: '1rem',
-            color: statusColor(),
+            color: clsx({ 'rgb(0,0,0)': status == 'accepted' }, { 'rgba(0,0,0,0.26)': status != 'accepted' }),
             fontSize: '.6rem',
             fontWeight: 'bold',
             whiteSpace: 'nowrap',
