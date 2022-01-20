@@ -1,5 +1,5 @@
-const Conversation = require("../models/Conversation");
-const asyncHandler = require("express-async-handler");
+const Conversation = require('../models/Conversation');
+const asyncHandler = require('express-async-handler');
 
 // @route POST /create-conversation/
 // @desc create a new conversation
@@ -10,7 +10,7 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
 
   if (!description || !receiver) {
     res.status(400);
-    throw new Error("Bad request! Missing description or receiver!");
+    throw new Error('Bad request! Missing description or receiver!');
   }
 
   const conversation = await Conversation.create({
@@ -37,14 +37,9 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
   const { conversationId } = req.params;
 
   const conversation = await Conversation.findById(conversationId).populate({
-    path: "messages",
-    sort: { updatedAt: "desc" },
+    path: 'messages',
+    sort: { updatedAt: 'desc' },
   });
-
-  if (conversation.length === 0) {
-    res.status(403);
-    throw new Error("No conversation found!");
-  }
 
   if (
     conversation.participants[0].toString() === req.user.id ||
@@ -57,7 +52,7 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
     });
   } else {
     res.status(401);
-    throw new Error("Not authorized");
+    throw new Error('Not authorized');
   }
 });
 
@@ -70,15 +65,10 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
 
   if (!description || !receiver || !conversationId) {
     res.status(400);
-    throw new Error("Bad request!");
+    throw new Error('Bad request!');
   }
 
   const conversation = await Conversation.findById(conversationId);
-
-  if (conversation.length === 0) {
-    res.status(403);
-    throw new Error("Conversation not found!");
-  }
 
   if (
     conversation.participants[0].toString() === req.user.id ||
@@ -99,7 +89,7 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
     });
   } else {
     res.status(401);
-    throw new Error("Not authorized");
+    throw new Error('Not authorized');
   }
 });
 
@@ -111,14 +101,9 @@ exports.getAllConversations = asyncHandler(async (req, res, next) => {
   const conversations = await Conversation.find({
     participants: { $in: req.user.id },
   }).populate({
-    path: "messages",
-    sort: { updatedAt: "desc" },
+    path: 'messages',
+    sort: { updatedAt: 'desc' },
   });
-
-  if (conversations.length === 0) {
-    res.status(403);
-    throw new Error("No conversations found!");
-  }
 
   res.status(200).json({
     success: {
