@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -10,7 +10,7 @@ import {
   ListItemText,
   Divider,
   Paper,
-  Fab,
+  Button,
   TextField,
 } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
@@ -20,6 +20,8 @@ import ConversationInterface from '../../interface/Conversation';
 import getConversations from '../../helpers/APICalls/Messages/getConversations';
 import { useSnackBar } from '../../context/useSnackbarContext';
 import moment from 'moment';
+import sendMessage from '../../helpers/APICalls/Messages/sendMessage';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const useStyles = makeStyles({
   table: {
@@ -49,6 +51,53 @@ export default function MessagesDashboard(): JSX.Element {
   const { updateSnackBarMessage } = useSnackBar();
   const [chatbox, setChatBox] = useState<number>(0);
   const { loggedInUser } = useAuth();
+  const [message, setMessage] = useState<string>('');
+  const scrollRef = useRef<HTMLLIElement>(null);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(event.target.value);
+  };
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView();
+    }
+  }, [chatbox]);
+
+  const handleSubmit = (receiver: string, description: string, conversationId: string) => {
+    setSubmitting(true);
+    sendMessage(receiver, description, conversationId).then((data) => {
+      if (data.error) {
+        setSubmitting(false);
+        updateSnackBarMessage(data.error.message);
+      } else if (data.success) {
+        console.log(data.success);
+        updateSnackBarMessage('Sent!');
+        getConversations().then((data) => {
+          if (data.error) {
+            updateSnackBarMessage(data.error.message);
+          } else if (data.success) {
+            const conversations = data.success.conversations;
+
+            setConversations(conversations);
+
+            setSubmitting(false);
+          } else {
+            console.error({ data });
+            setSubmitting(false);
+            updateSnackBarMessage('An unexpected error occurred. Please try again');
+          }
+        });
+        setSubmitting(false);
+      } else {
+        // should not get here from backend but this catch is for an unknown issue
+        console.error({ data });
+
+        setSubmitting(false);
+        updateSnackBarMessage('An unexpected error occurred. Please try again');
+      }
+    });
+  };
 
   useEffect(() => {
     setSubmitting(true);
@@ -58,8 +107,6 @@ export default function MessagesDashboard(): JSX.Element {
         updateSnackBarMessage(data.error.message);
       } else if (data.success) {
         const conversations = data.success.conversations;
-
-        setChatBox(conversations.length);
 
         setConversations(conversations);
 
@@ -116,10 +163,12 @@ export default function MessagesDashboard(): JSX.Element {
           </Grid>
           <Grid item xs={9}>
             <List className={classes.messageSection}>
-              {!isSubmitting &&
+              {isSubmitting ? (
+                <CircularProgress style={{ color: 'white' }} />
+              ) : (
                 conversations[chatbox] &&
                 conversations[chatbox].messages.map((message, index) => (
-                  <ListItem key={message._id}>
+                  <ListItem ref={scrollRef} key={message._id}>
                     <Grid container>
                       <Grid alignItems="right" item xs={12}>
                         <ListItemText primary={message.description}></ListItemText>
@@ -129,18 +178,33 @@ export default function MessagesDashboard(): JSX.Element {
                       </Grid>
                     </Grid>
                   </ListItem>
-                ))}
+                ))
+              )}
             </List>
             <Divider />
             <Grid container style={{ padding: '20px' }}>
-              <Grid item xs={11}>
-                <TextField id="send-message" label="Reply" fullWidth />
-              </Grid>
-              <Grid xs={1}>
-                <Fab color="primary" aria-label="add">
-                  Send
-                </Fab>
-              </Grid>
+              <Box
+                component="form"
+                sx={{
+                  width: 500,
+                  maxWidth: '100%',
+                }}
+              >
+                <Grid item xs={11}>
+                  <TextField id="outlined-name" label="message" value={message} onChange={handleChange} fullWidth />
+                </Grid>
+                <Grid xs={1}>
+                  <Button
+                    onClick={() =>
+                      handleSubmit(conversations[chatbox].participants[0]._id, message, conversations[chatbox]._id)
+                    }
+                    color="primary"
+                    variant="contained"
+                  >
+                    Send
+                  </Button>
+                </Grid>
+              </Box>
             </Grid>
           </Grid>
         </Grid>
