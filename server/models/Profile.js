@@ -18,7 +18,6 @@ const profileSchema = new mongoose.Schema({
     type: String,
     default: "none",
   },
-  },
   telephone: {
     type: String,
     default: "",
