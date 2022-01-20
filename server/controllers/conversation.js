@@ -24,7 +24,7 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: {
-      conversation: conversation,
+      conversation,
     },
   });
 });
@@ -47,7 +47,7 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
   ) {
     res.status(200).json({
       success: {
-        conversation: conversation,
+        conversation,
       },
     });
   } else {
@@ -84,7 +84,7 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
 
     res.status(200).json({
       success: {
-        conversation: conversation,
+        conversation,
       },
     });
   } else {
@@ -107,7 +107,7 @@ exports.getAllConversations = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: {
-      conversations: conversations,
+      conversations,
     },
   });
 });
