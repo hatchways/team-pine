@@ -1,5 +1,28 @@
 const mongoose = require("mongoose");
 
+const daySchedule = new mongoose.Schema({
+  isAvailable: {
+    type: Boolean,
+    default: false,
+  },
+  start: {
+    type: Number,
+    min: 0,
+    max: 23,
+    required: function () {
+      return this.isAvailable;
+    },
+  },
+  end: {
+    type: Number,
+    min: 0,
+    max: 23,
+    required: function () {
+      return this.isAvailable;
+    },
+  },
+});
+
 const scheduleSchema = new mongoose.Schema({
   profileId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -10,41 +33,23 @@ const scheduleSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  days: [
-    {
-      day: {
-        type: Number,
-        min: 1,
-        max: 7,
-        unique: true,
-        required: true,
-      },
-      isAvailable: {
-        type: Boolean,
-        default: false,
-      },
-      start: {
-        type: Number,
-        min: 0,
-        max: 23,
-        required: true,
-      },
-      end: {
-        type: Number,
-        min: 0,
-        max: 23,
-        required: true,
-      },
-    },
-  ],
+  days: {
+    sunday: daySchedule,
+    monday: daySchedule,
+    tuesday: daySchedule,
+    wednesday: daySchedule,
+    thursday: daySchedule,
+    friday: daySchedule,
+    saturday: daySchedule,
+  },
 });
 
 const ScheduleDayEndValidator = function (value) {
-  return value > this.startAt;
+  return value > this.start;
 };
 
-scheduleSchema
-  .path("days.end")
+daySchedule
+  .path("end")
   .validate(ScheduleDayEndValidator, "End date should be after start date");
 
 module.exports = Schedule = mongoose.model("Schedule", scheduleSchema);
