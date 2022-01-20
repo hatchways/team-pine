@@ -15,7 +15,7 @@ import {
   Toolbar,
 } from '@mui/material';
 import { AccountType } from '../../types/AccountType';
-import { Notification } from './Notification';
+import { NotificationMenu } from './NotificationMenu';
 import lovingSitterLogo from '../../images/logo.svg';
 import { useStyles } from './useStyles';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -141,7 +141,7 @@ const Navbar: React.FC = () => {
       </Grid>
       <Grid xs={8} md={6} item>
         <Grid container alignItems="center" gap={2} justifyContent="flex-end">
-          {loggedInUser && <Notification />}
+          {loggedInUser && <NotificationMenu />}
           {renderMenuItems()}
           {loggedInUser && (
             <Grid xs={2} item>
