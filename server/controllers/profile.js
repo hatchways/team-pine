@@ -39,3 +39,18 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
     },
   });
 });
+
+// @route GET /:availability/:location/list-profiles
+// @desc Show profiles on list page according to availability and location
+// @access Public
+exports.getProfileListings = asyncHandler(async (req, res, next) => {
+
+  const {availability, location} = req.params
+
+  const profiles = await Profile.find({'location': {'$regex': `.*${location}.*`}}, {isSitter: true})
+  res.status(200).json({
+    success: {
+      profiles
+    },
+  });
+});
