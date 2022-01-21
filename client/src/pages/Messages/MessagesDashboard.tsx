@@ -12,6 +12,7 @@ import {
   Paper,
   Button,
   TextField,
+  Modal,
 } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import { makeStyles } from '@mui/styles';
@@ -22,17 +23,21 @@ import { useSnackBar } from '../../context/useSnackbarContext';
 import moment from 'moment';
 import sendMessage from '../../helpers/APICalls/Messages/sendMessage';
 import CircularProgress from '@mui/material/CircularProgress';
+import Message from './Message/Message';
+import SendIcon from '@mui/icons-material/Send';
+import CreateConversation from './CreateConversation';
 
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
+    minHeight: 900,
   },
   inboxSection: {
     width: '100%',
-    height: '80vh',
+    height: '90vh',
   },
   messageSection: {
-    height: '70vh',
+    height: '65vh',
     overflowY: 'auto',
   },
   borderRight500: {
@@ -42,6 +47,7 @@ const useStyles = makeStyles({
     backgroundColor: '#e0e0e0',
   },
 });
+
 type Conversations = ConversationInterface[];
 
 export default function MessagesDashboard(): JSX.Element {
@@ -53,6 +59,9 @@ export default function MessagesDashboard(): JSX.Element {
   const { loggedInUser } = useAuth();
   const [message, setMessage] = useState<string>('');
   const scrollRef = useRef<HTMLLIElement>(null);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
@@ -125,43 +134,70 @@ export default function MessagesDashboard(): JSX.Element {
         <Grid container>
           <Grid item xs={12}>
             <Typography variant="h6" className="header-message">
-              Inbox
+              Inbox Messages
             </Typography>
+            <Button onClick={handleOpen}>Start new conversation</Button>
           </Grid>
         </Grid>
         <Grid container component={Paper} className={classes.inboxSection}>
           <Grid item xs={3} className={classes.borderRight500}>
             <Divider />
             <List>
-              {conversations.map((conversation, index) => (
-                <ListItem button onClick={() => setChatBox(index)} key={conversation._id}>
-                  <ListItemIcon>
-                    <Avatar
-                      alt={
+              {conversations.length &&
+                conversations.map((conversation, index) => (
+                  <ListItem button onClick={() => setChatBox(index)} key={conversation._id}>
+                    <ListItemIcon>
+                      <Avatar
+                        alt={
+                          conversation.participants[0].name === loggedInUser?.name
+                            ? `${conversation.participants[1].name}s profile picture`
+                            : `${conversation.participants[0].name}s profile picture`
+                        }
+                        src="https://material-ui.com/static/images/avatar/1.jpg"
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
                         conversation.participants[0].name === loggedInUser?.name
-                          ? `${conversation.participants[0].name}s profile picture`
-                          : `${conversation.participants[1].name}s profile picture`
+                          ? `${conversation.participants[1].name}`
+                          : `${conversation.participants[0].name}`
                       }
-                      src="https://material-ui.com/static/images/avatar/1.jpg"
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={
-                      conversation.participants[0].name === loggedInUser?.name
-                        ? `${conversation.participants[0].name}`
-                        : `${conversation.participants[1].name}`
-                    }
-                  >
-                    {conversation.participants[0].name === loggedInUser?.name
-                      ? `${conversation.participants[0].name}`
-                      : `${conversation.participants[1].name}`}
-                  </ListItemText>
-                  <ListItemText secondary={`${conversation.updatedAt}`}></ListItemText>
-                </ListItem>
-              ))}
+                      secondary={conversation.messages[conversation.messages.length - 1].description}
+                    >
+                      {conversation.participants[0].name === loggedInUser?.name
+                        ? `${conversation.participants[1].name}`
+                        : `${conversation.participants[0].name}`}
+                    </ListItemText>
+                    <ListItemText
+                      sx={{ textAlign: 'right' }}
+                      secondary={`${moment(conversation.updatedAt).calendar()}`}
+                    ></ListItemText>
+                  </ListItem>
+                ))}
             </List>
           </Grid>
           <Grid item xs={9}>
+            {!isSubmitting && conversations[chatbox] && (
+              <Grid sx={{ padding: '30px' }} container>
+                <Grid item>
+                  <Avatar
+                    alt={
+                      conversations[chatbox].participants[0].name === loggedInUser?.name
+                        ? `${conversations[chatbox].participants[1].name}s profile picture`
+                        : `${conversations[chatbox].participants[0].name}s profile picture`
+                    }
+                    src="https://material-ui.com/static/images/avatar/1.jpg"
+                  />
+                </Grid>
+                <Grid item>
+                  <Typography variant="h4" className="header-message">
+                    {conversations[chatbox].participants[0].name === loggedInUser?.name
+                      ? `${conversations[chatbox].participants[1].name}`
+                      : `${conversations[chatbox].participants[0].name}`}
+                  </Typography>
+                </Grid>
+              </Grid>
+            )}
             <List className={classes.messageSection}>
               {isSubmitting ? (
                 <CircularProgress style={{ color: 'white' }} />
@@ -169,43 +205,71 @@ export default function MessagesDashboard(): JSX.Element {
                 conversations[chatbox] &&
                 conversations[chatbox].messages.map((message, index) => (
                   <ListItem ref={scrollRef} key={message._id}>
-                    <Grid container>
-                      <Grid alignItems="right" item xs={12}>
-                        <ListItemText primary={message.description}></ListItemText>
-                      </Grid>
-                      <Grid alignItems="right" item xs={12}>
-                        <ListItemText secondary={moment(message.updatedAt).calendar()}></ListItemText>
-                      </Grid>
-                    </Grid>
+                    <Message message={message} />
                   </ListItem>
                 ))
               )}
             </List>
             <Divider />
-            <Grid container style={{ padding: '20px' }}>
-              <Box
-                component="form"
-                sx={{
-                  width: 500,
-                  maxWidth: '100%',
-                }}
-              >
+
+            <Box
+              component="form"
+              sx={{
+                width: 500,
+              }}
+              onSubmit={() => handleSubmit(message, conversations[chatbox]._id)}
+            >
+              <Grid container sx={{ padding: '20px' }}>
                 <Grid item xs={11}>
-                  <TextField id="outlined-name" label="message" value={message} onChange={handleChange} fullWidth />
+                  <TextField
+                    sx={{ minWidth: '400px' }}
+                    id="outlined-name"
+                    label="message"
+                    value={message}
+                    onChange={handleChange}
+                  />
                 </Grid>
-                <Grid xs={1}>
+                <Grid item xs={1}>
                   <Button
                     onClick={() => handleSubmit(message, conversations[chatbox]._id)}
                     color="primary"
                     variant="contained"
+                    endIcon={<SendIcon />}
                   >
                     Send
                   </Button>
                 </Grid>
-              </Box>
-            </Grid>
+              </Grid>
+            </Box>
           </Grid>
         </Grid>
+
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 400,
+              height: 400,
+              bgcolor: 'background.paper',
+              border: '2px solid #000',
+              boxShadow: 24,
+              p: 4,
+            }}
+          >
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Start a new conversation
+            </Typography>
+            <CreateConversation />
+          </Box>
+        </Modal>
       </Box>
     </PageContainer>
   );

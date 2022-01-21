@@ -4,9 +4,8 @@ interface User {
   _id: string;
 }
 
-export interface Message {
+export interface MessageInterface {
   sender: User;
-  receiver: string;
   description: string;
   _id: string;
   createdAt: string;
@@ -15,7 +14,7 @@ export interface Message {
 
 export default interface Conversation {
   user: string;
-  messages: [Message];
+  messages: [MessageInterface];
   participants: [User, User];
   _id: string;
   createdAt: string;

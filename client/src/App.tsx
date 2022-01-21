@@ -13,7 +13,7 @@ import { SnackBarProvider } from './context/useSnackbarContext';
 import { Navbar } from './components/Navbar/Navbar';
 import Settings from './pages/Settings/Settings';
 import NotFound from './pages/NotFound/NotFound';
-import MessagesDashboard from './pages/Messages/Messages';
+import MessagesDashboard from './pages/Messages/MessagesDashboard';
 
 function App(): JSX.Element {
   return (
