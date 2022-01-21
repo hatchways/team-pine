@@ -1,16 +1,16 @@
+interface User {
+  email: string;
+  name: string;
+  _id: string;
+}
+
 export interface Message {
-  sender: string;
+  sender: User;
   receiver: string;
   description: string;
   _id: string;
   createdAt: string;
   updatedAt: string;
-}
-
-interface User {
-  email: string;
-  name: string;
-  _id: string;
 }
 
 export default interface Conversation {
