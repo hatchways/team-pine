@@ -55,23 +55,28 @@ export default function ProfileListing({}: Props): ReactElement {
   return (
     <PageContainer>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Box margin={{ md: 10 }}>
+        <Box
+          sx={{
+            margin: 'auto',
+            maxWidth: '1300px',
+          }}
+        >
           <Typography className={classes.header} variant="h3" component="div">
             {`Your search results`}
           </Typography>
           <Box
             component="form"
             sx={{
-              width: 500,
+              maxWidth: '450px',
               margin: 'auto',
               padding: '10px',
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid item xs={7}>
                 <TextField id="outlined-name" label="Location" value={location} fullWidth />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={5}>
                 <DatePicker
                   label="Date"
                   value={date}
