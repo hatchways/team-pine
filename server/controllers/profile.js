@@ -49,8 +49,6 @@ exports.getProfileListings = asyncHandler(async (req, res, next) => {
 
   const profiles = await Profile.find({'location': {'$regex': `.*${location.toLowerCase()}.*`}}, {isSitter: true}).select('name description location photo payRate')
 
-  console.log(profiles, location)
-
   res.status(200).json({
     success: {
       profiles
