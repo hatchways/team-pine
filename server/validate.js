@@ -13,7 +13,6 @@ exports.validateRegister = [
   (req, res, next) => {
     const errors = validationResult(req);
 
-    console.log(errors);
     if (!errors.isEmpty())
       return res.status(400).json({ errors: errors.array() });
     next();
@@ -38,6 +37,9 @@ exports.validateScheduleSchema = [
     .isEmpty()
     .isString()
     .custom(async (name, { req }) => {
+      if (!req.profile) {
+        throw new Error("Unable to fetch profile");
+      }
       const schedule = await Schedule.findOne({
         name,
         profileId: req.profile.id,
