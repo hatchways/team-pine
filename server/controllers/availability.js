@@ -3,9 +3,20 @@ const Profile = require("../models/Profile");
 const Schedule = require("../models/Schedule");
 
 exports.createSchedule = asyncHandler(async (req, res, next) => {
+  if (req.profile === undefined) {
+    res.status(500);
+    throw new Error("Unable to get profile of user");
+  }
   const profileId = req.profile.id;
-  const name = req.body.name;
-  const days = req.body.days;
+  const { name, days } = req.body;
+  if (!name) {
+    res.status(400);
+    throw new Error("schedule's name is required!!");
+  }
+  if (!days) {
+    res.status(400);
+    throw new Error("schedule's days object is required");
+  }
   try {
     const newSchedule = new Schedule({
       name,
