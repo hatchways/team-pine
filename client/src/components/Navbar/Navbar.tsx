@@ -153,11 +153,7 @@ const Navbar: React.FC = () => {
                 onClick={handleMenuOpen}
                 color="inherit"
               >
-                <img
-                  alt={'account profile picture'}
-                  style={{ width: 50 }}
-                  src={`https://robohash.org/${loggedInUser.email}`}
-                />
+                <img alt={'profile picture'} style={{ width: 50 }} src={`https://robohash.org/${loggedInUser.email}`} />
               </IconButton>
 
               <Menu
