@@ -1,7 +1,7 @@
-const Conversation = require('../models/Conversation');
-const asyncHandler = require('express-async-handler');
+const Conversation = require("../models/Conversation");
+const asyncHandler = require("express-async-handler");
 
-// @route POST /create-conversation/
+// @route POST /
 // @desc create a new conversation
 // @access Public
 
@@ -10,23 +10,42 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
 
   if (!description || !receiver) {
     res.status(400);
-    throw new Error('Bad request! Missing description or receiver!');
+    throw new Error("Bad request! Missing description or receiver!");
   }
 
-  const conversation = await Conversation.create({
-    messages: {
-      sender: req.user.id,
-      receiver,
-      description,
-    },
-    participants: [req.user.id, receiver],
+  const existingConversation = await Conversation.findOne({
+    participants: { $all: [`${req.user.id}`, `${receiver}`] },
   });
 
-  res.status(200).json({
-    success: {
-      conversation,
-    },
-  });
+  if (existingConversation) {
+    existingConversation.messages.push({
+      sender: req.user.id,
+      description,
+    });
+
+    await existingConversation.save();
+
+    res.status(200).json({
+      success: {
+        conversation: existingConversation,
+      },
+    });
+  } else {
+    const conversation = await Conversation.create({
+      messages: {
+        sender: req.user.id,
+        receiver,
+        description,
+      },
+      participants: [req.user.id, receiver],
+    });
+
+    res.status(200).json({
+      success: {
+        conversation,
+      },
+    });
+  }
 });
 
 // @route GET /message/:conversationId
@@ -37,8 +56,8 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
   const { conversationId } = req.params;
 
   const conversation = await Conversation.findById(conversationId).populate({
-    path: 'messages',
-    sort: { updatedAt: 'desc' },
+    path: "messages",
+    sort: { updatedAt: "desc" },
   });
 
   if (
@@ -52,7 +71,7 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
     });
   } else {
     res.status(401);
-    throw new Error('Not authorized');
+    throw new Error("Not authorized");
   }
 });
 
@@ -65,7 +84,7 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
 
   if (!description || !receiver || !conversationId) {
     res.status(400);
-    throw new Error('Bad request!');
+    throw new Error("Bad request!");
   }
 
   const conversation = await Conversation.findById(conversationId);
@@ -89,7 +108,7 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
     });
   } else {
     res.status(401);
-    throw new Error('Not authorized');
+    throw new Error("Not authorized");
   }
 });
 
@@ -101,8 +120,8 @@ exports.getAllConversations = asyncHandler(async (req, res, next) => {
   const conversations = await Conversation.find({
     participants: { $in: req.user.id },
   }).populate({
-    path: 'messages',
-    sort: { updatedAt: 'desc' },
+    path: "messages",
+    sort: { updatedAt: "desc" },
   });
 
   res.status(200).json({

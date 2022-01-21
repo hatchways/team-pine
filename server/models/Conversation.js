@@ -7,14 +7,14 @@ const messageSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
-    receiver: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
-    },
     description: {
       type: String,
       default: "",
+    },
+    read: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
   },
   { timestamps: true }
