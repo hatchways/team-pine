@@ -2,66 +2,82 @@ import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { useState } from 'react';
+import { Typography, Button, CircularProgress } from '@mui/material';
 import FormikDatePicker from '../../../components/FormikDatePicker/FormikDatePicker';
+import useStyles from './useStyles';
 
-interface Props {
-  handleSubmit: (
-    {
-      startDate,
-      endDate,
-    }: {
-      startDate: Date;
-      endDate: Date;
-    },
-    {
-      setStatus,
-      setSubmitting,
-    }: FormikHelpers<{
-      startDate: Date;
-      endDate: Date;
-    }>,
-  ) => void;
-}
+export default function RequestForm(): JSX.Element {
+  const handleSubmit = (
+    { startDate, endDate }: { startDate: Date; endDate: Date },
+    { setSubmitting }: FormikHelpers<{ startDate: Date; endDate: Date }>,
+  ) => {
+    console.log(startDate, endDate);
+    setSubmitting(false);
+  };
 
-export default function RequestForm({ handleSubmit }: Props): JSX.Element {
+  const classes = useStyles();
+
   const initialDate = () => {
+    console.log(new Date(Date.now()), new Date(Date.now()).getHours());
     return new Date(Date.now());
-
-    // const currentDate = new Date(Date.now());
-
-    // return `${currentDate.getDate()} ${currentDate.getMonth()} ${currentDate.getFullYear()}`;
   };
 
   return (
     <Formik
-      initialValues={{ startDate: new Date(Date.now()), endDate: new Date(Date.now() + 86400000) }}
+      initialValues={{ startDate: new Date(Date.now()), endDate: new Date(Date.now() + 3600000) }}
       validationSchema={Yup.object().shape({
         startDate: Yup.date()
           .required('Start date is required')
           .min(initialDate(), 'You must select a date starting from today')
-          .test('first', 'Starting date must be sooner than ending date', function (date) {
+          .test('first', 'Starting date must be sooner than ending date', (date, context) => {
             if (date) {
-              return date < this.parent.endDate;
+              return date < context.parent.endDate;
             }
+            return false;
           }),
         endDate: Yup.date()
           .required('End date is required')
-          .test('second', 'Ending date must be after the start date', function (date) {
+          .test('second', 'Ending date must be after the start date', (date, context) => {
             if (date) {
-              return date > this.parent.startDate;
+              return date > context.parent.startDate;
             }
             return false;
           }),
       })}
       onSubmit={handleSubmit}
     >
-      {({ handleSubmit, setFieldValue, values, touched, errors, isSubmitting }) => (
-        <form onSubmit={handleSubmit} noValidate>
+      {({ handleSubmit, setFieldValue, values, handleChange, isSubmitting, errors, touched }) => (
+        <form onSubmit={handleSubmit} noValidate className={classes.requestForm}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <FormikDatePicker label="Drop In" date={values.startDate} setFieldValue={setFieldValue} field="startDate" />
-            <FormikDatePicker label="Drop Off" date={values.endDate} setFieldValue={setFieldValue} field="endDate" />
+            <FormikDatePicker
+              onChange={handleChange}
+              inputId="drop-in"
+              label="Drop In"
+              date={values.startDate}
+              setFieldValue={setFieldValue}
+              dateField="startDate"
+              error={touched.startDate && Boolean(errors.startDate)}
+            />
+            <Typography sx={{ marginBottom: 1, marginTop: -1.5, color: '#d32f2f' }}>{errors.startDate}</Typography>
+            <FormikDatePicker
+              inputId="drop-off"
+              label="Drop Off"
+              date={values.endDate}
+              setFieldValue={setFieldValue}
+              dateField="endDate"
+              error={touched.endDate && Boolean(errors.endDate)}
+            />
+            <Typography sx={{ marginBottom: 1, marginTop: -1.5, color: '#d32f2f' }}>{errors.endDate}</Typography>
           </LocalizationProvider>
+          <Button
+            sx={{ margin: 'auto', marginTop: 3, height: 60, width: 200 }}
+            type="submit"
+            variant="contained"
+            color="primary"
+            disableElevation
+          >
+            {isSubmitting ? <CircularProgress style={{ color: 'white' }} /> : 'Send Request'}
+          </Button>
         </form>
       )}
     </Formik>
