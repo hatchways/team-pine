@@ -82,7 +82,7 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
 // @access Private
 
 exports.sendMessage = asyncHandler(async (req, res, next) => {
-  const { conversationId, description, receiver } = req.body;
+  const { conversationId, description  } = req.body;
 
   if (!description || !receiver || !conversationId) {
     res.status(400);
