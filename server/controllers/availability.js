@@ -29,7 +29,7 @@ exports.createSchedule = asyncHandler(async (req, res, next) => {
       throw new Error("Unexpected Error: Unable to save new schedule");
     }
     res.status(201);
-    res.send("schedule is created");
+    res.send(savedSchedule);
   } catch (err) {
     res.status(500);
     res.send(err);
