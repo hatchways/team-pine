@@ -42,16 +42,21 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
 
   const fileChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      profilePhotoUpload(event.target.files[0]).then((data) => {
-        if (data.error) {
-          updateSnackBarMessage(data.error.message);
-        } else if (data.success) {
-          updateProfileContext(data.success);
-          updateSnackBarMessage('Profile Photo is uploaded successfuly!!!');
-        } else {
-          updateSnackBarMessage('An unexpected error occurred. Please try again');
-        }
-      });
+      profilePhotoUpload(event.target.files[0])
+        .then((data) => {
+          if (data.error) {
+            updateSnackBarMessage(data.error.message);
+          } else if (data.success) {
+            updateProfileContext(data.success);
+            updateSnackBarMessage('Profile Photo is uploaded successfuly!!!');
+            event.target.value = '';
+          } else {
+            updateSnackBarMessage('An unexpected error occurred. Please try again');
+          }
+        })
+        .catch((err) => {
+          updateSnackBarMessage(err);
+        });
     }
   };
   const fileSelectHandler = () => {
@@ -60,14 +65,18 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
     }
   };
   const deleteClickHandler = () => {
-    profilePhotoDelete().then((data) => {
-      if (data.error) {
-        updateSnackBarMessage(data.error.message);
-      } else if (data.success) {
-        updateProfileContext(data.success);
-        updateSnackBarMessage('Deleted profile photo!!!');
-      }
-    });
+    profilePhotoDelete()
+      .then((data) => {
+        if (data.error) {
+          updateSnackBarMessage(data.error.message);
+        } else if (data.success) {
+          updateProfileContext(data.success);
+          updateSnackBarMessage('Deleted profile photo!!!');
+        }
+      })
+      .catch((err) => {
+        updateSnackBarMessage(err);
+      });
   };
   return (
     <Box
