@@ -55,6 +55,10 @@ exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
           console.error(err);
         }
       }
+      if (!req.file) {
+        res.status(404);
+        throw new Error("Unable to upload photo");
+      }
       profile.set({ photo: req.file.location });
       const updatedProfile = await profile.save();
       res.status(200);
