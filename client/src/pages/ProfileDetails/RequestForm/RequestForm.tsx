@@ -11,20 +11,18 @@ export default function RequestForm(): JSX.Element {
     { startDate, endDate }: { startDate: Date; endDate: Date },
     { setSubmitting }: FormikHelpers<{ startDate: Date; endDate: Date }>,
   ) => {
-    console.log(startDate, endDate);
     setSubmitting(false);
   };
 
   const classes = useStyles();
 
   const initialDate = () => {
-    console.log(new Date(Date.now()), new Date(Date.now()).getHours());
     return new Date(Date.now());
   };
 
   return (
     <Formik
-      initialValues={{ startDate: new Date(Date.now()), endDate: new Date(Date.now() + 3600000) }}
+      initialValues={{ startDate: initialDate(), endDate: new Date(Date.now() + 3600000) }}
       validationSchema={Yup.object().shape({
         startDate: Yup.date()
           .required('Start date is required')
