@@ -87,7 +87,7 @@ export default function ProfileListing({}: Props): ReactElement {
                         {`${profile.title}`}
                       </Typography>
 
-                      <Rating name="half-rating" defaultValue={2.5} precision={0.5} />
+                      <Rating name="half-rating" defaultValue={2.5} precision={0.5} readOnly />
 
                       <Typography
                         sx={{ fontWeight: 500, paddingTop: '5px', paddingBottom: '5px' }}
