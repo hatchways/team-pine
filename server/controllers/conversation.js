@@ -103,7 +103,13 @@ exports.getAllConversations = asyncHandler(async (req, res, next) => {
   }).populate({
     path: 'messages',
     sort: { updatedAt: 'desc' },
+       populate: {
+       path: 'sender',
+       model: 'User'
+     } 
   }).populate('participants')
+
+
 
   res.status(200).json({
     success: {
