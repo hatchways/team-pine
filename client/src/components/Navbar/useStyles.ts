@@ -9,7 +9,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   },
   transparentNavbar: {
     position: 'fixed',
-    zindex: 10000,
+    zIndex: 10000,
     boxShadow: 'none',
     background: 'none',
   },
