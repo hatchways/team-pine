@@ -8,8 +8,22 @@ export const useStyles = makeStyles((theme: Theme) => ({
     background: 'white',
   },
   transparentNavbar: {
+    position: 'fixed',
+    zIndex: 10000,
     boxShadow: 'none',
     background: 'none',
+  },
+  navbarItemLanding: {
+    fontWeight: 700,
+    textDecoration: 'none',
+    color: 'white !important',
+    transition: 'color 120ms ease-in-out',
+    '& .MuiButton-root': {
+      color: 'white',
+    },
+    '&:hover': {
+      color: theme.palette.primary.main,
+    },
   },
   navbarItem: {
     color: theme.palette.grey[900],
