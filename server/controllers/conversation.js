@@ -1,4 +1,5 @@
 const Conversation = require("../models/Conversation");
+const Message = require("../models/Message");
 const asyncHandler = require("express-async-handler");
 
 // @route POST /
@@ -13,15 +14,17 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
     throw new Error("Bad request! Missing description or receiver!");
   }
 
+  const message = await Message.create({
+    sender: req.user.id,
+    description,
+  });
+
   const existingConversation = await Conversation.findOne({
     participants: { $all: [`${req.user.id}`, `${receiver}`] },
   });
 
   if (existingConversation) {
-    existingConversation.messages.push({
-      sender: req.user.id,
-      description,
-    });
+    existingConversation.messages.push(message);
 
     await existingConversation.save();
 
@@ -32,13 +35,12 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
     });
   } else {
     const conversation = await Conversation.create({
-      messages: {
-        sender: req.user.id,
-        receiver,
-        description,
-      },
       participants: [req.user.id, receiver],
     });
+
+    conversation.messages.push(message);
+
+    await conversation.save();
 
     res.status(200).json({
       success: {
@@ -93,11 +95,12 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
     conversation.participants[0].toString() === req.user.id ||
     conversation.participants[1].toString() === req.user.id
   ) {
-    conversation.messages.push({
+    const message = await Message.create({
       sender: req.user.id,
-      receiver,
       description,
     });
+
+    conversation.messages.push(message);
 
     await conversation.save();
 
