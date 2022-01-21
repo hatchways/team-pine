@@ -91,7 +91,7 @@ export default function ProfileListing({}: Props): ReactElement {
 
                       <Typography
                         sx={{ fontWeight: 500, paddingTop: '5px', paddingBottom: '5px' }}
-                      >{`${profile.description}`}</Typography>
+                      >{`${profile.description.substring(0, 80)}`}</Typography>
                       <Divider />
                       <Grid container spacing={2}>
                         {' '}
