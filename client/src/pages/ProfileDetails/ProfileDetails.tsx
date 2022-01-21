@@ -1,7 +1,10 @@
 import { Grid, Box, Typography, Rating } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
+import AvatarDisplay from '../../components/AvatarDisplay/AvatarDisplay';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import RequestForm from './RequestForm/RequestForm';
+import useStyles from './useStyles';
+import { useAuth } from '../../context/useAuthContext';
 
 const boxShadow =
   '0px 0px 1.5px rgba(0, 0, 0, 0.006),0px 0px 3.6px rgba(0, 0, 0, 0.009),0px 0px 6.8px rgba(0, 0, 0, 0.011),0px 0px 12px rgba(0, 0, 0, 0.015),0px 0px 22.1px rgba(0, 0, 0, 0.027),0px 0px 48px rgba(0, 0, 0, 0.1)';
@@ -17,23 +20,33 @@ const mockProfile = {
 };
 
 export default function ProfileDetails(): JSX.Element {
-  // TODO: Responsiveness
+  const classes = useStyles();
 
   return (
     <PageContainer>
-      <Grid justifyContent="space-around" container alignItems="flex-start">
+      <Grid m={window.innerWidth < 600 ? 2 : 4} justifyContent="space-around" container alignItems="flex-start">
         <Grid
-          ml="2.5rem"
-          xs={10}
+          maxWidth="100%"
+          ml={window.innerWidth < 600 ? 0 : 5}
+          mb={window.innerWidth < 600 ? 3 : 0}
+          xs={12}
           md={6}
           item
-          borderRadius=".4rem"
-          boxShadow={boxShadow}
+          borderRadius={2}
+          boxShadow={window.innerWidth < 600 ? 0 : 4}
           container
           flexDirection="column"
         >
-          <Box m="2rem 0 1rem 0" textAlign="center">
-            <Typography fontWeight="bold" component="h1" fontSize="1.2rem">
+          <Box borderRadius={2} className={classes.coverImage}>
+            <AvatarDisplay
+              width={window.innerWidth < 600 ? 100 : 150}
+              height={window.innerWidth < 600 ? 100 : 150}
+              loggedIn
+              user={{ name: 'example', email: 'example@example.com' }}
+            />
+          </Box>
+          <Box m={window.innerWidth < 600 ? '1rem 0' : '5rem 0 1rem 0'} textAlign="center">
+            <Typography fontWeight="bold" component="h1" fontSize="1.4rem">
               {mockProfile.name}
             </Typography>
             <Typography fontWeight="bold" color="rgba(0,0,0,0.3)">
@@ -42,7 +55,7 @@ export default function ProfileDetails(): JSX.Element {
           </Box>
           <Typography
             margin="auto"
-            mb="2rem"
+            mb={4}
             display="flex"
             alignItems="center"
             color="rgba(0,0,0,0.3)"
@@ -51,17 +64,23 @@ export default function ProfileDetails(): JSX.Element {
           >
             <LocationOnIcon color="primary" /> &nbsp; {mockProfile.location}
           </Typography>
-          <Box m="2rem">
-            <Typography mb=".4rem" component="h2" fontSize="1rem" fontWeight="bold">
+          <Box m={window.innerWidth < 600 ? `${5} ${4}` : 5}>
+            <Typography mb={1} component="h2" fontSize="1rem" fontWeight="bold">
               About me
             </Typography>
             <Typography>{mockProfile.aboutMe}</Typography>
           </Box>
         </Grid>
-        {
-          // TODO: use theme for borderRadius/margin spacing
-        }
-        <Grid xs={10} md={4} item borderRadius=".4rem" boxShadow={boxShadow} container flexDirection="column">
+        {window.innerWidth < 600 ? <hr style={{ width: '100%' }} /> : null}
+        <Grid
+          xs={12}
+          md={4}
+          item
+          borderRadius={2}
+          boxShadow={window.innerWidth < 600 ? 'none' : 4}
+          container
+          flexDirection="column"
+        >
           <Typography fontSize="1.2rem" fontWeight="bold" m="3rem auto 1rem auto">
             ${mockProfile.payRate}/hr
           </Typography>

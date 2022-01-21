@@ -2,6 +2,7 @@ import DatePicker from '@mui/lab/DatePicker';
 import { SelectChangeEvent, Select, Box, InputLabel, InputBase, MenuItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { format, hoursToMilliseconds } from 'date-fns';
+import { useState } from 'react';
 
 const StyledInput = styled(InputBase)(({ theme }) => ({
   'label + &': {
@@ -34,6 +35,8 @@ export default function FormikDatePicker({
   error,
   ...rest
 }: Props): JSX.Element {
+  const [open, setOpen] = useState<boolean>(false);
+
   const handleChange = (event: SelectChangeEvent) => {
     const hourDifference = parseInt(event.target.value) - date.getHours();
     const newDate = new Date(Date.parse(date.toString()) + hoursToMilliseconds(hourDifference));
@@ -42,6 +45,10 @@ export default function FormikDatePicker({
 
   return (
     <DatePicker
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      minDate={new Date(Date.now())}
       value={date}
       onChange={(value) => setFieldValue(dateField, value)}
       renderInput={({ inputRef, InputProps }) => (
@@ -73,6 +80,7 @@ export default function FormikDatePicker({
               value={format(date, 'd MMM yyyy')}
               id={inputId}
               ref={inputRef}
+              onClick={() => setOpen(true)}
             />
             <Box
               sx={{
