@@ -64,9 +64,9 @@ export default function MessagesDashboard(): JSX.Element {
     }
   }, [chatbox]);
 
-  const handleSubmit = (receiver: string, description: string, conversationId: string) => {
+  const handleSubmit = (description: string, conversationId: string) => {
     setSubmitting(true);
-    sendMessage(receiver, description, conversationId).then((data) => {
+    sendMessage(description, conversationId).then((data) => {
       if (data.error) {
         setSubmitting(false);
         updateSnackBarMessage(data.error.message);
@@ -195,9 +195,7 @@ export default function MessagesDashboard(): JSX.Element {
                 </Grid>
                 <Grid xs={1}>
                   <Button
-                    onClick={() =>
-                      handleSubmit(conversations[chatbox].participants[0]._id, message, conversations[chatbox]._id)
-                    }
+                    onClick={() => handleSubmit(message, conversations[chatbox]._id)}
                     color="primary"
                     variant="contained"
                   >

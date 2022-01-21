@@ -7,7 +7,7 @@ const createConversation = async (receiver: string, description: string) => {
     body: JSON.stringify({ receiver, description }),
     credentials: 'include',
   };
-  return await fetch(`/conversations/create-conversation/`, fetchOptions)
+  return await fetch(`/conversations/`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },

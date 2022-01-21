@@ -84,7 +84,7 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
 exports.sendMessage = asyncHandler(async (req, res, next) => {
   const { conversationId, description } = req.body;
 
-  if (!description || !receiver || !conversationId) {
+  if (!description || !conversationId) {
     res.status(400);
     throw new Error("Bad request!");
   }
