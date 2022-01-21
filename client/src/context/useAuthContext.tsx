@@ -31,7 +31,6 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
 
   const updateLoginContext = useCallback(
     (data: AuthApiDataSuccess) => {
-      console.log(data);
       setLoggedInUser(data.user);
       setLoggedInUserProfile(data.profile);
       if (data.user && (history.location.pathname === '/login' || history.location.pathname === '/signup')) {
