@@ -16,11 +16,9 @@ export default function LandingPage(): JSX.Element {
         updateSnackBarMessage(data.error.message);
       } else if (data.success) {
         // we will handle submit here during integration of profile search
-        console.log('submitted');
       } else {
         // should not get here from backend but this catch is for an unknown issue
         console.error({ data });
-
         setSubmitting(false);
         updateSnackBarMessage('An unexpected error occurred. Please try again');
       }
