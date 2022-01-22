@@ -12,7 +12,7 @@ const logger = require("morgan");
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
 const profileRouter = require("./routes/profile");
-const notificationRouter = require("./routes/notifications");
+const notificationRouter = require("./routes/notification");
 
 const { json, urlencoded } = express;
 
