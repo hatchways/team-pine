@@ -1,4 +1,4 @@
-import { Grid, Box, Typography, Rating } from '@mui/material';
+import { Grid, Box, Typography, Rating, ImageList, ImageListItem } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import AvatarDisplay from '../../components/AvatarDisplay/AvatarDisplay';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -8,6 +8,11 @@ import { useState, useEffect } from 'react';
 import getProfile from '../../helpers/APICalls/getProfile';
 import Profile from '../../interface/Profile';
 import { useParams } from 'react-router-dom';
+
+const mockPhotos = [
+  'https://images.pexels.com/photos/3714060/pexels-photo-3714060.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+  'https://images.pexels.com/photos/6303371/pexels-photo-6303371.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+];
 
 export default function ProfileDetails(): JSX.Element {
   const classes = useStyles();
@@ -43,12 +48,15 @@ export default function ProfileDetails(): JSX.Element {
           flexDirection="column"
         >
           <Box borderRadius={2} className={classes.coverImage}>
-            <AvatarDisplay
-              width={window.innerWidth < 600 ? 100 : 150}
-              height={window.innerWidth < 600 ? 100 : 150}
-              loggedIn
-              user={{ name: 'example', email: 'example@example.com' }}
-            />
+            {profile ? (
+              <AvatarDisplay
+                width={window.innerWidth < 600 ? 100 : 150}
+                height={window.innerWidth < 600 ? 100 : 150}
+                loggedIn
+                user={{ name: profile.name, email: 'example@example.com' }}
+                photoUrl={profile ? profile.photo : ''}
+              />
+            ) : null}
           </Box>
           <Box m={window.innerWidth < 600 ? '1rem 0' : '5rem 0 1rem 0'} textAlign="center">
             <Typography fontWeight="bold" component="h1" fontSize="1.4rem">
@@ -68,14 +76,23 @@ export default function ProfileDetails(): JSX.Element {
             fontWeight="bold"
             sx={{ textTransform: 'capitalize' }}
           >
-            <LocationOnIcon color="primary" /> &nbsp; {profile ? profile.location : null}
+            {profile ? (
+              <>
+                <LocationOnIcon color="primary" /> &nbsp; {profile.location}
+              </>
+            ) : null}
           </Typography>
-          <Box m={window.innerWidth < 600 ? `${5} ${4}` : 5}>
-            <Typography mb={1} component="h2" fontSize="1rem" fontWeight="bold">
-              About me
-            </Typography>
-            <Typography>{profile ? profile.aboutMe : null}</Typography>
-          </Box>
+          {profile ? (
+            <Box m={window.innerWidth < 600 ? `${5} ${4}` : 5}>
+              <Typography mb={1} component="h2" fontSize="1rem" fontWeight="bold">
+                About me
+              </Typography>
+              <Typography mb={4}>{profile.aboutMe}</Typography>
+              {mockPhotos.map((item, i) => (
+                <img key={item} className={classes.listImage} src={item} alt="Pet image" />
+              ))}
+            </Box>
+          ) : null}
         </Grid>
         {window.innerWidth < 600 ? <hr style={{ width: '100%' }} /> : null}
         {profile ? (

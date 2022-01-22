@@ -4,4 +4,5 @@ export default interface Profile {
   aboutMe: string;
   payRate: string;
   location: string;
+  photo: string;
 }
