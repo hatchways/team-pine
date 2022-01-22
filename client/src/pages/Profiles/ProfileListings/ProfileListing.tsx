@@ -44,7 +44,6 @@ export default function ProfileListing({}: Props): ReactElement {
   const { updateSnackBarMessage } = useSnackBar();
 
   const { availability, location } = useParams<{ availability?: string; location?: string }>();
-  console.log(availability, location);
 
   useEffect(() => {
     if (availability && location) {

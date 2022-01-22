@@ -43,7 +43,6 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
 // @access Public
 exports.getProfileListings = asyncHandler(async (req, res, next) => {
   const { availability, location } = req.query;
-  console.log(req.query);
 
   const profiles = await Profile.find(
     { location: { $regex: `.*${location.toLowerCase()}.*` } },
