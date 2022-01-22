@@ -31,8 +31,8 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
     res.status(404);
     throw new Error("Request doesn't exist");
   }
-  const user = await User.findById(req.user.id).populate('profileId')
-  if (user.profileId.isSitter) {
+  const profile = await Profile.findOne({'userId': req.user.id})
+  if (profile.isSitter) {
     const { status } = req.body
     request.set('status', status)
     const updatedRequest = await request.save();
@@ -51,8 +51,7 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
 // @desc get requests of logged in user
 // @access Private
 exports.getUserRequests = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user.id).populate('profileId')
-  const profile = user.profileId
+  const profile = await Profile.findOne({'userId': req.user.id})
   if (profile.isSitter) {
     const requests = await Request.where('sitter', profile._id);
     const requestProfiles = []
