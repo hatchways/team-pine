@@ -1,5 +1,3 @@
-
-   
 const Profile = require("../models/Profile");
 const asyncHandler = require("express-async-handler");
 
@@ -40,19 +38,21 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @route GET /:availability/:location/list-profiles
+// @route GET /list-profiles/
 // @desc Show profiles on list page according to availability and location
 // @access Public
 exports.getProfileListings = asyncHandler(async (req, res, next) => {
+  const { availability, location } = req.query;
+  console.log(req.query);
 
-  const {availability, location} = req.params
-
-  const profiles = await Profile.find({'location': {'$regex': `.*${location.toLowerCase()}.*`}}, {isSitter: true}).select('name description location photo payRate')
+  const profiles = await Profile.find(
+    { location: { $regex: `.*${location.toLowerCase()}.*` } },
+    { isSitter: true }
+  ).select("name description location photo payRate");
 
   res.status(200).json({
     success: {
-      profiles
+      profiles,
     },
   });
 });
-

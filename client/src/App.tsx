@@ -31,7 +31,7 @@ function App(): JSX.Element {
                 <Route exact path="/signup" component={Signup} />
                 <Route exact path="/dashboard" component={Dashboard} />
                 <Route path="/profile/settings" component={Settings} />
-                <Route path="/:availability/:location/list-profiles" component={ProfileListing} />
+                <Route path="/profile/list-profiles/:availability/:location/" component={ProfileListing} />
                 <Route path="*">
                   <NotFound />
                 </Route>

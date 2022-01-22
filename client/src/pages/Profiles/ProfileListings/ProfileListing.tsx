@@ -17,6 +17,7 @@ import PageContainer from '../../../components/PageContainer/PageContainer';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { PinDrop } from '@mui/icons-material';
 import listProfiles from '../../../helpers/APICalls/listProfiles';
+import { useSnackBar } from '../../../context/useSnackbarContext';
 
 interface Props {
   location: string;
@@ -40,19 +41,27 @@ type Profiles = Profile[];
 export default function ProfileListing({}: Props): ReactElement {
   const [profiles, setProfiles] = useState<Profiles>([]);
   const classes = useStyles();
+  const { updateSnackBarMessage } = useSnackBar();
 
   const { availability, location } = useParams<{ availability?: string; location?: string }>();
+  console.log(availability, location);
 
   useEffect(() => {
     if (availability && location) {
-      listProfiles(availability, location).then((res) => {
-        const profiles = res.success.profiles;
-        setProfiles(profiles);
+      listProfiles(availability, location).then((data) => {
+        if (data.error) {
+          updateSnackBarMessage(data.error.message);
+        } else if (data.success) {
+          const profiles = data.success.profiles;
+          setProfiles(profiles);
+        } else {
+          // should not get here from backend but this catch is for an unknown issue
+          console.error({ data });
+          updateSnackBarMessage('An unexpected error occurred. Please try again');
+        }
       });
-    } else {
-      console.log('no profiles');
     }
-  }, [availability, location]);
+  }, [availability, location, updateSnackBarMessage]);
 
   return (
     <PageContainer>
