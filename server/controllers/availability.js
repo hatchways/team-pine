@@ -4,7 +4,7 @@ const Schedule = require("../models/Schedule");
 
 exports.createSchedule = asyncHandler(async (req, res, next) => {
   if (req.profile === undefined) {
-    res.status(500);
+    res.status(404);
     throw new Error("Unable to get profile of user");
   }
   const profileId = req.profile.id;
