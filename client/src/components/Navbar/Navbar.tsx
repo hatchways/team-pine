@@ -15,8 +15,7 @@ import {
   Toolbar,
 } from '@mui/material';
 import { AccountType } from '../../types/AccountType';
-import { Notification } from './Notification';
-
+import { NotificationMenu } from './NotificationMenu';
 import lovingSitterLogo from '../../images/logo.svg';
 import { useStyles } from './useStyles';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -87,7 +86,10 @@ const MenuItem: React.FC<{
 
   return (
     <Grid key={resource} sx={{ textAlign: 'center' }} xs={2} justifySelf="flex-end" item>
-      <NavLink className={classes.navbarItem} to={resource}>
+      <NavLink
+        className={clsx(classes.navbarItem, location.pathname === '/' && classes.navbarItemLanding)}
+        to={resource}
+      >
         {item}
       </NavLink>
     </Grid>
@@ -134,12 +136,12 @@ const Navbar: React.FC = () => {
     >
       <Grid xs={4} md={6} item>
         <NavLink className={classes.navbarItem} to={'/'}>
-          <img className={classes.navbarLogo} src={lovingSitterLogo} />
+          <img alt={'Loving Sitter navbar logo'} className={classes.navbarLogo} src={lovingSitterLogo} />
         </NavLink>
       </Grid>
       <Grid xs={8} md={6} item>
         <Grid container alignItems="center" gap={2} justifyContent="flex-end">
-          {loggedInUser && <Notification />}
+          {loggedInUser && <NotificationMenu />}
           {renderMenuItems()}
           {loggedInUser && (
             <Grid xs={2} item>
@@ -151,7 +153,7 @@ const Navbar: React.FC = () => {
                 onClick={handleMenuOpen}
                 color="inherit"
               >
-                <img style={{ width: 50 }} src={`https://robohash.org/${loggedInUser.email}`} />
+                <img alt={'profile picture'} style={{ width: 50 }} src={`https://robohash.org/${loggedInUser.email}`} />
               </IconButton>
 
               <Menu

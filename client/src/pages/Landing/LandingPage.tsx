@@ -1,10 +1,9 @@
 import { FormikHelpers } from 'formik';
 import getProfiles from '../../helpers/APICalls/getProfiles';
 import { useSnackBar } from '../../context/useSnackbarContext';
-import PageContainer from '../../components/PageContainer/PageContainer';
 import Landing from './LandingForm';
 
-export default function Login(): JSX.Element {
+export default function LandingPage(): JSX.Element {
   const { updateSnackBarMessage } = useSnackBar();
 
   const handleSubmit = (
@@ -16,20 +15,15 @@ export default function Login(): JSX.Element {
         setSubmitting(false);
         updateSnackBarMessage(data.error.message);
       } else if (data.success) {
-        // updateLoginContext(data.success);
+        // we will handle submit here during integration of profile search
       } else {
         // should not get here from backend but this catch is for an unknown issue
         console.error({ data });
-
         setSubmitting(false);
         updateSnackBarMessage('An unexpected error occurred. Please try again');
       }
     });
   };
 
-  return (
-    <PageContainer>
-      <Landing handleSubmit={handleSubmit} />
-    </PageContainer>
-  );
+  return <Landing handleSubmit={handleSubmit} />;
 }
