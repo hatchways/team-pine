@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const protect = require("../middleware/auth");
 const { validateScheduleSchema } = require("../validate");
-const fetchProfile = require("../middleware/fetchProfile");
 const {
   getActiveSchedule,
   getAvailability,
@@ -11,18 +10,14 @@ const {
   createSchedule,
 } = require("../controllers/availability");
 
-router.route("/").get(protect, fetchProfile, getAvailability);
+router.route("/").get(protect, getAvailability);
 
-router
-  .route("/")
-  .post(protect, fetchProfile, validateScheduleSchema, createSchedule);
+router.route("/").post(protect, validateScheduleSchema, createSchedule);
 
-router.route("/active").get(protect, fetchProfile, getActiveSchedule);
+router.route("/active").get(protect, getActiveSchedule);
 
-router.route("/:scheduleId").get(protect, fetchProfile, getSchedule);
+router.route("/:scheduleId").get(protect, getSchedule);
 
-router
-  .route("/:scheduleId/activate")
-  .patch(protect, fetchProfile, setActiveSchedule);
+router.route("/:scheduleId/activate").patch(protect, setActiveSchedule);
 
 module.exports = router;
