@@ -17,8 +17,8 @@ export default function Message({ message }: Props): ReactElement {
   const classes = useStyles(sender);
 
   return (
-    <Grid sx={{ flexDirection: 'row' }} flexDirection={'row'} container>
-      <List sx={{ display: 'flex', flexDirection: 'row' }}>
+    <Grid container>
+      <List>
         <Grid className={classes.root} item xs={12}>
           <ListItem>
             <ListItemAvatar>

@@ -15,7 +15,6 @@ import {
   Modal,
 } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
-import { makeStyles } from '@mui/styles';
 import { useAuth } from '../../context/useAuthContext';
 import ConversationInterface from '../../interface/Conversation';
 import getConversations from '../../helpers/APICalls/Messages/getConversations';
@@ -26,32 +25,13 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Message from './Message/Message';
 import SendIcon from '@mui/icons-material/Send';
 import CreateConversation from './CreateConversation';
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-    minHeight: 900,
-  },
-  inboxSection: {
-    width: '100%',
-    height: '90vh',
-  },
-  messageSection: {
-    height: '65vh',
-    overflowY: 'auto',
-  },
-  borderRight500: {
-    borderRight: '1px solid #e0e0e0',
-  },
-  headBG: {
-    backgroundColor: '#e0e0e0',
-  },
-});
+import useStyles from './useStyles';
 
 type Conversations = ConversationInterface[];
 
 export default function MessagesDashboard(): JSX.Element {
   const classes = useStyles();
+
   const [conversations, setConversations] = useState<Conversations>([]);
   const [isSubmitting, setSubmitting] = useState(false);
   const { updateSnackBarMessage } = useSnackBar();
@@ -252,17 +232,11 @@ export default function MessagesDashboard(): JSX.Element {
         >
           <Box
             sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 400,
-              height: 400,
               bgcolor: 'background.paper',
-              border: '2px solid #000',
-              boxShadow: 24,
+              boxShadow: '24',
               p: 4,
             }}
+            className={classes.modal}
           >
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Start a new conversation
