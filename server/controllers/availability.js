@@ -17,43 +17,37 @@ exports.createSchedule = asyncHandler(async (req, res, next) => {
     res.status(400);
     throw new Error("schedule's days object is required");
   }
-  try {
-    const newSchedule = new Schedule({
-      name,
-      profileId,
-      days,
-    });
-    const savedSchedule = await newSchedule.save();
-    if (!savedSchedule) {
-      res.status(500);
-      throw new Error("Unexpected Error: Unable to save new schedule");
-    }
-    res.status(201);
-    res.send(savedSchedule);
-  } catch (err) {
+  const newSchedule = new Schedule({
+    name,
+    profileId,
+    days,
+  });
+  const savedSchedule = await newSchedule.save();
+  if (!savedSchedule) {
     res.status(500);
-    res.send(err);
+    throw new Error("Unexpected Error: Unable to save new schedule");
   }
+  if (req.profile.activeSchedule === undefined) {
+    req.profile.set({ activeSchedule: savedSchedule.id });
+    await req.profile.save();
+  }
+  res.status(201);
+  res.send(savedSchedule);
 });
 // @route GET /availability/:scheduleId
 // @desc Get Schedule by Id
 // @access Private
 exports.getSchedule = asyncHandler(async (req, res, next) => {
   const scheduleId = req.params.scheduleId;
-  try {
-    const schedule = await Schedule.findOne({ _id: scheduleId })
-      .where("profileId")
-      .equals(req.profile.id);
-    if (schedule) {
-      res.status(200);
-      res.send(schedule);
-    } else {
-      res.status(404);
-      res.send("schedule is not found!!");
-    }
-  } catch (err) {
-    res.status(500);
-    res.send(err);
+  const schedule = await Schedule.findOne({ _id: scheduleId })
+    .where("profileId")
+    .equals(req.profile.id);
+  if (schedule) {
+    res.status(200);
+    res.send(schedule);
+  } else {
+    res.status(404);
+    res.send("schedule Nnot Found!!");
   }
 });
 // @route GET /availability
@@ -61,14 +55,12 @@ exports.getSchedule = asyncHandler(async (req, res, next) => {
 // @access Private
 exports.getAvailability = asyncHandler(async (req, res, next) => {
   const profile = req.profile;
-  try {
-    const schedules = await Schedule.find({ profileId: profile.id });
-    res.status(200);
-    res.send(schedules);
-  } catch (err) {
-    res.status(500);
-    res.send(err);
+  const schedules = await Schedule.find({ profileId: profile.id });
+  if (!schedules) {
+    schedules = [];
   }
+  res.status(200);
+  res.send(schedules);
 });
 
 // @route GET /availability/active
@@ -76,14 +68,13 @@ exports.getAvailability = asyncHandler(async (req, res, next) => {
 // @access Private
 exports.getActiveSchedule = asyncHandler(async (req, res, next) => {
   const profile = req.profile;
-  try {
-    const schedule = await Schedule.findOne({ _id: profile.activeSchedule });
-    res.status(200);
-    res.send(schedule);
-  } catch (err) {
-    res.status(500);
-    res.send(err);
+  const schedule = await Schedule.findOne({ _id: profile.activeSchedule });
+  if (!schedule) {
+    res.status(404);
+    throw new Error("Schedule Not Found!!");
   }
+  res.status(200);
+  res.send(schedule);
 });
 
 // @route PATCH /availability/:scheduleId/activate
@@ -91,19 +82,14 @@ exports.getActiveSchedule = asyncHandler(async (req, res, next) => {
 // @access Private
 exports.setActiveSchedule = asyncHandler(async (req, res, next) => {
   const scheduleId = req.params.scheduleId;
-  try {
-    const schedule = await Schedule.findOne({ _id: scheduleId });
-    const profile = await Profile.findOne({ _id: req.profile.id });
-    profile.set({ activeSchedule: schedule.id });
-    const updatedProfile = await profile.save();
-    res.status(200);
-    res.send({
-      success: {
-        profile: updatedProfile,
-      },
-    });
-  } catch (err) {
-    res.status(500);
-    res.send(err);
-  }
+  const schedule = await Schedule.findOne({ _id: scheduleId });
+  const profile = await Profile.findOne({ _id: req.profile.id });
+  profile.set({ activeSchedule: schedule.id });
+  const updatedProfile = await profile.save();
+  res.status(200);
+  res.send({
+    success: {
+      profile: updatedProfile,
+    },
+  });
 });
