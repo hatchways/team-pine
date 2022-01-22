@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const Profile = require("../models/Profile");
 
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
@@ -11,6 +12,13 @@ const protect = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     req.user = decoded;
+
+    const profile = await Profile.findOne({ userId: req.user.id });
+    if (!profile) {
+      return res.status(401).send("Profile is not exists!!");
+    }
+
+    req.profile = profile;
 
     next();
   } catch (err) {
