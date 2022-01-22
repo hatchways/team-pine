@@ -4,10 +4,7 @@ import AvatarDisplay from '../../components/AvatarDisplay/AvatarDisplay';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import RequestForm from './RequestForm/RequestForm';
 import useStyles from './useStyles';
-import { useAuth } from '../../context/useAuthContext';
-
-const boxShadow =
-  '0px 0px 1.5px rgba(0, 0, 0, 0.006),0px 0px 3.6px rgba(0, 0, 0, 0.009),0px 0px 6.8px rgba(0, 0, 0, 0.011),0px 0px 12px rgba(0, 0, 0, 0.015),0px 0px 22.1px rgba(0, 0, 0, 0.027),0px 0px 48px rgba(0, 0, 0, 0.1)';
+import { useState, useEffect } from 'react';
 
 const mockProfile = {
   name: 'Norma Byers',
@@ -21,6 +18,14 @@ const mockProfile = {
 
 export default function ProfileDetails(): JSX.Element {
   const classes = useStyles();
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    if (!isMounted) {
+      setIsMounted(true);
+    }
+  }, [isMounted]);
 
   return (
     <PageContainer>
