@@ -38,6 +38,16 @@ const profileSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  payRate: {
+    type: String,
+    default: "",
+  },
+  location: {
+    type: String,
+    default: "",
+    lowercase: true,
+    trim: true
+  }
 });
 
 module.exports = Profile = mongoose.model("Profile", profileSchema);

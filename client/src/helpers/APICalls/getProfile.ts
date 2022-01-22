@@ -5,7 +5,7 @@ const getProfile = async (profileId: string) => {
     method: 'GET',
     credentials: 'include',
   };
-  return await fetch(`/profiles/load/${profileId}`, fetchOptions)
+  return await fetch(`/profile/load/${profileId}`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: {

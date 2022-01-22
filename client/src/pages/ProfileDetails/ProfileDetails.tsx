@@ -5,27 +5,27 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import RequestForm from './RequestForm/RequestForm';
 import useStyles from './useStyles';
 import { useState, useEffect } from 'react';
-
-const mockProfile = {
-  name: 'Norma Byers',
-  description: 'Loving pet sitter',
-  location: 'Toronto, Ontario',
-  aboutMe:
-    'Animals are my passion! I will look after your pets with loving care. I have some availability for pet care in my home as well. I have 10 yrs experience at the Animal Hospital, and have owned multiple pets for many years, including numerous rescues. Kindly email, text or call me and I will respond promptly!',
-  payRate: 14,
-  rating: 4,
-};
+import getProfile from '../../helpers/APICalls/getProfile';
+import Profile from '../../interface/Profile';
+import { useParams } from 'react-router-dom';
 
 export default function ProfileDetails(): JSX.Element {
   const classes = useStyles();
   const [isMounted, setIsMounted] = useState<boolean>(false);
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<Profile | undefined>();
+
+  const { profileId } = useParams<{ profileId: string }>();
 
   useEffect(() => {
     if (!isMounted) {
       setIsMounted(true);
+      getProfile(profileId).then((res) => {
+        if (!res.error) {
+          setProfile(res.success.profile);
+        }
+      });
     }
-  }, [isMounted]);
+  }, [isMounted, profileId]);
 
   return (
     <PageContainer>
@@ -52,10 +52,10 @@ export default function ProfileDetails(): JSX.Element {
           </Box>
           <Box m={window.innerWidth < 600 ? '1rem 0' : '5rem 0 1rem 0'} textAlign="center">
             <Typography fontWeight="bold" component="h1" fontSize="1.4rem">
-              {mockProfile.name}
+              {profile ? profile.name : 'No profile found'}
             </Typography>
             <Typography fontWeight="bold" color="rgba(0,0,0,0.3)">
-              {mockProfile.description}
+              {profile ? profile.description : null}
             </Typography>
           </Box>
           <Typography
@@ -66,32 +66,35 @@ export default function ProfileDetails(): JSX.Element {
             color="rgba(0,0,0,0.3)"
             fontSize=".8rem"
             fontWeight="bold"
+            sx={{ textTransform: 'capitalize' }}
           >
-            <LocationOnIcon color="primary" /> &nbsp; {mockProfile.location}
+            <LocationOnIcon color="primary" /> &nbsp; {profile ? profile.location : null}
           </Typography>
           <Box m={window.innerWidth < 600 ? `${5} ${4}` : 5}>
             <Typography mb={1} component="h2" fontSize="1rem" fontWeight="bold">
               About me
             </Typography>
-            <Typography>{mockProfile.aboutMe}</Typography>
+            <Typography>{profile ? profile.aboutMe : null}</Typography>
           </Box>
         </Grid>
         {window.innerWidth < 600 ? <hr style={{ width: '100%' }} /> : null}
-        <Grid
-          xs={12}
-          md={4}
-          item
-          borderRadius={2}
-          boxShadow={window.innerWidth < 600 ? 'none' : 4}
-          container
-          flexDirection="column"
-        >
-          <Typography fontSize="1.2rem" fontWeight="bold" m="3rem auto 1rem auto">
-            ${mockProfile.payRate}/hr
-          </Typography>
-          <Rating sx={{ margin: 'auto' }} value={mockProfile.rating} precision={0.5} />
-          <RequestForm />
-        </Grid>
+        {profile ? (
+          <Grid
+            xs={12}
+            md={4}
+            item
+            borderRadius={2}
+            boxShadow={window.innerWidth < 600 ? 'none' : 4}
+            container
+            flexDirection="column"
+          >
+            <Typography fontSize="1.2rem" fontWeight="bold" m="3rem auto 1rem auto">
+              ${profile.payRate}/hr
+            </Typography>
+            <Rating sx={{ margin: 'auto' }} value={4} precision={0.5} />
+            <RequestForm />
+          </Grid>
+        ) : null}
       </Grid>
     </PageContainer>
   );

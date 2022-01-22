@@ -44,8 +44,7 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
 // @route Get user profile data based on id
 // @access Public
 exports.loadProfileById = asyncHandler(async (req, res, next) => {
-  const profile = await Profile.findById(params.profileId)
-
+  const profile = await Profile.findById(req.params.profileId)
   if (!profile || !profile.isSitter) {
     res.status(403);
     throw new Error ("Invalid profile")
