@@ -1,4 +1,4 @@
-import { Grid, Box, Typography, Rating, ImageList, ImageListItem } from '@mui/material';
+import { Grid, Box, Typography, Rating } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import AvatarDisplay from '../../components/AvatarDisplay/AvatarDisplay';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -88,7 +88,7 @@ export default function ProfileDetails(): JSX.Element {
                 About me
               </Typography>
               <Typography mb={4}>{profile.aboutMe}</Typography>
-              {mockPhotos.map((item, i) => (
+              {mockPhotos.map((item) => (
                 <img key={item} className={classes.listImage} src={item} alt="Pet image" />
               ))}
             </Box>
