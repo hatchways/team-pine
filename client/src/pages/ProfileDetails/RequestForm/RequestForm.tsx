@@ -5,12 +5,30 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { Typography, Button, CircularProgress } from '@mui/material';
 import FormikDatePicker from '../../../components/FormikDatePicker/FormikDatePicker';
 import useStyles from './useStyles';
+import createRequest from '../../../helpers/APICalls/createRequest';
+import { useSnackBar } from '../../../context/useSnackbarContext';
 
-export default function RequestForm(): JSX.Element {
+export default function RequestForm({ profileId }: { profileId: string }): JSX.Element {
+  const { updateSnackBarMessage } = useSnackBar();
+
   const handleSubmit = (
     { startDate, endDate }: { startDate: Date; endDate: Date },
     { setSubmitting }: FormikHelpers<{ startDate: Date; endDate: Date }>,
   ) => {
+    createRequest(profileId, startDate, endDate).then((data) => {
+      if (data.error) {
+        console.error({ error: data.error.message });
+        updateSnackBarMessage(data.error);
+      } else if (data.success) {
+        updateSnackBarMessage('Request successfully created!');
+      } else {
+        // should not get here from backend but this catch is for an unknown issue
+        console.error({ data });
+
+        setSubmitting(false);
+        updateSnackBarMessage('An unexpected error occurred. Please try again');
+      }
+    });
     setSubmitting(false);
   };
 

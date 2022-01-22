@@ -109,7 +109,7 @@ export default function ProfileDetails(): JSX.Element {
               ${profile.payRate}/hr
             </Typography>
             <Rating sx={{ margin: 'auto' }} value={4} precision={0.5} />
-            <RequestForm />
+            <RequestForm profileId={profileId} />
           </Grid>
         ) : null}
       </Grid>
