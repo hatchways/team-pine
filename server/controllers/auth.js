@@ -30,10 +30,13 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
   });
 
   if (user) {
-    await Profile.create({
+    const profile = await Profile.create({
       userId: user._id,
       name
     });
+
+    user.set("profileId", profile._id)
+    await user.save()
 
     const token = generateToken(user._id);
     const secondsInWeek = 604800;
