@@ -16,6 +16,7 @@ const profileRouter = require("./routes/profile");
 const uploadRouter = require("./routes/upload");
 const deleteRouter = require("./routes/delete");
 const availabilityRouter = require("./routes/availability");
+const paymentsRoute = require("./routes/payment");
 
 const { json, urlencoded } = express;
 
@@ -56,6 +57,7 @@ app.use("/profile", profileRouter);
 app.use("/upload", uploadRouter);
 app.use("/delete", deleteRouter);
 app.use("/availability", availabilityRouter);
+app.use("/payments", paymentsRoute);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));
