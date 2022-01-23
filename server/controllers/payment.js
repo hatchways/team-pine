@@ -78,3 +78,56 @@ exports.getListOfPaymentSources = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @route POST /payments/charge-default-card
+// @desc collect payment from customer's saved card
+// @access Private
+exports.chargeSavedPaymentMethod = asyncHandler(async (req, res, next) => {
+  const { requestId } = req.body;
+  if (!requestId) {
+    res.status(400);
+    throw new Error("Please provide a request id to process payment");
+  }
+  const request = await Request.findById(requestId);
+  if (!request) {
+    res.status(404);
+    throw new Error("Request Not Found!!");
+  }
+  const { requester, startDate, endDate } = request;
+  const profile = await Profile.findById(requester);
+  const customer = await createOrRetrieveStripeCustomer(profile.userId);
+  if (!customer) {
+    res.status(404);
+    throw new Error("Unable to create a payment account!!");
+  }
+  const paymentMethods = await stripe.customers.listPaymentMethods(
+    customer.id,
+    { type: "card" }
+  );
+  if (!paymentMethods) {
+    res.status(404);
+    throw new Error("Unable to fetch saved payment methods!!");
+  }
+  if (!paymentMethods.data === []) {
+    res.status(404);
+    throw new Error("Payment method needs to be setup");
+  }
+  const amountNeedsToBeCharged = calculateTotalHours(startDate, endDate);
+  if (amountNeedsToBeCharged < 1) {
+    res.status(400);
+    throw new Error("Hours of diffrence should be more than zero");
+  }
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: amountNeedsToBeCharged * 100,
+    currency: "cad",
+    customer: customer.id,
+    payment_method: paymentMethods.id,
+    off_session: true,
+    confirm: true,
+  });
+  if (!paymentIntent) {
+    res.status(404);
+    throw new Error("Unable to charge the saved payment method!!");
+  }
+  res.status(200);
+  res.send(paymentIntent);
+});
