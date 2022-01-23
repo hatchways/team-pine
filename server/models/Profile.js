@@ -34,15 +34,19 @@ const profileSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-    payRate: {
+  payRate: {
     type: String,
     default: "",
   },
-    location: {
+  activeSchedule: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Schedule",
+  },
+  location: {
     type: String,
     default: "",
     lowercase: true,
-    trim: true
+    trim: true,
   },
 });
 
