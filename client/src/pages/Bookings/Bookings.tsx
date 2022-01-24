@@ -4,60 +4,52 @@ import useStyles from './useStyles';
 import Calendar from '../../components/Calendar/Calendar';
 import BookingCard from '../../components/BookingCard/BookingCard';
 import 'react-calendar/dist/Calendar.css';
-import { Booking } from '../../interface/Booking';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { Request } from '../../interface/Request';
+import getRequests from '../../helpers/APICalls/getRequests';
+import { useState, useEffect } from 'react';
 
 const boxShadow =
   '0px 0px 1.9px rgba(0, 0, 0, 0.007),0px 0px 4.9px rgba(0, 0, 0, 0.014),0px 0px 9.9px rgba(0, 0, 0, 0.021),0px 0px 20.4px rgba(0, 0, 0, 0.031),0px 0px 56px rgba(0, 0, 0, 0.05)';
 
 export default function Bookings(): JSX.Element {
   const classes = useStyles();
-  // We expect to receive Date objects from the database for all times and dates, and we will build functions to handle conversion in the BookingCard component.
 
-  // This mock will be replaced with database information once implemented
-  const mockBookings: Booking[] = [
-    {
-      user: {
-        name: 'Norma Byers',
-        email: 'example@example.com',
-      },
-      startTime: new Date(Date.parse('2022-01-25T12:00:00.000Z')),
-      endTime: new Date(Date.parse('2022-01-25T14:00:00.000Z')),
-      status: 'accepted',
-    },
-    {
-      user: {
-        name: 'Charles Compton',
-        email: 'example@example.com',
-      },
-      startTime: new Date(Date.parse('2022-01-28T15:00:00.000Z')),
-      endTime: new Date(Date.parse('2022-01-28T18:00:00.000Z')),
-      status: 'accepted',
-    },
-    {
-      user: {
-        name: 'Joan Blakeney',
-        email: 'example@example.com',
-      },
-      startTime: new Date(Date.parse('2022-02-11T08:00:00.000Z')),
-      endTime: new Date(Date.parse('2022-02-11T10:00:00.000Z')),
-      status: 'declined',
-    },
-    {
-      user: {
-        name: 'Michael Carnahan',
-        email: 'example@example.com',
-      },
-      startTime: new Date(Date.parse('2022-01-12T14:00:00.000Z')),
-      endTime: new Date(Date.parse('2022-01-12T16:00:00.000Z')),
-      status: 'accepted',
-    },
-  ];
+  const [mounted, setMounted] = useState(false);
+  const [pastBookings, setPastBookings] = useState<Request[] | undefined>();
+  const [nextBooking, setNextBooking] = useState<Request | undefined>();
+  const [sortedBookings, setSortedBookings] = useState<Request[] | undefined>();
 
-  // return a filtered array AND remove filtered values from the original
-  function getPastBookings(bookingsArray: Booking[]) {
+  useEffect(() => {
+    if (!mounted) {
+      setMounted(true);
+      getRequests().then((res) => {
+        if (!res.error) {
+          const userBookings: Request[] = [];
+          for (let i = 0; i < res.requests.length; i++) {
+            userBookings.push({
+              startDate: new Date(res.requests[i].startDate),
+              endDate: new Date(res.requests[i].endDate),
+              id: res.requests[i]._id,
+              status: res.requests[i].status,
+              user: {
+                name: res.requests[i].requester.name,
+                email: res.requests[i].requester.email,
+              },
+            });
+          }
+          if (userBookings.length > 0 && userBookings != undefined) {
+            setPastBookings(getPastBookings(userBookings));
+            setNextBooking(userBookings.shift());
+            setSortedBookings(sortBookingDates(userBookings));
+          }
+        }
+      });
+    }
+  }, [mounted, nextBooking, pastBookings, sortedBookings]);
+
+  function getPastBookings(bookingsArray: Request[]) {
     bookingsArray = bookingsArray.filter((value, index, arr) => {
-      if (value.startTime < new Date(Date.now())) {
+      if (value.startDate < new Date(Date.now())) {
         arr.splice(index, 1);
         return true;
       }
@@ -65,21 +57,15 @@ export default function Bookings(): JSX.Element {
     return bookingsArray;
   }
 
-  function sortBookingDates(bookingsArray: Booking[]) {
+  function sortBookingDates(bookingsArray: Request[]) {
     return bookingsArray.sort((booking1, booking2) => {
-      if (booking1.startTime < booking2.startTime) {
+      if (booking1.startDate < booking2.startDate) {
         return -1;
       } else {
         return 0;
       }
     });
   }
-
-  const pastBookings = getPastBookings(mockBookings);
-
-  const nextBooking = mockBookings.shift();
-
-  const sortedBookings = sortBookingDates(mockBookings);
 
   return (
     <PageContainer>
@@ -88,11 +74,7 @@ export default function Bookings(): JSX.Element {
           <Calendar firstBooking={nextBooking} upcomingBookings={sortedBookings} />
         </Grid>
         <Grid xs={10} md={3} direction="column" item container className={classes.bookings}>
-          <Box sx={{ padding: '24px', marginBottom: '16px', boxShadow: boxShadow }}>
-            <Box className={classes.bookingSectionLabel}>
-              <Typography sx={{ fontSize: '.7rem', fontWeight: 'bold' }}>Your next booking:</Typography>
-              <SettingsIcon color="disabled" />
-            </Box>
+          <Box sx={{ padding: '18px 24px 24px 24px', marginBottom: '16px', boxShadow: boxShadow }}>
             <Card sx={{ boxShadow: 'none' }}>
               <CardContent sx={{ padding: '.1rem 0' }}>
                 {nextBooking ? (
@@ -105,9 +87,9 @@ export default function Bookings(): JSX.Element {
               </CardContent>
             </Card>
           </Box>
-          {pastBookings.length > 0 || sortedBookings.length > 0 ? (
+          {(pastBookings && pastBookings.length > 0) || (sortedBookings && sortedBookings.length > 0) ? (
             <Box sx={{ padding: '24px', boxShadow: boxShadow }}>
-              {sortedBookings.length > 0 ? (
+              {sortedBookings && sortedBookings.length > 0 ? (
                 <>
                   <Typography sx={{ fontSize: '.7rem', fontWeight: 'bold' }}>Current bookings:</Typography>
                   {sortedBookings.map((booking, i) => {
@@ -124,7 +106,7 @@ export default function Bookings(): JSX.Element {
                 ''
               )}
               <br />
-              {pastBookings.length > 0 ? (
+              {pastBookings && pastBookings.length > 0 ? (
                 <>
                   {' '}
                   <Typography sx={{ fontSize: '.7rem', fontWeight: 'bold' }}>Past bookings:</Typography>
@@ -132,7 +114,7 @@ export default function Bookings(): JSX.Element {
                     return (
                       <Card className={classes.bookingCard} key={i} variant="outlined">
                         <CardContent className={classes.bookingCardContent}>
-                          <BookingCard booking={booking} />
+                          <BookingCard isPastBooking booking={booking} />
                         </CardContent>
                       </Card>
                     );

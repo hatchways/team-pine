@@ -11,10 +11,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '.7rem',
     },
   },
-  bookingSectionLabel: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
   bookingCard: {
     margin: '' + theme.spacing(1) + ' 0',
   },

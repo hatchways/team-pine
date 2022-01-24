@@ -30,7 +30,7 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
   });
 
   if (user) {
-    await Profile.create({
+    const profile = await Profile.create({
       userId: user._id,
       name
     });
