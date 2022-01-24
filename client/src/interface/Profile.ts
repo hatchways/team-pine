@@ -1,10 +1,12 @@
-export default interface Profile {
+export interface Profile {
+  address?: string;
+  birthday?: Date;
+  description?: string;
+  gender?: string;
+  name?: string;
+  photo?: string;
+  telephone?: string;
   userId: string;
-  name: string;
-  title: string;
-  description: string;
-  address: string;
   pay: string;
   _id: string;
-  photo: string;
 }

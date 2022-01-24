@@ -20,19 +20,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.primary.main,
     },
   },
-  unreadNotification: {
-    backgroundColor: '#FFFFFF',
-    fontWeight: 700,
-    textDecoration: 'none',
-  },
-  readNotification: {
-    backgroundColor: theme.palette.grey[300],
-    fontWeight: 700,
-    textDecoration: 'none',
-  },
-  badge: {
-    color: '#008000',
-  },
   navbarLogo: {
     width: 180,
   },
