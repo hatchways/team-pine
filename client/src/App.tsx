@@ -33,7 +33,7 @@ function App(): JSX.Element {
                 <ProtectedRoute exact path="/dashboard" component={Dashboard} />
                 <ProtectedRoute path="/profile/settings" component={Settings} />
                 <ProtectedRoute path="/bookings" component={Bookings} />
-                <ProtectedRoute path="/profile/exampleid" component={ProfileDetails} />
+                <ProtectedRoute path="/profile/:profile-id" component={ProfileDetails} />
                 <Route path="*">
                   <NotFound />
                 </Route>

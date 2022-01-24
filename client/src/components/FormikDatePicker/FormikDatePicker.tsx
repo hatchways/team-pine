@@ -18,7 +18,7 @@ const StyledInput = styled(InputBase)(({ theme }) => ({
 interface Props {
   dateField: string;
   date: Date;
-  setFieldValue: (field: string, value: any) => void;
+  setFieldValue: (field: string, value: Date | null) => void;
   label: string;
   inputId: string;
   error?: boolean;
