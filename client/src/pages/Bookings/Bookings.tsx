@@ -23,6 +23,7 @@ export default function Bookings(): JSX.Element {
     if (!mounted) {
       setMounted(true);
       getRequests().then((res) => {
+        console.log(res);
         if (!res.error) {
           const userBookings: Request[] = [];
           for (let i = 0; i < res.requests.length; i++) {
@@ -32,8 +33,8 @@ export default function Bookings(): JSX.Element {
               id: res.requests[i]._id,
               status: res.requests[i].status,
               user: {
-                name: res.requestProfiles[i].name,
-                email: res.requestProfiles[i].email,
+                name: res.requests[i].requester.name,
+                email: res.requests[i].requester.email,
               },
             });
           }
