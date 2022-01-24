@@ -32,8 +32,8 @@ export default function Bookings(): JSX.Element {
               id: res.requests[i]._id,
               status: res.requests[i].status,
               user: {
-                name: res.requestProfiles[i].name,
-                email: res.requestProfiles[i].email,
+                name: res.requests[i].requester.name,
+                email: res.requests[i].requester.email,
               },
             });
           }

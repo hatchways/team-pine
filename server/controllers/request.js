@@ -31,8 +31,8 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
     res.status(404);
     throw new Error("Request doesn't exist");
   }
-  const profile = await Profile.findOne({'userId': req.user.id})
-  if (profile.isSitter) {
+  const profile = await Profile.findOne({ 'userId': req.user.id })
+  if (request.sitter.toString() == profile._id.toString()) {
     const { status } = req.body
     request.set('status', status)
     const updatedRequest = await request.save();
@@ -53,12 +53,8 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
 exports.getUserRequests = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findOne({'userId': req.user.id})
   if (profile.isSitter) {
-    const requests = await Request.where('sitter', profile._id);
-    const requestProfiles = []
-    for (let i = 0; i < requests.length; i++) {
-      requestProfiles.push(await Profile.findById(requests[i].requester))
-    }
-    res.status(200).json({ requests: requests, requestProfiles: requestProfiles })
+    const requests = await Request.where('sitter', profile._id).populate('requester');
+    res.status(200).json({ requests: requests })
   } else {
     res.status(403);
     throw new Error("You are not authorized to perform this operation");
