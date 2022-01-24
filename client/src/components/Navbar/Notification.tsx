@@ -18,6 +18,7 @@ import moment from 'moment';
 import getNotifications from '../../helpers/APICalls/getNotifications';
 import markNotificationAsRead from '../../helpers/APICalls/markNotificationAsRead';
 
+//newPR
 interface Notification {
   user: string;
   type: string;
