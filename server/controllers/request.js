@@ -19,6 +19,9 @@ exports.createRequest = asyncHandler(async (req, res, next) => {
         }
       }
     })
+  } else {
+    res.status(404);
+    throw new Error("Request does not exist")
   }
 });
 
