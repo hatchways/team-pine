@@ -15,14 +15,5 @@ export const theme = createTheme({
     button: {
       fontWeight: 700,
     },
-    h1: {
-      fontSize: '1.4rem',
-    },
-    h2: {
-      fontSize: '1.1rem',
-    },
-    h3: {
-      fontSize: '1rem',
-    },
   },
 });

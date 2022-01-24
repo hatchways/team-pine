@@ -58,7 +58,7 @@ export default function ProfileDetails(): JSX.Element {
             />
           </Box>
           <Box m={windowWidth < 600 ? '1rem 0' : '5rem 0 1rem 0'} textAlign="center">
-            <Typography fontWeight="bold" variant="h1">
+            <Typography fontWeight="bold" component="h1" fontSize="1.4rem">
               {mockProfile.name}
             </Typography>
             <Typography fontWeight="bold" color="rgba(0,0,0,0.3)">
@@ -69,7 +69,7 @@ export default function ProfileDetails(): JSX.Element {
             <LocationOnIcon color="primary" /> &nbsp; {mockProfile.location}
           </Typography>
           <Box m={windowWidth < 600 ? `${5} ${4}` : 5}>
-            <Typography mb={1} variant="h2" fontWeight="bold">
+            <Typography mb={1} fontSize="1.1rem" component="h2" fontWeight="bold">
               About me
             </Typography>
             <Typography>{mockProfile.aboutMe}</Typography>
@@ -85,7 +85,7 @@ export default function ProfileDetails(): JSX.Element {
           container
           flexDirection="column"
         >
-          <Typography variant="h2" component="p" fontWeight="bold" m="3rem auto 1rem auto">
+          <Typography fontSize="1.1rem" component="p" fontWeight="bold" m="3rem auto 1rem auto">
             ${mockProfile.payRate}/hr
           </Typography>
           <Rating sx={{ margin: 'auto' }} value={mockProfile.rating} precision={0.5} readOnly />
