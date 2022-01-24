@@ -16,8 +16,6 @@ const profileRouter = require("./routes/profile");
 const uploadRouter = require("./routes/upload");
 const deleteRouter = require("./routes/delete");
 const availabilityRouter = require("./routes/availability");
-const Profile = require("./models/Profile")
-const jwt = require("jsonwebtoken");
 
 const { json, urlencoded } = express;
 
@@ -30,34 +28,6 @@ const io = socketio(server, {
     origin: "*",
   },
 });
-
-io.on("connection", (socket) => {
-  console.log(socket.data.user)
-});
-
-io.use(async (socket, next) => {
-  const token = socket.handshake.headers.cookie
-
-  if (!token) {
-    console.log("Invalid token, socket connection refused")
-  }
-
-  try {
-    const userToken = token.split("token=").join("");
-
-    const user = jwt.verify(userToken, process.env.JWT_SECRET);
-
-    const profile = await Profile.findOne({ userId: user.id });
-    if (!profile) {
-      console.log("Profile not found. Socket connection refused");
-    }
-
-    socket.data.user = user
-    next();
-  } catch (err) {
-    console.log("Token is not valid")
-  }
-})
 
 if (process.env.NODE_ENV === "development") {
   server.listen(process.env.PORT, (err, res) => {
@@ -105,4 +75,4 @@ process.on("unhandledRejection", (err, promise) => {
   server.close(() => process.exit(1));
 });
 
-module.exports = { app, server };
+module.exports = { app, server, io };
