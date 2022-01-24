@@ -20,7 +20,7 @@ import { PinDrop } from '@mui/icons-material';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
-import Profile from '../../../interface/Profile';
+import { Profile } from '../../../interface/Profile';
 
 interface Props {
   location: string;
@@ -40,7 +40,6 @@ export default function ProfileListing({}: Props): ReactElement {
     const profile = {
       userId: '61df3960442e349d92bad441',
       name: 'Roland Matheson',
-      title: 'Pet Lover',
       description:
         'I love dogcats Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis assumenda omnis obcaecati, cumque, nisi animi quam voluptatum tempora enim illo at id iusto! Iure eveniet cum in a, accusamus earum!',
       address: 'Tokyo, Japan',
@@ -108,15 +107,12 @@ export default function ProfileListing({}: Props): ReactElement {
                         <Typography gutterBottom variant="h4" component="div">
                           {`${profile.name}`}
                         </Typography>
-                        <Typography gutterBottom variant="h5" color="text.secondary" component="div">
-                          {`${profile.title}`}
-                        </Typography>
 
                         <Rating name="half-rating" defaultValue={2.5} precision={0.5} readOnly />
 
                         <Typography
                           sx={{ fontWeight: 500, paddingTop: '5px', paddingBottom: '5px' }}
-                        >{`${profile.description.substring(0, 80)}`}</Typography>
+                        >{`${profile.description?.substring(0, 80)}`}</Typography>
                         <Divider />
                         <Grid container spacing={2}>
                           {' '}
