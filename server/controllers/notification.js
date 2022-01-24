@@ -8,10 +8,12 @@ const asyncHandler = require("express-async-handler");
 
 exports.createNotification = asyncHandler(async (req, res, next) => {
   const { type, title, description, receiver } = req.body;
-  
-  if (!type || !title || !description || !receiver){
+
+  if (!type || !title || !description || !receiver) {
     res.status(400);
-    throw new Error("Bad request! Missing type, title, description or receiver!");
+    throw new Error(
+      "Bad request! Missing type, title, description or receiver"
+    );
   }
 
   const notification = await Notification.create({
@@ -39,7 +41,9 @@ exports.markAsRead = asyncHandler(async (req, res, next) => {
 
   if (foundNotification.receiver.toString() !== req.user.id) {
     res.status(403);
-    throw new Error("The user doesn't have the correct privileges or permissions to modify this notification");
+    throw new Error(
+      "The user doesn't have the correct privileges or permissions to modify this notification"
+    );
   }
 
   foundNotification.read = true;

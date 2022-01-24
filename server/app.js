@@ -1,3 +1,4 @@
+require("dotenv").config();
 const colors = require("colors");
 const path = require("path");
 const http = require("http");
@@ -14,6 +15,10 @@ const userRouter = require("./routes/user");
 const profileRouter = require("./routes/profile");
 const notificationRouter = require("./routes/notification");
 const conversationRouter = require("./routes/conversation");
+const requestRouter = require("./routes/request");
+const uploadRouter = require("./routes/upload");
+const deleteRouter = require("./routes/delete");
+const availabilityRouter = require("./routes/availability");
 
 const { json, urlencoded } = express;
 
@@ -32,6 +37,10 @@ io.on("connection", (socket) => {
 });
 
 if (process.env.NODE_ENV === "development") {
+  server.listen(process.env.PORT, (err, res) => {
+    if (err) return console.log(err);
+    console.log("server is listening...");
+  });
   app.use(logger("dev"));
 }
 app.use(json());
@@ -49,6 +58,10 @@ app.use("/users", userRouter);
 app.use("/profile", profileRouter);
 app.use("/notifications", notificationRouter);
 app.use("/conversations", conversationRouter);
+app.use("/requests", requestRouter);
+app.use("/upload", uploadRouter);
+app.use("/delete", deleteRouter);
+app.use("/availability", availabilityRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));

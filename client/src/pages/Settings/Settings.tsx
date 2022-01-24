@@ -1,12 +1,13 @@
 import { cloneElement } from 'react';
 import { useAuth } from '../../context/useAuthContext';
-import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { NavLink, Redirect, Route, Switch } from 'react-router-dom';
 import { Box, CircularProgress, Grid, Link } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import { makeStyles } from '@mui/styles';
 import SettingsWrapper from '../../components/SettingsWrapper/SettingsWrapper';
 import EditProfile from './EditProfile/EditProfile';
 import SettingHeader from '../../components/SettingsHeader/SettingsHeader';
+import ProfilePhoto from './ProfilePhoto/ProfilePhoto';
 
 const settingsMenu = [
   {
@@ -17,7 +18,7 @@ const settingsMenu = [
   {
     name: 'Profile photo',
     to: '/profile/settings/profile-photo',
-    component: <SettingHeader header="Profile Photo" />,
+    component: <ProfilePhoto header="Profile Photo" />,
   },
   {
     name: 'Availability',
@@ -39,21 +40,17 @@ const useStyles = makeStyles({
 });
 
 export default function Settings(): JSX.Element {
-  const { loggedInUser, profile } = useAuth();
-  const history = useHistory();
+  const { loggedInUser, loggedInUserProfile } = useAuth();
   const classes = useStyles();
 
-  if (loggedInUser === undefined) return <CircularProgress />;
-  if (!loggedInUser || !profile) {
-    history.push('/login');
-    // loading for a split seconds until history.push works
+  if (loggedInUserProfile === undefined) {
     return <CircularProgress />;
   }
 
   return (
     <PageContainer>
-      <Grid sx={{ width: '75%', margin: '0 auto' }} container>
-        <Grid xs={3} item>
+      <Grid sx={{ width: '90%', margin: '0 auto' }} container>
+        <Grid xs={12} md={3} item>
           {settingsMenu.map((item) => (
             <Box
               sx={{
@@ -80,7 +77,7 @@ export default function Settings(): JSX.Element {
             </Box>
           ))}
         </Grid>
-        <Grid xs={9} item>
+        <Grid xs={12} md={9} item>
           <Switch>
             <Route exact path="/profile/settings">
               <Redirect to="/profile/settings/edit-profile" />
@@ -94,7 +91,7 @@ export default function Settings(): JSX.Element {
                     cloneElement(item.component, {
                       ...props,
                       currentUser: loggedInUser,
-                      currentProfile: profile,
+                      currentProfile: loggedInUserProfile,
                     })
                   }
                 />

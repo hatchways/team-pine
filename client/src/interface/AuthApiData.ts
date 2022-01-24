@@ -1,9 +1,10 @@
 import { User } from './User';
+import { Profile } from './Profile';
 
 export interface AuthApiDataSuccess {
   message: string;
   user: User;
-  profile: any;
+  profile: Profile;
   token: string;
 }
 
