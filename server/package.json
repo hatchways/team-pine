@@ -6,11 +6,12 @@
     "test": "test"
   },
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {
-    "aws-sdk": "^2.1059.0",
+    "aws-sdk": "^2.1058.0",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "cookie-parser": "^1.4.6",
