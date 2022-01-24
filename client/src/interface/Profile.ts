@@ -6,4 +6,7 @@ export interface Profile {
   name?: string;
   photo?: string;
   telephone?: string;
+  userId: string;
+  pay: string;
+  _id: string;
 }

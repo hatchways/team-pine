@@ -7,17 +7,22 @@ const User = require("../models/User");
 // @desc Create new request
 // @access Public
 exports.createRequest = asyncHandler(async (req, res, next) => {
-  const { requester, sitter, startDate, endDate } = req.body
-  const request = await Request.create({requester, sitter, startDate, endDate});
+  const { requester, sitter, startDate, endDate } = req.body;
+  const request = await Request.create({
+    requester,
+    sitter,
+    startDate,
+    endDate,
+  });
 
   if (request) {
     res.status(200).json({
       success: {
         request: {
-          ...request
-        }
-      }
-    })
+          ...request,
+        },
+      },
+    });
   }
 });
 
@@ -25,25 +30,25 @@ exports.createRequest = asyncHandler(async (req, res, next) => {
 // @desc edit request
 // @access Public
 exports.editRequest = asyncHandler(async (req, res, next) => {
-  const request = await Request.findById(req.params.requestId)
+  const request = await Request.findById(req.params.requestId);
 
   if (!request) {
     res.status(404);
     throw new Error("Request doesn't exist");
   }
-  const profile = await Profile.findOne({ 'userId': req.user.id })
+  const profile = await Profile.findOne({ userId: req.user.id });
   if (request.sitter.toString() == profile._id.toString()) {
-    const { status } = req.body
-    request.set('status', status)
+    const { status } = req.body;
+    request.set("status", status);
     const updatedRequest = await request.save();
     res.status(200).json({
       success: {
-        request: updatedRequest
+        request: updatedRequest,
       },
     });
   } else {
     res.status(403);
-    throw new Error ("You are not authorized to perform this operation")
+    throw new Error("You are not authorized to perform this operation");
   }
 });
 
@@ -51,13 +56,14 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
 // @desc get requests of logged in user
 // @access Private
 exports.getUserRequests = asyncHandler(async (req, res, next) => {
-  const profile = await Profile.findOne({'userId': req.user.id})
+  const profile = await Profile.findOne({ userId: req.user.id });
   if (profile.isSitter) {
-    const requests = await Request.where('sitter', profile._id).populate('requester');
-    res.status(200).json({ requests: requests })
+    const requests = await Request.where("sitter", profile._id).populate(
+      "requester"
+    );
+    res.status(200).json({ requests: requests });
   } else {
     res.status(403);
     throw new Error("You are not authorized to perform this operation");
   }
-
-})
+});
