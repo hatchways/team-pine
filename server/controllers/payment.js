@@ -50,7 +50,11 @@ exports.getClientSecret = asyncHandler(async (req, res, next) => {
     throw new Error("Unable proccess payment setup");
   }
   res.status(200);
-  res.send({ client_secret: setupIntent.client_secret });
+  res.send({
+    success: {
+      client_secret: setupIntent.client_secret,
+    },
+  });
 });
 
 // @route GET /payments/saved-cards
@@ -62,18 +66,18 @@ exports.getListOfPaymentSources = asyncHandler(async (req, res, next) => {
     res.status(404);
     throw new Error("Customer's payment account is not exists!!");
   }
-  const cards = await stripe.customers.listSources(customer.id, {
-    object: "card",
-    limit: 3,
+  const paymentMethods = await stripe.paymentMethods.list({
+    customer: customer.id,
+    type: "card",
   });
-  if (!cards) {
+  if (!paymentMethods) {
     res.status(404);
-    throw new Error("No Card is setup yet!!");
+    throw new Error("No Payment method found!!");
   }
   res.status(200);
   res.send({
     success: {
-      cards: cards.data,
+      payment_methods: paymentMethods.data,
     },
   });
 });
