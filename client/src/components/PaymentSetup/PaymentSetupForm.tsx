@@ -33,15 +33,17 @@ const PaymentSetupForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <PaymentElement />
-      <Box py={4}>
-        <Button type="submit" disabled={!stripe} variant="outlined" size="large" className={classes.button}>
-          Submit
-        </Button>
-      </Box>
-      {errorMessage && <div>{errorMessage}</div>}
-    </form>
+    <Box maxWidth={400}>
+      <form onSubmit={handleSubmit}>
+        <PaymentElement />
+        <Box py={4}>
+          <Button type="submit" disabled={!stripe} variant="outlined" size="large" className={classes.button}>
+            Submit
+          </Button>
+        </Box>
+        {errorMessage && <div>{errorMessage}</div>}
+      </form>
+    </Box>
   );
 };
 
