@@ -5,9 +5,11 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AvatarDisplay from '../../../components/AvatarDisplay/AvatarDisplay';
 import SettingHeader from '../../../components/SettingsHeader/SettingsHeader';
 import { User } from '../../../interface/User';
-
+import { Profile } from '../../../interface/Profile';
 import { makeStyles } from '@mui/styles';
 import { useSnackBar } from '../../../context/useSnackbarContext';
+import { profilePhotoUpload, profilePhotoDelete } from '../../../helpers/APICalls/profilePhoto';
+import { useAuth } from '../../../context/useAuthContext';
 
 const useStyles = makeStyles({
   root: {
@@ -29,17 +31,32 @@ const useStyles = makeStyles({
 interface ProfilePhotoProps {
   header: string;
   currentUser?: User;
-  currentProfile?: any;
+  currentProfile?: Profile;
 }
 
 const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, currentProfile }) => {
   const fileInputButton = React.useRef<HTMLInputElement>(null);
   const classes = useStyles();
   const { updateSnackBarMessage } = useSnackBar();
+  const { updateProfileContext } = useAuth();
 
   const fileChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      updateSnackBarMessage('Profile Photo uploaded successfuly!!!');
+      profilePhotoUpload(event.target.files[0])
+        .then((data) => {
+          if (data.error) {
+            updateSnackBarMessage(data.error.message);
+          } else if (data.success) {
+            updateProfileContext(data.success);
+            updateSnackBarMessage('Profile Photo is uploaded successfuly!!!');
+            event.target.value = '';
+          } else {
+            updateSnackBarMessage('An unexpected error occurred. Please try again');
+          }
+        })
+        .catch((err) => {
+          updateSnackBarMessage(err);
+        });
     }
   };
   const fileSelectHandler = () => {
@@ -48,7 +65,18 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
     }
   };
   const deleteClickHandler = () => {
-    updateSnackBarMessage('Deleted profile photo!!!');
+    profilePhotoDelete()
+      .then((data) => {
+        if (data.error) {
+          updateSnackBarMessage(data.error.message);
+        } else if (data.success) {
+          updateProfileContext(data.success);
+          updateSnackBarMessage('Deleted profile photo!!!');
+        }
+      })
+      .catch((err) => {
+        updateSnackBarMessage(err);
+      });
   };
   return (
     <Box
@@ -69,7 +97,7 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
               width={170}
               height={170}
               user={currentUser}
-              photoUrl={currentProfile.photo}
+              photoUrl={currentProfile ? currentProfile.photo : ''}
               loggedIn={!!currentUser}
             />
           ) : (
