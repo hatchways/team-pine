@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import getProfile from '../../helpers/APICalls/getProfile';
 import Profile from '../../interface/Profile';
 import { useParams } from 'react-router-dom';
+import { useSnackBar } from '../../context/useSnackbarContext';
 
 const mockPhotos = [
   'https://images.pexels.com/photos/3714060/pexels-photo-3714060.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
@@ -16,6 +17,7 @@ const mockPhotos = [
 
 export default function ProfileDetails(): JSX.Element {
   const classes = useStyles();
+  const { updateSnackBarMessage } = useSnackBar();
   const [isMounted, setIsMounted] = useState<boolean>(false);
   const [profile, setProfile] = useState<Profile | undefined>();
 
@@ -27,10 +29,13 @@ export default function ProfileDetails(): JSX.Element {
       getProfile(profileId).then((res) => {
         if (!res.error) {
           setProfile(res.success.profile);
+        } else {
+          console.error(res.error);
+          updateSnackBarMessage('Profile not found');
         }
       });
     }
-  }, [isMounted, profileId]);
+  }, [isMounted, profileId, updateSnackBarMessage]);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -62,51 +67,51 @@ export default function ProfileDetails(): JSX.Element {
           container
           flexDirection="column"
         >
-          <Box borderRadius={2} className={classes.coverImage}>
-            {profile ? (
-              <AvatarDisplay
-                width={window.innerWidth < 600 ? 100 : 150}
-                height={window.innerWidth < 600 ? 100 : 150}
-                loggedIn
-                user={{ name: profile.name, email: 'example@example.com' }}
-                photoUrl={profile ? profile.photo : ''}
-              />
-            ) : null}
-          </Box>
-          <Box m={windowWidth < 600 ? '1rem 0' : '5rem 0 1rem 0'} textAlign="center">
-            <Typography fontWeight="bold" component="h1" fontSize="1.4rem">
-              {profile ? profile.name : 'No profile found'}
-            </Typography>
-            <Typography fontWeight="bold" color="rgba(0,0,0,0.3)">
-              {profile ? profile.description : null}
-            </Typography>
-          </Box>
-          <Typography
-            margin="auto"
-            mb={4}
-            display="flex"
-            alignItems="center"
-            color="rgba(0,0,0,0.3)"
-            fontWeight="bold"
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {profile ? (
-              <>
-                <LocationOnIcon color="primary" /> &nbsp; {profile.location}
-              </>
-            ) : null}
-          </Typography>
           {profile ? (
-            <Box m={windowWidth < 600 ? `${5} ${4}` : 5}>
-              <Typography mb={1} component="h2" fontSize="1.1rem" fontWeight="bold">
-                About me
+            <>
+              <Box borderRadius={2} className={classes.coverImage}>
+                <AvatarDisplay
+                  width={window.innerWidth < 600 ? 100 : 150}
+                  height={window.innerWidth < 600 ? 100 : 150}
+                  loggedIn
+                  user={{ name: profile.name, email: 'example@example.com' }}
+                  photoUrl={profile.photo}
+                />
+              </Box>
+              <Box m={windowWidth < 600 ? '1rem 0' : '5rem 0 1rem 0'} textAlign="center">
+                <Typography fontWeight="bold" component="h1" fontSize="1.4rem">
+                  {profile.name}
+                </Typography>
+                <Typography fontWeight="bold" color="rgba(0,0,0,0.3)">
+                  {profile.description}
+                </Typography>
+              </Box>
+              <Typography
+                margin="auto"
+                mb={4}
+                display="flex"
+                alignItems="center"
+                color="rgba(0,0,0,0.3)"
+                fontWeight="bold"
+                sx={{ textTransform: 'capitalize' }}
+              >
+                <LocationOnIcon color="primary" /> &nbsp; {profile.location}
               </Typography>
-              <Typography>{profile.aboutMe}</Typography>
-              {mockPhotos.map((item) => (
-                <img key={item} className={classes.listImage} src={item} alt="Pet image" />
-              ))}
-            </Box>
-          ) : null}
+              {profile.aboutMe != '' ? (
+                <Box m={windowWidth < 600 ? `${5} ${4}` : 5}>
+                  <Typography mb={1} component="h2" fontSize="1.1rem" fontWeight="bold">
+                    About me
+                  </Typography>
+                  <Typography mb={4}>{profile.aboutMe}</Typography>
+                  {mockPhotos.map((item) => (
+                    <img key={item} className={classes.listImage} src={item} alt="Pet image" />
+                  ))}
+                </Box>
+              ) : null}
+            </>
+          ) : (
+            'No Profile Found'
+          )}
         </Grid>
         {windowWidth < 1200 ? <Divider sx={{ width: '95%' }} /> : null}
         {profile ? (
