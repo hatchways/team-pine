@@ -8,6 +8,7 @@ import SettingsWrapper from '../../components/SettingsWrapper/SettingsWrapper';
 import EditProfile from './EditProfile/EditProfile';
 import SettingHeader from '../../components/SettingsHeader/SettingsHeader';
 import ProfilePhoto from './ProfilePhoto/ProfilePhoto';
+import Payment from './Payment/Payment';
 
 const settingsMenu = [
   {
@@ -28,7 +29,7 @@ const settingsMenu = [
   {
     name: 'Payment methods',
     to: '/profile/settings/payment-methods',
-    component: <SettingHeader header="Payment Methods" />,
+    component: <Payment header="Payment Methods" />,
   },
 ];
 
