@@ -1,4 +1,4 @@
-import React, { useState, useEffect, MouseEventHandler } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@mui/styles';
 import { Box, Button, Typography, Badge, Divider, MenuItem, TextField, FormControl, InputLabel } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -49,21 +49,7 @@ const Availability: React.FC<AvailabilityProps> = ({ header }) => {
   const [listOfAllSchedules, setListOfAllSchedules] = useState<Schedule[]>();
   const scheduleNameInput = React.useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    getActiveSchedule()
-      .then((data) => {
-        if (data.error) {
-          updateSnackBarMessage(data.error.message);
-        } else if (data.success) {
-          setActiveSchedule(data.success.schedule);
-        } else {
-          updateSnackBarMessage('Unexpected Error');
-        }
-      })
-      .catch((err) => {
-        updateSnackBarMessage(err);
-      });
-
+  const fetchSchedules = useCallback(() => {
     fetchListOfAllSchedule()
       .then((data) => {
         if (data.error) {
@@ -79,6 +65,23 @@ const Availability: React.FC<AvailabilityProps> = ({ header }) => {
       });
   }, [updateSnackBarMessage]);
 
+  useEffect(() => {
+    getActiveSchedule()
+      .then((data) => {
+        if (data.error) {
+          updateSnackBarMessage(data.error.message);
+        } else if (data.success) {
+          setActiveSchedule(data.success.schedule);
+        } else {
+          updateSnackBarMessage('Unexpected Error');
+        }
+      })
+      .catch((err) => {
+        updateSnackBarMessage(err);
+      });
+    fetchSchedules();
+  }, [updateSnackBarMessage, fetchSchedules]);
+
   const handleChange = (event: SelectChangeEvent<string | number>, day: string, field: string) => {
     const {
       target: { value },
@@ -88,7 +91,6 @@ const Availability: React.FC<AvailabilityProps> = ({ header }) => {
 
     if (!tempSchedule) {
       setTempSchedule({ name: 'New Schedule', days: selectedSchedule?.days || {} });
-      setSelectedSchedule(tempSchedule);
     }
     if (!tempSchedule) return;
     if (hour) {
@@ -103,20 +105,17 @@ const Availability: React.FC<AvailabilityProps> = ({ header }) => {
         tempSchedule.days[day as keyof typeof tempSchedule.days]!.end = hour;
       }
     }
+    console.log(tempSchedule);
     setSelectedSchedule({ ...tempSchedule });
-    console.log(selectedSchedule);
   };
   const onSelectedScheduleChange = (event: SelectChangeEvent) => {
     const {
       target: { value },
     } = event;
-    if (value === '') return;
-    if (tempSchedule) {
-      setTempSchedule(undefined);
-    }
     listOfAllSchedules?.map((schedule) => {
       if (schedule._id === value) {
         setSelectedSchedule(schedule);
+        console.log(schedule);
       }
       return schedule;
     });
@@ -127,13 +126,15 @@ const Availability: React.FC<AvailabilityProps> = ({ header }) => {
       updateSnackBarMessage('Please select a valid name!!');
       return;
     }
-    activeSchedule!.name = scheduleName;
-    createNewSchedule(activeSchedule)
+    tempSchedule!.name = scheduleName;
+    if (!tempSchedule) return;
+    createNewSchedule(tempSchedule)
       .then((data) => {
         if (data.error) {
           updateSnackBarMessage(data.error.message);
         } else if (data.success) {
-          setActiveSchedule(data.success.schedule);
+          setSelectedSchedule(data.success.schedule);
+          fetchSchedules();
           updateSnackBarMessage(`Schedule '${data.success.schedule.name}' is created successfuly`);
         } else {
           updateSnackBarMessage('Unexpected Error');
