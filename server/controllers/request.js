@@ -29,7 +29,7 @@ exports.createRequest = asyncHandler(async (req, res, next) => {
 // @desc edit request
 // @access Public
 exports.editRequest = asyncHandler(async (req, res, next) => {
-  const request = await Request.findById(req.params.requestId)
+  const request = await Request.findById(req.params.requestId);
 
   if (!request) {
     res.status(404);
@@ -42,12 +42,12 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
     const updatedRequest = await request.save();
     res.status(200).json({
       success: {
-        request: updatedRequest
+        request: updatedRequest,
       },
     });
   } else {
     res.status(403);
-    throw new Error ("You are not authorized to perform this operation")
+    throw new Error("You are not authorized to perform this operation");
   }
 });
 
@@ -55,7 +55,7 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
 // @desc get requests of logged in user
 // @access Private
 exports.getUserRequests = asyncHandler(async (req, res, next) => {
-  const profile = await Profile.findOne({'userId': req.user.id})
+  const profile = await Profile.findOne({ userId: req.user.id });
   if (profile.isSitter) {
     const requests = await Request.where('sitter', profile._id).populate('requester');
     res.status(200).json({ requests: requests })
@@ -63,5 +63,4 @@ exports.getUserRequests = asyncHandler(async (req, res, next) => {
     res.status(403);
     throw new Error("You are not authorized to perform this operation");
   }
-
-})
+});

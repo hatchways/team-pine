@@ -47,7 +47,11 @@ const profileSchema = new mongoose.Schema({
     default: "",
     lowercase: true,
     trim: true
-  }
+  },
+  activeSchedule: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Schedule",
+  },
 });
 
 module.exports = Profile = mongoose.model("Profile", profileSchema);
