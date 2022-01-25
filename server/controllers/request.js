@@ -2,6 +2,7 @@ const Request = require("../models/Request");
 const Profile = require("../models/Profile");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
+const { chargeCustomer } = require("./availability");
 
 // @route POST /requests
 // @desc Create new request
@@ -45,6 +46,9 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
     const { status } = req.body;
     request.set("status", status);
     const updatedRequest = await request.save();
+    if (updatedRequest.status === "accepted") {
+      await chargeCustomer(updatedRequest.id);
+    }
     res.status(200).json({
       success: {
         request: updatedRequest,
