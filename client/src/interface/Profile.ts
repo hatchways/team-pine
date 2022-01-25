@@ -1,3 +1,12 @@
+export interface ProfileDetails {
+  name: string;
+  description: string;
+  aboutMe: string;
+  payRate: string;
+  location: string;
+  photo: string;
+}
+
 export interface Profile {
   address?: string;
   birthday?: Date;
