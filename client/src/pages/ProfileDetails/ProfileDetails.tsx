@@ -1,4 +1,4 @@
-import { Grid, Box, Typography, Rating } from '@mui/material';
+import { Grid, Box, Typography, Rating, Divider } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import AvatarDisplay from '../../components/AvatarDisplay/AvatarDisplay';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -32,18 +32,33 @@ export default function ProfileDetails(): JSX.Element {
     }
   }, [isMounted, profileId]);
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const updateWindowWidth = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', updateWindowWidth);
+    return () => window.removeEventListener('resize', updateWindowWidth);
+  });
+
   return (
     <PageContainer>
-      <Grid m={window.innerWidth < 600 ? 2 : 4} justifyContent="space-around" container alignItems="flex-start">
+      <Grid
+        maxWidth={windowWidth < 600 ? 400 : windowWidth < 1200 ? 600 : 1200}
+        m={'auto'}
+        justifyContent="space-around"
+        container
+        alignItems="flex-start"
+      >
         <Grid
-          maxWidth="100%"
-          ml={window.innerWidth < 600 ? 0 : 5}
-          mb={window.innerWidth < 600 ? 3 : 0}
+          mb={windowWidth < 1200 ? 3 : 0}
           xs={12}
-          md={6}
+          lg={6}
           item
           borderRadius={2}
-          boxShadow={window.innerWidth < 600 ? 0 : 4}
+          boxShadow={windowWidth < 1200 ? 0 : 4}
           container
           flexDirection="column"
         >
@@ -58,7 +73,7 @@ export default function ProfileDetails(): JSX.Element {
               />
             ) : null}
           </Box>
-          <Box m={window.innerWidth < 600 ? '1rem 0' : '5rem 0 1rem 0'} textAlign="center">
+          <Box m={windowWidth < 600 ? '1rem 0' : '5rem 0 1rem 0'} textAlign="center">
             <Typography fontWeight="bold" component="h1" fontSize="1.4rem">
               {profile ? profile.name : 'No profile found'}
             </Typography>
@@ -72,7 +87,6 @@ export default function ProfileDetails(): JSX.Element {
             display="flex"
             alignItems="center"
             color="rgba(0,0,0,0.3)"
-            fontSize=".8rem"
             fontWeight="bold"
             sx={{ textTransform: 'capitalize' }}
           >
@@ -83,32 +97,32 @@ export default function ProfileDetails(): JSX.Element {
             ) : null}
           </Typography>
           {profile ? (
-            <Box m={window.innerWidth < 600 ? `${5} ${4}` : 5}>
-              <Typography mb={1} component="h2" fontSize="1rem" fontWeight="bold">
+            <Box m={windowWidth < 600 ? `${5} ${4}` : 5}>
+              <Typography mb={1} component="h2" fontSize="1.1rem" fontWeight="bold">
                 About me
               </Typography>
-              <Typography mb={4}>{profile.aboutMe}</Typography>
+              <Typography>{profile.aboutMe}</Typography>
               {mockPhotos.map((item) => (
                 <img key={item} className={classes.listImage} src={item} alt="Pet image" />
               ))}
             </Box>
           ) : null}
         </Grid>
-        {window.innerWidth < 600 ? <hr style={{ width: '100%' }} /> : null}
+        {windowWidth < 1200 ? <Divider sx={{ width: '95%' }} /> : null}
         {profile ? (
           <Grid
             xs={12}
-            md={4}
+            lg={4}
             item
             borderRadius={2}
-            boxShadow={window.innerWidth < 600 ? 'none' : 4}
+            boxShadow={windowWidth < 1200 ? 'none' : 4}
             container
             flexDirection="column"
           >
-            <Typography fontSize="1.2rem" fontWeight="bold" m="3rem auto 1rem auto">
+            <Typography component="p" fontSize="1.1rem" fontWeight="bold" m="3rem auto 1rem auto">
               ${profile.payRate}/hr
             </Typography>
-            <Rating sx={{ margin: 'auto' }} value={4} precision={0.5} />
+            <Rating sx={{ margin: 'auto' }} value={4} precision={0.5} readOnly />
             <RequestForm profileId={profileId} />
           </Grid>
         ) : null}

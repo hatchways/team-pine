@@ -1,10 +1,12 @@
 import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
-  // TODO: Box shadows
   palette: {
     primary: {
       main: '#f14140',
+    },
+    error: {
+      main: '#d32f2f',
     },
   },
   typography: {

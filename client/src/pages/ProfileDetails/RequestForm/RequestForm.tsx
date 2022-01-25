@@ -7,9 +7,11 @@ import FormikDatePicker from '../../../components/FormikDatePicker/FormikDatePic
 import useStyles from './useStyles';
 import createRequest from '../../../helpers/APICalls/createRequest';
 import { useSnackBar } from '../../../context/useSnackbarContext';
+import { useTheme } from '@mui/system';
 
 export default function RequestForm({ profileId }: { profileId: string }): JSX.Element {
   const { updateSnackBarMessage } = useSnackBar();
+  const theme = useTheme();
 
   const handleSubmit = (
     { startDate, endDate }: { startDate: Date; endDate: Date },
@@ -74,7 +76,9 @@ export default function RequestForm({ profileId }: { profileId: string }): JSX.E
               dateField="startDate"
               error={touched.startDate && Boolean(errors.startDate)}
             />
-            <Typography sx={{ marginBottom: 1, marginTop: -1.5, color: '#d32f2f' }}>{errors.startDate}</Typography>
+            <Typography sx={{ marginBottom: 1, marginTop: -1.5, color: theme.palette.error.main }}>
+              {errors.startDate}
+            </Typography>
             <FormikDatePicker
               inputId="drop-off"
               label="Drop Off"
@@ -83,7 +87,9 @@ export default function RequestForm({ profileId }: { profileId: string }): JSX.E
               dateField="endDate"
               error={touched.endDate && Boolean(errors.endDate)}
             />
-            <Typography sx={{ marginBottom: 1, marginTop: -1.5, color: '#d32f2f' }}>{errors.endDate}</Typography>
+            <Typography sx={{ marginBottom: 1, marginTop: -1.5, color: theme.palette.error.main }}>
+              {errors.endDate}
+            </Typography>
           </LocalizationProvider>
           <Button
             sx={{ margin: 'auto', marginTop: 3, height: 60, width: 200 }}
