@@ -7,22 +7,21 @@ const User = require("../models/User");
 // @desc Create new request
 // @access Public
 exports.createRequest = asyncHandler(async (req, res, next) => {
-  const { requester, sitter, startDate, endDate } = req.body;
-  const request = await Request.create({
-    requester,
-    sitter,
-    startDate,
-    endDate,
-  });
+  const profileId = await Profile.findOne({"userId": req.user.id})
+  const { sitter, startDate, endDate } = req.body
+  const request = await Request.create({ requester: profileId, sitter, startDate, endDate });
 
   if (request) {
     res.status(200).json({
       success: {
         request: {
-          ...request,
-        },
-      },
-    });
+          ...request
+        }
+      }
+    })
+  } else {
+    res.status(404);
+    throw new Error("Request does not exist")
   }
 });
 

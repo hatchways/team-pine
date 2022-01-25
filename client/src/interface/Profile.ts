@@ -10,3 +10,12 @@ export interface Profile {
   pay: string;
   _id: string;
 }
+
+export interface ProfileDetails {
+  name: string;
+  description: string;
+  aboutMe: string;
+  payRate: string;
+  location: string;
+  photo: string;
+}

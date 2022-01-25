@@ -14,6 +14,10 @@ const profileSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  aboutMe: {
+    type: String,
+    default: "",
+  },
   gender: {
     type: String,
     default: "none",
@@ -38,6 +42,16 @@ const profileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Schedule",
   },
+  payRate: {
+    type: String,
+    default: "",
+  },
+  location: {
+    type: String,
+    default: "",
+    lowercase: true,
+    trim: true
+  }
 });
 
 module.exports = Profile = mongoose.model("Profile", profileSchema);
