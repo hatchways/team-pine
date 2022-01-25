@@ -101,7 +101,7 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { loggedInUser, logout } = useAuth();
+  const { loggedInUser, logout, loggedInUserProfile } = useAuth();
   const open = Boolean(anchorEl);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -157,8 +157,11 @@ const Navbar: React.FC = () => {
                 <AvatarDisplay
                   user={loggedInUser}
                   loggedIn
+                  height={50}
                   width={50}
-                  photoUrl={`https://robohash.org/${loggedInUser.email}`}
+                  photoUrl={
+                    loggedInUserProfile ? loggedInUserProfile.photo : `https://robohash.org/${loggedInUser.email}`
+                  }
                 />
               </IconButton>
 
