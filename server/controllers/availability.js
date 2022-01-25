@@ -32,7 +32,7 @@ exports.createSchedule = asyncHandler(async (req, res, next) => {
     await req.profile.save();
   }
   res.status(201);
-  res.send(savedSchedule);
+  res.send({ success: { schedule: savedSchedule } });
 });
 // @route GET /availability/:scheduleId
 // @desc Get Schedule by Id
@@ -44,10 +44,14 @@ exports.getSchedule = asyncHandler(async (req, res, next) => {
     .equals(req.profile.id);
   if (schedule) {
     res.status(200);
-    res.send(schedule);
+    res.send({
+      success: {
+        schedule: schedule,
+      },
+    });
   } else {
     res.status(404);
-    res.send("schedule Nnot Found!!");
+    res.send("schedule not Found!!");
   }
 });
 // @route GET /availability
@@ -60,7 +64,11 @@ exports.getAvailability = asyncHandler(async (req, res, next) => {
     schedules = [];
   }
   res.status(200);
-  res.send(schedules);
+  res.send({
+    success: {
+      schedules: schedules,
+    },
+  });
 });
 
 // @route GET /availability/active
@@ -74,7 +82,11 @@ exports.getActiveSchedule = asyncHandler(async (req, res, next) => {
     throw new Error("Schedule Not Found!!");
   }
   res.status(200);
-  res.send(schedule);
+  res.send({
+    success: {
+      schedule: schedule,
+    },
+  });
 });
 
 // @route PATCH /availability/:scheduleId/activate
