@@ -1,5 +1,5 @@
 export interface Profile {
-  address?: string;
+  location?: string;
   birthday?: Date;
   description?: string;
   gender?: string;
@@ -9,7 +9,6 @@ export interface Profile {
   userId: string;
   payRate: string;
   _id: string;
-  location: string;
 }
 
 export interface ProfileDetails {

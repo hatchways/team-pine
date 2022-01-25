@@ -40,7 +40,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ header, currentUser, currentP
       gender: string;
       birthday: Date;
       telephone: string;
-      address: string;
+      location: string;
       description: string;
     },
     {
@@ -51,7 +51,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ header, currentUser, currentP
       gender: string;
       birthday: Date;
       telephone: string;
-      address: string;
+      location: string;
       description: string;
     }>,
   ) => {
@@ -88,7 +88,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ header, currentUser, currentP
           gender: currentProfile.gender || 'none',
           birthday: currentProfile.birthday || new Date(),
           telephone: currentProfile.telephone || '',
-          address: currentProfile.address || '',
+          location: currentProfile.location || '',
           description: currentProfile.description || '',
         }}
         onSubmit={handleSubmit}
@@ -200,16 +200,16 @@ const EditProfile: React.FC<EditProfileProps> = ({ header, currentUser, currentP
             />
 
             <FormInput
-              id="address"
-              label="Address"
+              id="location"
+              label="Location"
               fullWidth
               margin="normal"
-              name="address"
+              name="location"
               placeholder="Where you live"
-              autoComplete="address"
-              helperText={touched.address ? errors.address : ''}
-              error={touched.address && Boolean(errors.address)}
-              value={values.address}
+              autoComplete="location"
+              helperText={touched.location ? errors.location : ''}
+              error={touched.location && Boolean(errors.location)}
+              value={values.location}
               onChange={handleChange}
             />
 

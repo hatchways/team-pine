@@ -143,14 +143,14 @@ export default function ProfileListing({}: Props): ReactElement {
                 profiles.map((profile) => (
                   <Grid key={profile.userId} item md={'auto'}>
                     <Card className={classes.profileCard}>
-                      <CardActionArea component={RouterLink} target="_blank" to={`/profile${profile._id}`}>
+                      <CardActionArea component={RouterLink} target="_blank" to={`/profile/${profile._id}`}>
                         <CardMedia>
                           {' '}
                           <Avatar
                             sx={{ width: 80, height: 80 }}
                             className={classes.profileAvatar}
                             alt={`${profile.name} profile picture`}
-                            src={`someimageurl/${profile.photo}`}
+                            src={`${profile.photo}`}
                           />{' '}
                         </CardMedia>
 
