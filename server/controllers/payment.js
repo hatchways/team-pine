@@ -32,6 +32,48 @@ const createOrRetrieveStripeCustomer = async (userId) => {
   return customer;
 };
 
+exports.chargeCustomer = async (requestId) => {
+  if (!requestId) {
+    throw new Error("Please provide a request id to process payment");
+  }
+  const request = await Request.findById(requestId);
+  if (!request) {
+    throw new Error("Request Not Found!!");
+  }
+  const { requester, startDate, endDate } = request;
+  const profile = await Profile.findById(requester);
+  const customer = await createOrRetrieveStripeCustomer(profile.userId);
+  if (!customer) {
+    throw new Error("Unable to create a payment account!!");
+  }
+  const paymentMethods = await stripe.customers.listPaymentMethods(
+    customer.id,
+    { type: "card" }
+  );
+  if (!paymentMethods) {
+    throw new Error("Unable to fetch saved payment methods!!");
+  }
+  if (!paymentMethods.data === []) {
+    throw new Error("Payment method needs to be setup");
+  }
+  const amountNeedsToBeCharged = calculateTotalHours(startDate, endDate);
+  if (amountNeedsToBeCharged < 1) {
+    throw new Error("Hours of diffrence should be more than zero");
+  }
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: amountNeedsToBeCharged * 100,
+    currency: "cad",
+    customer: customer.id,
+    payment_method: paymentMethods.id,
+    off_session: true,
+    confirm: true,
+  });
+  if (!paymentIntent) {
+    throw new Error("Unable to charge the saved payment method!!");
+  }
+  return paymentIntent;
+};
+
 // @route GET /payments/secret
 // @desc Get setup intent client secret
 // @access Private
@@ -91,47 +133,12 @@ exports.chargeSavedPaymentMethod = asyncHandler(async (req, res, next) => {
     res.status(400);
     throw new Error("Please provide a request id to process payment");
   }
-  const request = await Request.findById(requestId);
-  if (!request) {
-    res.status(404);
-    throw new Error("Request Not Found!!");
-  }
-  const { requester, startDate, endDate } = request;
-  const profile = await Profile.findById(requester);
-  const customer = await createOrRetrieveStripeCustomer(profile.userId);
-  if (!customer) {
-    res.status(404);
-    throw new Error("Unable to create a payment account!!");
-  }
-  const paymentMethods = await stripe.customers.listPaymentMethods(
-    customer.id,
-    { type: "card" }
-  );
-  if (!paymentMethods) {
-    res.status(404);
-    throw new Error("Unable to fetch saved payment methods!!");
-  }
-  if (!paymentMethods.data === []) {
-    res.status(404);
-    throw new Error("Payment method needs to be setup");
-  }
-  const amountNeedsToBeCharged = calculateTotalHours(startDate, endDate);
-  if (amountNeedsToBeCharged < 1) {
-    res.status(400);
-    throw new Error("Hours of diffrence should be more than zero");
-  }
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amountNeedsToBeCharged * 100,
-    currency: "cad",
-    customer: customer.id,
-    payment_method: paymentMethods.id,
-    off_session: true,
-    confirm: true,
-  });
+  const paymentIntent = await chargeCustomer(requestId);
   if (!paymentIntent) {
     res.status(404);
-    throw new Error("Unable to charge the saved payment method!!");
+    throw new Error("Unable to process payment !!!");
   }
+
   res.status(200);
-  res.send(paymentIntent);
+  res.send({ success: { paymentIntent } });
 });
