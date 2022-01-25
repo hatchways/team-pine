@@ -2,7 +2,7 @@ const Request = require("../models/Request");
 const Profile = require("../models/Profile");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
-const { chargeCustomer } = require("./availability");
+const { chargeCustomer } = require("./payment");
 
 // @route POST /requests
 // @desc Create new request
