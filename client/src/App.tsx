@@ -16,6 +16,7 @@ import { Navbar } from './components/Navbar/Navbar';
 import Settings from './pages/Settings/Settings';
 import NotFound from './pages/NotFound/NotFound';
 import ProfileListing from './pages/Profiles/ProfileListings/ProfileListing';
+import MessagesDashboard from './pages/Messages/MessagesDashboard';
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import LandingPage from './pages/Landing/LandingPage';
@@ -38,6 +39,7 @@ function App(): JSX.Element {
                 <ProtectedRoute path="/bookings" component={Bookings} />
                 <Route path="/profile/list-profiles/:availability/:location/" component={ProfileListing} />
                 <ProtectedRoute path="/profile/:profileId" component={ProfileDetails} />
+                <Route path="/messages/" component={MessagesDashboard} />
                 <Route path="*">
                   <NotFound />
                 </Route>

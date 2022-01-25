@@ -84,7 +84,7 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
 exports.sendMessage = asyncHandler(async (req, res, next) => {
   const { conversationId, description } = req.body;
 
-  if (!description || !receiver || !conversationId) {
+  if (!description || !conversationId) {
     res.status(400);
     throw new Error("Bad request!");
   }
@@ -122,10 +122,16 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
 exports.getAllConversations = asyncHandler(async (req, res, next) => {
   const conversations = await Conversation.find({
     participants: { $in: req.user.id },
-  }).populate({
-    path: "messages",
-    sort: { updatedAt: "desc" },
-  });
+  })
+    .populate({
+      path: "messages",
+      sort: { updatedAt: "desc" },
+      populate: {
+        path: "sender",
+        model: "User",
+      },
+    })
+    .populate("participants");
 
   res.status(200).json({
     success: {
