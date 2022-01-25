@@ -38,3 +38,15 @@ export const fetchListOfAllSchedule = async (): Promise<ScheduleListApiData> => 
       error: { message: 'Unable to connect to server. Please try again' },
     }));
 };
+
+export const setScheduleActive = async (scheduleId: string): Promise<ScheduleApiData> => {
+  const fetchOptions: FetchOptions = {
+    method: 'PATCH',
+    credentials: 'include',
+  };
+  return await fetch(`/availability/${scheduleId}/activate`, fetchOptions)
+    .then((res) => res.json())
+    .catch(() => ({
+      error: { message: 'Unable to connect to server. Please try again' },
+    }));
+};
