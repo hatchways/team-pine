@@ -36,7 +36,7 @@ export default function BookingCard({ booking, isNextBooking, isPastBooking }: P
     changeRequestStatus(booking.id, newStatus).then((data) => {
       if (data.error) {
         console.error({ error: data.error.message });
-        updateSnackBarMessage(data.error);
+        updateSnackBarMessage(data.error.message);
       } else if (data.success) {
         updateSnackBarMessage('Status successfully changed');
       } else {
