@@ -34,7 +34,7 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
       setLoggedInUser(data.user);
       setLoggedInUserProfile(data.profile);
       if (data.user && (history.location.pathname === '/login' || history.location.pathname === '/signup')) {
-        history.push('/dashboard');
+        history.push('/profile/list-profiles/monday_thursday/tokyo/');
       }
     },
     [history],

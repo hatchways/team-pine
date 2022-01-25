@@ -8,6 +8,7 @@ import useStyles from './useStyles';
 import createRequest from '../../../helpers/APICalls/createRequest';
 import { useSnackBar } from '../../../context/useSnackbarContext';
 import { useTheme } from '@mui/system';
+import createNotification from '../../../helpers/APICalls/createNotification';
 
 export default function RequestForm({ profileId }: { profileId: string }): JSX.Element {
   const { updateSnackBarMessage } = useSnackBar();
@@ -23,6 +24,21 @@ export default function RequestForm({ profileId }: { profileId: string }): JSX.E
         updateSnackBarMessage(data.error);
       } else if (data.success) {
         updateSnackBarMessage('Request successfully created!');
+
+        createNotification('request', 'message', `Dog Sitting Requested!`, profileId).then((data) => {
+          if (data.error) {
+            setSubmitting(false);
+            updateSnackBarMessage(data.error.message);
+          } else if (data.success) {
+            setSubmitting(false);
+            console.log(data.success);
+          } else {
+            // should not get here from backend but this catch is for an unknown issue
+            console.error({ data });
+            setSubmitting(false);
+            updateSnackBarMessage('An unexpected error occurred. Please try again');
+          }
+        });
       } else {
         // should not get here from backend but this catch is for an unknown issue
         console.error({ data });

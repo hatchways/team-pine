@@ -1,5 +1,6 @@
 export default interface Notification {
-  user: string;
+  sender: string;
+  receiver: string;
   type: string;
   title: string;
   description: string;

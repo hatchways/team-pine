@@ -52,6 +52,7 @@ export default function ProfileListing({}: Props): ReactElement {
   const { updateSnackBarMessage } = useSnackBar();
   const [formDate, setFormDate] = useState<string>('');
   const [formLocation, setFormLocation] = useState<string>('');
+  const [isMounted, setIsMounted] = useState<boolean>(false);
 
   const { availability, location } = useParams<{ availability?: string; location?: string }>();
 
@@ -76,7 +77,8 @@ export default function ProfileListing({}: Props): ReactElement {
   }, [debouncedFormLocation, debouncedFormDate, updateSnackBarMessage]);
 
   useEffect(() => {
-    if (availability && location) {
+    if (availability && location && !isMounted) {
+      setIsMounted(true);
       listProfiles(availability, location).then((data) => {
         if (data.error) {
           updateSnackBarMessage(data.error.message);
@@ -89,7 +91,7 @@ export default function ProfileListing({}: Props): ReactElement {
         }
       });
     }
-  }, [availability, location, updateSnackBarMessage]);
+  }, [availability, location, updateSnackBarMessage, isMounted]);
 
   return (
     <PageContainer>
@@ -138,7 +140,7 @@ export default function ProfileListing({}: Props): ReactElement {
           {isSearching ? (
             'searching...'
           ) : (
-            <Grid container spacing={2}>
+            <Grid sx={{ maxWidth: '1300px', margin: 'auto' }} container spacing={2}>
               {profiles.length > 0 &&
                 profiles.map((profile) => (
                   <Grid key={profile.userId} item md={'auto'}>
@@ -147,7 +149,7 @@ export default function ProfileListing({}: Props): ReactElement {
                         <CardMedia>
                           {' '}
                           <Avatar
-                            sx={{ width: 80, height: 80 }}
+                            sx={{ width: 100, height: 100 }}
                             className={classes.profileAvatar}
                             alt={`${profile.name} profile picture`}
                             src={`${profile.photo}`}

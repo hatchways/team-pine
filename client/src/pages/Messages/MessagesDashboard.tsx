@@ -123,7 +123,7 @@ export default function MessagesDashboard(): JSX.Element {
           <Grid item xs={3} className={classes.borderRight500}>
             <Divider />
             <List>
-              {conversations.length &&
+              {conversations.length > 0 &&
                 conversations.map((conversation, index) => (
                   <ListItem button onClick={() => setChatBox(index)} key={conversation._id}>
                     <ListItemIcon>
@@ -157,7 +157,7 @@ export default function MessagesDashboard(): JSX.Element {
             </List>
           </Grid>
           <Grid item xs={9}>
-            {!isSubmitting && conversations[chatbox] && (
+            {!isSubmitting && conversations[chatbox] && conversations.length > 0 && (
               <Grid sx={{ padding: '30px' }} container>
                 <Grid item>
                   <Avatar

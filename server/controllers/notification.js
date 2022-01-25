@@ -1,5 +1,5 @@
 const Notification = require("../models/Notification");
-const User = require("../models/User");
+const Profile = require("../models/Profile");
 const asyncHandler = require("express-async-handler");
 
 // @route POST /notifications/
@@ -7,13 +7,20 @@ const asyncHandler = require("express-async-handler");
 // @access Public
 
 exports.createNotification = asyncHandler(async (req, res, next) => {
-  const { type, title, description, receiver } = req.body;
+  const { type, title, description } = req.body;
+
+  let receiver = req.body.receiver;
 
   if (!type || !title || !description || !receiver) {
     res.status(400);
     throw new Error(
       "Bad request! Missing type, title, description or receiver"
     );
+  }
+
+  const foundProfile = await Profile.findById(receiver);
+  if (foundProfile.length) {
+    receiver = foundProfile.userId;
   }
 
   const notification = await Notification.create({

@@ -53,6 +53,8 @@ exports.getProfileListings = asyncHandler(async (req, res, next) => {
     isSitter: true,
   });
 
+  console.log(availability, location, profiles);
+
   const profile = profiles.map((profile) => profile._id.toString());
 
   try {

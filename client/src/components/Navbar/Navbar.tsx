@@ -141,7 +141,7 @@ const Navbar: React.FC = () => {
         </NavLink>
       </Grid>
       <Grid xs={8} md={6} item>
-        <Grid container alignItems="center" gap={2} justifyContent="flex-end">
+        <Grid container alignItems="center" gap={1} justifyContent="flex-end">
           {loggedInUser && <NotificationMenu />}
           {renderMenuItems()}
           {loggedInUser && (

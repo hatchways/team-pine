@@ -1,4 +1,5 @@
 const Conversation = require("../models/Conversation");
+const User = require("../models/User");
 const Message = require("../models/Message");
 const asyncHandler = require("express-async-handler");
 
@@ -9,9 +10,22 @@ const asyncHandler = require("express-async-handler");
 exports.createConversation = asyncHandler(async (req, res, next) => {
   const { description, receiver } = req.body;
 
-  if (!description || !receiver) {
+  if (!description || !receiver || !req.user.id) {
     res.status(400);
     throw new Error("Bad request! Missing description or receiver!");
+  }
+
+  console.log(req.body);
+
+  const receiverUser = await User.findOne({
+    email: { $regex: receiver.toLowerCase(), $options: "i" },
+  });
+
+  console.log(receiverUser);
+
+  if (!receiverUser) {
+    res.status(403);
+    throw new Error("No user found!");
   }
 
   const message = await Message.create({
@@ -20,7 +34,7 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
   });
 
   const existingConversation = await Conversation.findOne({
-    participants: { $all: [`${req.user.id}`, `${receiver}`] },
+    participants: { $all: [`${req.user.id}`, `${receiverUser._id}`] },
   });
 
   if (existingConversation) {
@@ -35,7 +49,7 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
     });
   } else {
     const conversation = await Conversation.create({
-      participants: [req.user.id, receiver],
+      participants: [req.user.id, receiverUser._id],
     });
 
     conversation.messages.push(message);
