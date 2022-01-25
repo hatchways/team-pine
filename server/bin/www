@@ -95,6 +95,8 @@ function onListening() {
  * Authentication and listener for user connection to socket
  */
 
+const { createNotification } = require("../socket handlers/notificationsHandler")(io);
+
 io.use(async (socket, next) => {
   const token = socket.handshake.headers.cookie
 
@@ -119,4 +121,5 @@ io.use(async (socket, next) => {
   }
 }).on("connection", (socket) => {
   console.log(socket.data.user)
+  socket.on("notification:create", createNotification);
 });
