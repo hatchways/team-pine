@@ -101,7 +101,7 @@ export default function ProfileDetails(): JSX.Element {
               <Typography mb={1} component="h2" fontSize="1.1rem" fontWeight="bold">
                 About me
               </Typography>
-              <Typography>{profile.aboutMe}</Typography>
+              <Typography mb={3}>{profile.aboutMe}</Typography>
               {mockPhotos.map((item) => (
                 <img key={item} className={classes.listImage} src={item} alt="Pet image" />
               ))}
