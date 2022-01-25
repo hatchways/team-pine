@@ -36,7 +36,7 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
     throw new Error("Request doesn't exist");
   }
   const profile = await Profile.findOne({'userId': req.user.id})
-  if (request.sitter == profile._id) {
+  if (request.sitter.toString() == profile._id.toString()) {
     const { status } = req.body
     request.set('status', status)
     const updatedRequest = await request.save();

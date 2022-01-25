@@ -6,7 +6,7 @@ import RequestForm from './RequestForm/RequestForm';
 import useStyles from './useStyles';
 import { useState, useEffect } from 'react';
 import getProfile from '../../helpers/APICalls/getProfile';
-import Profile from '../../interface/Profile';
+import { ProfileDetails as Profile } from '../../interface/Profile';
 import { useParams } from 'react-router-dom';
 import { useSnackBar } from '../../context/useSnackbarContext';
 
