@@ -20,6 +20,7 @@ import lovingSitterLogo from '../../images/logo.svg';
 import { useStyles } from './useStyles';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Settings, Logout, Person } from '@mui/icons-material';
+import AvatarDisplay from '../AvatarDisplay/AvatarDisplay';
 
 const NavbarButton = styled(Button)({
   padding: '15px 0',
@@ -144,7 +145,7 @@ const Navbar: React.FC = () => {
           {loggedInUser && <NotificationMenu />}
           {renderMenuItems()}
           {loggedInUser && (
-            <Grid xs={2} item>
+            <>
               <IconButton
                 size="large"
                 aria-label="account profile picture"
@@ -153,7 +154,12 @@ const Navbar: React.FC = () => {
                 onClick={handleMenuOpen}
                 color="inherit"
               >
-                <img alt={'profile picture'} style={{ width: 50 }} src={`https://robohash.org/${loggedInUser.email}`} />
+                <AvatarDisplay
+                  user={loggedInUser}
+                  loggedIn
+                  width={50}
+                  photoUrl={`https://robohash.org/${loggedInUser.email}`}
+                />
               </IconButton>
 
               <Menu
@@ -191,7 +197,7 @@ const Navbar: React.FC = () => {
                   <ListItemText>Logout</ListItemText>
                 </DropdownMenuItem>
               </Menu>
-            </Grid>
+            </>
           )}
         </Grid>
       </Grid>
