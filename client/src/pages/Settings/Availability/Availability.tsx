@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Box, Button, Typography, Badge, Divider, MenuItem, TextField, FormControl, InputLabel } from '@mui/material';
+import { Box, Button, Typography, Divider, MenuItem, TextField, FormControl, InputLabel } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import SettingHeader from '../../../components/SettingsHeader/SettingsHeader';
-import { Schedule, Days } from '../../../interface/Schedule';
+import { Schedule } from '../../../interface/Schedule';
 import {
   getActiveSchedule,
   createNewSchedule,
@@ -12,7 +12,6 @@ import {
   setScheduleActive,
 } from '../../../helpers/APICalls/schedule';
 import { useSnackBar } from '../../../context/useSnackbarContext';
-import { te } from 'date-fns/locale';
 import moment from 'moment';
 
 const hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23];
