@@ -11,3 +11,12 @@ export interface Profile {
   _id: string;
   location: string;
 }
+
+export interface ProfileDetails {
+  name: string;
+  description: string;
+  aboutMe: string;
+  payRate: string;
+  location: string;
+  photo: string;
+}

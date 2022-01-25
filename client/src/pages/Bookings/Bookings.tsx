@@ -23,6 +23,7 @@ export default function Bookings(): JSX.Element {
     if (!mounted) {
       setMounted(true);
       getRequests().then((res) => {
+        console.log(res);
         if (!res.error) {
           const userBookings: Request[] = [];
           for (let i = 0; i < res.requests.length; i++) {
