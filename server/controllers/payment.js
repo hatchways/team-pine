@@ -64,7 +64,7 @@ exports.chargeCustomer = async (requestId) => {
     amount: amountNeedsToBeCharged * 100,
     currency: "cad",
     customer: customer.id,
-    payment_method: paymentMethods.id,
+    payment_method: paymentMethods.data[0].id,
     off_session: true,
     confirm: true,
   });
