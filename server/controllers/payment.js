@@ -50,7 +50,7 @@ exports.getClientSecret = asyncHandler(async (req, res, next) => {
     throw new Error("Unable proccess payment setup");
   }
   res.status(200);
-  res.send({ client_secret: setupIntent.client_secret });
+  res.send({ success: { client_secret: setupIntent.client_secret } });
 });
 
 // @route GET /payments/saved-cards
