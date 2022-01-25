@@ -5,7 +5,7 @@ const Schedule = require("../models/Schedule");
 exports.createSchedule = asyncHandler(async (req, res, next) => {
   if (req.profile === undefined) {
     res.status(404);
-    throw new Error("Unable to get profile of user");
+    throw new Error("Unable to get profile of user while creating schedule");
   }
   const profileId = req.profile.id;
   const { name, days } = req.body;
@@ -51,7 +51,7 @@ exports.getSchedule = asyncHandler(async (req, res, next) => {
     });
   } else {
     res.status(404);
-    res.send("schedule not Found!!");
+    res.send("schedule with given id is not exists!!!");
   }
 });
 // @route GET /availability
@@ -79,7 +79,7 @@ exports.getActiveSchedule = asyncHandler(async (req, res, next) => {
   const schedule = await Schedule.findOne({ _id: profile.activeSchedule });
   if (!schedule) {
     res.status(404);
-    throw new Error("Schedule Not Found!!");
+    throw new Error("No Activated Schedule!!");
   }
   res.status(200);
   res.send({
