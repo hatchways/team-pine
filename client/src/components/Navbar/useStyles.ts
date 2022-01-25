@@ -8,8 +8,22 @@ export const useStyles = makeStyles((theme: Theme) => ({
     background: 'white',
   },
   transparentNavbar: {
+    position: 'fixed',
+    zIndex: 10000,
     boxShadow: 'none',
     background: 'none',
+  },
+  navbarItemLanding: {
+    fontWeight: 700,
+    textDecoration: 'none',
+    color: 'white !important',
+    transition: 'color 120ms ease-in-out',
+    '& .MuiButton-root': {
+      color: 'white',
+    },
+    '&:hover': {
+      color: theme.palette.primary.main,
+    },
   },
   navbarItem: {
     color: theme.palette.grey[900],
@@ -18,6 +32,23 @@ export const useStyles = makeStyles((theme: Theme) => ({
     transition: 'color 120ms ease-in-out',
     '&:hover': {
       color: theme.palette.primary.main,
+    },
+  },
+  unreadNotification: {
+    backgroundColor: '#FFFFFF',
+    fontWeight: 700,
+    textDecoration: 'none',
+  },
+  readNotification: {
+    backgroundColor: theme.palette.grey[300],
+    fontWeight: 700,
+    textDecoration: 'none',
+  },
+  badge: {
+    '& .MuiBadge-standard': {
+      backgroundColor: '#4caf50',
+      left: '1px',
+      top: '-10px',
     },
   },
   navbarLogo: {

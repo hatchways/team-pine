@@ -18,6 +18,7 @@ import NotFound from './pages/NotFound/NotFound';
 import ProfileListing from './pages/Profiles/ProfileListings/ProfileListing';
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import LandingPage from './pages/Landing/LandingPage';
 
 function App(): JSX.Element {
   return (
@@ -29,12 +30,13 @@ function App(): JSX.Element {
               <CssBaseline />
               <Navbar />
               <Switch>
+                <Route exact path="/" component={LandingPage} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/signup" component={Signup} />
                 <ProtectedRoute exact path="/dashboard" component={Dashboard} />
                 <ProtectedRoute path="/profile/settings" component={Settings} />
                 <ProtectedRoute path="/bookings" component={Bookings} />
-                <Route exact path="/profile-listings/" component={ProfileListing} />
+                <Route path="/profile/list-profiles/:availability/:location/" component={ProfileListing} />
                 <ProtectedRoute path="/profile/:profileId" component={ProfileDetails} />
                 <Route path="*">
                   <NotFound />

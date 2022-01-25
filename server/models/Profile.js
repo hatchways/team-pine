@@ -38,20 +38,20 @@ const profileSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  activeSchedule: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Schedule",
-  },
   payRate: {
     type: String,
     default: "",
+  },
+  activeSchedule: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Schedule",
   },
   location: {
     type: String,
     default: "",
     lowercase: true,
-    trim: true
-  }
+    trim: true,
+  },
 });
 
 module.exports = Profile = mongoose.model("Profile", profileSchema);
