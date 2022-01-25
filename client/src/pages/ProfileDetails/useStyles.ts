@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  listImage: {
+    width: 125,
+    height: 125,
+    borderRadius: 10,
+    marginRight: 20,
+  },
 }));
 
 export default useStyles;
