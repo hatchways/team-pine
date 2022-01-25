@@ -22,22 +22,12 @@ import { useSnackBar } from '../../../context/useSnackbarContext';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import moment from 'moment';
+import { Profile } from '../../../interface/Profile';
 
 interface Props {
   location: string;
   dropIn: Date;
   dropOff: Date;
-}
-
-interface Profile {
-  userId: string;
-  name: string;
-  title: string;
-  description: string;
-  location: string;
-  payRate: string;
-  _id: string;
-  photo: string;
 }
 
 type Profiles = Profile[];
@@ -167,9 +157,6 @@ export default function ProfileListing({}: Props): ReactElement {
                         <CardContent>
                           <Typography gutterBottom variant="h4" component="div">
                             {`${profile.name}`}
-                          </Typography>
-                          <Typography gutterBottom variant="h5" color="text.secondary" component="div">
-                            {`${profile.title}`}
                           </Typography>
 
                           <Rating name="half-rating" defaultValue={2.5} precision={0.5} />

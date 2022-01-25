@@ -3,8 +3,8 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   profileCard: {
-    width: '350px',
-    height: '290px',
+    maxWidth: '340px',
+    maxHeight: '340px',
     margin: '30px',
     textAlign: 'center',
   },
