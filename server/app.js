@@ -32,10 +32,6 @@ const io = socketio(server, {
   },
 });
 
-io.on("connection", (socket) => {
-  console.log("connected");
-});
-
 if (process.env.NODE_ENV === "development") {
   server.listen(process.env.PORT, (err, res) => {
     if (err) return console.log(err);
@@ -85,4 +81,4 @@ process.on("unhandledRejection", (err, promise) => {
   server.close(() => process.exit(1));
 });
 
-module.exports = { app, server };
+module.exports = { app, server, io };
