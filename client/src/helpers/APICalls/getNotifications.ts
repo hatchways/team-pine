@@ -1,16 +1,15 @@
-import { FetchOptions } from './../../interface/FetchOptions';
+import { FetchOptions } from '../../interface/FetchOptions';
 
-const getRequests = async () => {
+const getNotifications = async () => {
   const fetchOptions: FetchOptions = {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
   };
-  return await fetch(`/requests`, fetchOptions)
+  return await fetch(`/notification/all`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },
     }));
 };
 
-export default getRequests;
+export default getNotifications;

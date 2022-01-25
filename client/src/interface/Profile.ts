@@ -7,6 +7,16 @@ export interface Profile {
   photo?: string;
   telephone?: string;
   userId: string;
-  pay: string;
+  payRate: string;
   _id: string;
+  location: string;
+}
+
+export interface ProfileDetails {
+  name: string;
+  description: string;
+  aboutMe: string;
+  payRate: string;
+  location: string;
+  photo: string;
 }

@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, Typography } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
+import { io } from 'socket.io-client';
 
 export default function Dashboard(): JSX.Element {
+  useEffect(() => {
+    const socket = io();
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   return (
     <PageContainer>
       <Grid container>

@@ -19,6 +19,7 @@ const requestRouter = require("./routes/request");
 const uploadRouter = require("./routes/upload");
 const deleteRouter = require("./routes/delete");
 const availabilityRouter = require("./routes/availability");
+const paymentsRoute = require("./routes/payment");
 
 const { json, urlencoded } = express;
 
@@ -30,10 +31,6 @@ const io = socketio(server, {
   cors: {
     origin: "*",
   },
-});
-
-io.on("connection", (socket) => {
-  console.log("connected");
 });
 
 if (process.env.NODE_ENV === "development") {
@@ -56,12 +53,14 @@ app.use((req, res, next) => {
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/profile", profileRouter);
+app.use("/availability", availabilityRouter);
 app.use("/notifications", notificationRouter);
 app.use("/conversations", conversationRouter);
 app.use("/requests", requestRouter);
 app.use("/upload", uploadRouter);
 app.use("/delete", deleteRouter);
 app.use("/availability", availabilityRouter);
+app.use("/payments", paymentsRoute);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));
@@ -85,4 +84,4 @@ process.on("unhandledRejection", (err, promise) => {
   server.close(() => process.exit(1));
 });
 
-module.exports = { app, server };
+module.exports = { app, server, io };

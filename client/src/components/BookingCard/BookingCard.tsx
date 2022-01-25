@@ -39,6 +39,10 @@ export default function BookingCard({ booking, isNextBooking, isPastBooking }: P
         updateSnackBarMessage(data.error);
       } else if (data.success) {
         updateSnackBarMessage('Status successfully changed');
+      } else {
+        // should not get here from backend but this catch is for an unknown issue
+        console.error({ data });
+        updateSnackBarMessage('An unexpected error occurred. Please try again');
       }
     });
   };

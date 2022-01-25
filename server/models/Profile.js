@@ -14,6 +14,10 @@ const profileSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  aboutMe: {
+    type: String,
+    default: "",
+  },
   gender: {
     type: String,
     default: "none",
@@ -34,9 +38,19 @@ const profileSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  payRate: {
+    type: String,
+    default: "",
+  },
   activeSchedule: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Schedule",
+  },
+  location: {
+    type: String,
+    default: "",
+    lowercase: true,
+    trim: true,
   },
 });
 

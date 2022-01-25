@@ -9,6 +9,9 @@ require("dotenv").config();
 
 var app = require("../app").app;
 var http = require("http");
+var io = require("../app").io;
+const Profile = require("../models/Profile");
+const jwt = require("jsonwebtoken");
 
 /**
  * Get port from environment and store in Express.
@@ -87,3 +90,29 @@ function onListening() {
 
   console.log(`Listening on ${bind}`.red.underline.bold);
 }
+
+io.use(async (socket, next) => {
+  const token = socket.handshake.headers.cookie;
+
+  if (!token) {
+    next(new Error("Invalid token"));
+  }
+
+  try {
+    const userToken = token.split("token=").join("");
+
+    const decodedUser = jwt.verify(userToken, process.env.JWT_SECRET);
+
+    const user = await User.findById(decodedUser.id);
+    if (!user) {
+      next(new Error("User not found"));
+    }
+
+    socket.data.user = user;
+    next();
+  } catch (err) {
+    next(new Error("User authentication failed!"));
+  }
+}).on("connection", (socket) => {
+  console.log(socket.data.user);
+});
