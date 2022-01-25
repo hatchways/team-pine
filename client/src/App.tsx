@@ -8,12 +8,14 @@ import Login from './pages/Login/Login';
 import Signup from './pages/SignUp/SignUp';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Bookings from './pages/Bookings/Bookings';
+import ProfileDetails from './pages/ProfileDetails/ProfileDetails';
 import { AuthProvider } from './context/useAuthContext';
 import { SocketProvider } from './context/useSocketContext';
 import { SnackBarProvider } from './context/useSnackbarContext';
 import { Navbar } from './components/Navbar/Navbar';
 import Settings from './pages/Settings/Settings';
 import NotFound from './pages/NotFound/NotFound';
+import ProfileListing from './pages/Profiles/ProfileListings/ProfileListing';
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
@@ -32,6 +34,8 @@ function App(): JSX.Element {
                 <ProtectedRoute exact path="/dashboard" component={Dashboard} />
                 <ProtectedRoute path="/profile/settings" component={Settings} />
                 <ProtectedRoute path="/bookings" component={Bookings} />
+                <ProtectedRoute path="/profile/:profileId" component={ProfileDetails} />
+                <Route exact path="/profile-listings/" component={ProfileListing} />
                 <Route path="*">
                   <NotFound />
                 </Route>

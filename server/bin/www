@@ -91,17 +91,13 @@ function onListening() {
   console.log(`Listening on ${bind}`.red.underline.bold);
 }
 
-/**
- * Authentication and listener for user connection to socket
- */
-
 const { createNotification } = require("../socket handlers/notificationsHandler")(io);
 
 io.use(async (socket, next) => {
   const token = socket.handshake.headers.cookie
 
   if (!token) {
-    console.log("Invalid token")
+    next(new Error('Invalid token'));
   }
 
   try {
@@ -111,13 +107,13 @@ io.use(async (socket, next) => {
 
     const user = await User.findById(decodedUser.id);
     if (!user) {
-      console.log("User not found");
+      next(new Error("User not found"));
     }
 
     socket.data.user = user
     next();
   } catch (err) {
-    console.log("User authentication failed!")
+    next(new Error("User authentication failed!"));
   }
 }).on("connection", (socket) => {
   console.log(socket.data.user)
