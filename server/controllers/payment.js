@@ -87,7 +87,7 @@ exports.chargeSavedPaymentMethod = asyncHandler(async (req, res, next) => {
     res.status(400);
     throw new Error("Please provide a request id to process payment");
   }
-  const request = await Request.findById(requestId);
+  const request = await Request.findById(requestId).populate('requester');
   if (!request) {
     res.status(404);
     throw new Error("Request Not Found!!");
