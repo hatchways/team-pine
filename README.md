@@ -1,10 +1,10 @@
-## Project Name
+## Loving Sitter
 
-This is a little description about your project.
+Loving sitter is a project created to help bring pet owners and sitters together. Whether you have a pet and you need someone to watch it, or you want to watch someone else's pet, this is the place for you!
 
 **Tech Stack:** MongoDB, Express.js, React.js, Node.js, Typescript
 
-**Contributors**: [Hatchways](https://github.com/hatchways) (replace)
+**Contributors**: [Hatchways](https://github.com/hatchways) Roland Matheson, Gurkirt Singh, Miles Coffin, Rajiv Titus
 
 ---
 
