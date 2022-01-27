@@ -4,7 +4,7 @@ Loving sitter is a project created to help bring pet owners and sitters together
 
 **Tech Stack:** MongoDB, Express.js, React.js, Node.js, Typescript
 
-**Contributors**: [Hatchways](https://github.com/hatchways) [Roland Matheson](https://github.com/rj13371), [Gurkirt Singh](https://github.com/GurkirtSingh), [Miles Coffin](https://github.com/MilesDev91), [Rajiv Titus](https://github.com/rajivtitus)
+**Contributors**: [Hatchways](https://github.com/hatchways), [Roland Matheson](https://github.com/rj13371), [Gurkirt Singh](https://github.com/GurkirtSingh), [Miles Coffin](https://github.com/MilesDev91), [Rajiv Titus](https://github.com/rajivtitus)
 
 ---
 
