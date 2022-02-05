@@ -52,6 +52,13 @@ const profileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Schedule",
   },
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Review",
+      default: [],
+    }
+  ],
 });
 
 module.exports = Profile = mongoose.model("Profile", profileSchema);
