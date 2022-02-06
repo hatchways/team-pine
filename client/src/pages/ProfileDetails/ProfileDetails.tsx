@@ -42,7 +42,6 @@ export default function ProfileDetails(): JSX.Element {
           getReviews(profileId).then((res) => {
             if (!res.error) {
               setReviews(res.success.reviews);
-              console.log(res.success.reviews);
             } else {
               console.error(res.error);
               updateSnackBarMessage('Reviews not found');
@@ -73,6 +72,14 @@ export default function ProfileDetails(): JSX.Element {
 
   const handleClose = () => {
     setReviewsDialogOpen(false);
+  };
+
+  const addReview = (review: Review) => {
+    if (reviews) {
+      setReviews([review, ...reviews]);
+    } else {
+      setReviews([review]);
+    }
   };
 
   return (
@@ -193,7 +200,7 @@ export default function ProfileDetails(): JSX.Element {
                 <Typography component="h2" fontSize="1.1rem">
                   Leave a review
                 </Typography>
-                <ReviewForm profileId={profileId} />
+                <ReviewForm profileId={profileId} addReview={addReview} />
               </Box>
             </Box>
           </Grid>

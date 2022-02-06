@@ -14,8 +14,8 @@ export default function ProfileReview({ review }: Props): JSX.Element {
         <ListItemAvatar>
           <AvatarDisplay
             loggedIn
-            user={{ name: review.name, email: 'example@example.com' }}
-            photoUrl={review.photo}
+            user={{ name: review.reviewer.name, email: 'example@example.com' }}
+            photoUrl={review.reviewer.photo}
           ></AvatarDisplay>
         </ListItemAvatar>
         {review.text ? <ListItemText>{review.text}</ListItemText> : null}

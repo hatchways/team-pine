@@ -5,18 +5,41 @@ import { useSnackBar } from '../../../context/useSnackbarContext';
 import FormInput from '../../../components/FormInput/FormInput';
 import useStyles from './useStyles';
 import { useTheme } from '@mui/system';
+import createReview from '../../../helpers/APICalls/createReview';
+import Review from '../../../interface/Review';
 
-export default function ReviewForm({ profileId }: { profileId: string }): JSX.Element {
+interface Props {
+  profileId: string;
+  addReview: (review: Review) => void;
+}
+
+export default function ReviewForm({ profileId, addReview }: Props): JSX.Element {
   const { updateSnackBarMessage } = useSnackBar();
   const classes = useStyles();
   const theme = useTheme();
 
   const handleSubmit = (
     { reviewText, rating }: { reviewText: string; rating: number },
-    { setSubmitting }: FormikHelpers<{ reviewText: string; rating: number }>,
+    { setSubmitting, resetForm }: FormikHelpers<{ reviewText: string; rating: number }>,
   ) => {
-    console.log(reviewText, rating);
-    setSubmitting(false);
+    createReview(profileId, rating, reviewText).then((data) => {
+      if (data.error) {
+        console.error({ error: data.error.message });
+        updateSnackBarMessage(data.error.message);
+        setSubmitting(false);
+      } else if (data.success) {
+        updateSnackBarMessage('Review successfully created!');
+        const { rating, text, reviewer } = data.success.review;
+        addReview({ rating, text, reviewer });
+      } else {
+        // should not get here from backend but this catch is for an unknown issue
+        console.error({ data });
+
+        setSubmitting(false);
+        updateSnackBarMessage('An unexpected error occurred. Please try again');
+      }
+    });
+    resetForm();
   };
 
   return (
