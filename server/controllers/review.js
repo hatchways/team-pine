@@ -35,6 +35,12 @@ exports.createReview = asyncHandler(async (req, res, next) => {
 
   if (review) {
     profile.reviews.push(review);
+    let ratings = []
+    for (let profileReview of profile.reviews) {
+      ratings.push(profileReview.rating);
+    }
+    const averageRating = ratings.reduce((a, b) => a + b) / ratings.length;
+    profile.set("rating", Math.round(averageRating * 2) / 2)
     profile.save();
     res.status(200).json({
       success: {

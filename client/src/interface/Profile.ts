@@ -5,6 +5,7 @@ export interface ProfileDetails {
   payRate: string;
   location: string;
   photo: string;
+  rating: number;
 }
 
 export interface Profile {

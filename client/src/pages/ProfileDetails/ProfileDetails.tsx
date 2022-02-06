@@ -162,7 +162,7 @@ export default function ProfileDetails(): JSX.Element {
             <Typography component="p" fontSize="1.1rem" fontWeight="bold" m="3rem auto 1rem auto">
               ${profile.payRate}/hr
             </Typography>
-            <Rating sx={{ margin: 'auto' }} value={4} precision={0.5} readOnly />
+            <Rating sx={{ margin: 'auto' }} value={profile.rating} precision={0.5} readOnly />
             <RequestForm profileId={profileId} />
             <Divider sx={{ width: '95%', margin: 'auto' }} />
             <Box className={classes.reviewsContainer}>

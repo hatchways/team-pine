@@ -1,6 +1,6 @@
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import { CircularProgress, Rating, Button } from '@mui/material';
+import { Box, CircularProgress, Rating, Button, Typography } from '@mui/material';
 import { useSnackBar } from '../../../context/useSnackbarContext';
 import FormInput from '../../../components/FormInput/FormInput';
 import useStyles from './useStyles';
@@ -44,7 +44,7 @@ export default function ReviewForm({ profileId, addReview }: Props): JSX.Element
 
   return (
     <Formik
-      initialValues={{ reviewText: '', rating: 3 }}
+      initialValues={{ reviewText: '', rating: 0 }}
       validationSchema={Yup.object().shape({
         rating: Yup.number()
           .required('You must select a rating')
@@ -57,12 +57,19 @@ export default function ReviewForm({ profileId, addReview }: Props): JSX.Element
       {({ handleSubmit, setFieldValue, values, handleChange, isSubmitting, errors, touched }) => (
         <form className={classes.reviewForm} onSubmit={handleSubmit} noValidate>
           <Rating
-            sx={{ marginBottom: theme.spacing(2) }}
             value={values.rating}
             onChange={(event, newValue) => {
               setFieldValue('rating', newValue);
             }}
+            precision={0.5}
           />
+          {errors.rating ? (
+            <Typography sx={{ color: theme.palette.error.main, marginBottom: theme.spacing(2) }}>
+              {errors.rating}
+            </Typography>
+          ) : (
+            <Box sx={{ height: theme.spacing(2) }} />
+          )}
           <FormInput
             id="review-comments"
             label="Optional Comments"
@@ -74,6 +81,7 @@ export default function ReviewForm({ profileId, addReview }: Props): JSX.Element
             onChange={handleChange}
             multiline
             minRows={3}
+            sx={{ marginTop: theme.spacing(2) }}
           ></FormInput>
           <Button sx={{ width: 100 }} variant="contained" type="submit">
             {isSubmitting ? <CircularProgress size={20} style={{ color: 'white' }} /> : 'Submit'}
