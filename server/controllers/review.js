@@ -58,5 +58,8 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
     throw new Error("Profile does not exist");
   }
 
-  res.status(200).json({ reviews: profile.reviews });
+  res.status(200).json({
+    success: {
+      reviews: profile.reviews
+  }});
 });
