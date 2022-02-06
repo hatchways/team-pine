@@ -13,6 +13,7 @@ import getReviews from '../../helpers/APICalls/getReviews';
 import { ProfileDetails as Profile } from '../../interface/Profile';
 import { useParams } from 'react-router-dom';
 import { useSnackBar } from '../../context/useSnackbarContext';
+import { useTheme } from '@mui/material';
 import Review from '../../interface/Review';
 
 const mockPhotos = [
@@ -22,6 +23,8 @@ const mockPhotos = [
 
 export default function ProfileDetails(): JSX.Element {
   const classes = useStyles();
+  const theme = useTheme();
+
   const { updateSnackBarMessage } = useSnackBar();
   const [isMounted, setIsMounted] = useState<boolean>(false);
   const [profile, setProfile] = useState<Profile | undefined>();
@@ -137,9 +140,10 @@ export default function ProfileDetails(): JSX.Element {
             'No Profile Found'
           )}
         </Grid>
-        {windowWidth < 1200 ? <Divider sx={{ width: '95%' }} /> : null}
+        {windowWidth < 1200 ? <Divider sx={{ width: '100%' }} /> : null}
         {profile ? (
           <Grid
+            padding={theme.spacing(2)}
             xs={12}
             lg={4}
             item
@@ -184,7 +188,13 @@ export default function ProfileDetails(): JSX.Element {
                   />
                 </>
               ) : null}
-              <ReviewForm profileId={profileId} />
+              <Divider sx={{ width: '100%' }} />
+              <Box className={classes.reviewForm}>
+                <Typography component="h2" fontSize="1.1rem">
+                  Leave a review
+                </Typography>
+                <ReviewForm profileId={profileId} />
+              </Box>
             </Box>
           </Grid>
         ) : null}

@@ -30,11 +30,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   reviewsContainer: {
     display: 'flex',
     flexDirection: 'column',
-    margin: `${theme.spacing(2)} ${theme.spacing(2)}`,
+    marginTop: theme.spacing(2),
     alignItems: 'flex-start',
   },
   review: {
     padding: `${theme.spacing(1)} ${theme.spacing(1)}`,
+  },
+  reviewForm: {
+    marginTop: theme.spacing(2),
+    width: '100%',
   },
 }));
 
