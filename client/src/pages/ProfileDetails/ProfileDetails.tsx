@@ -1,6 +1,8 @@
-import { Grid, Box, Typography, Rating, Divider } from '@mui/material';
+import { Grid, Box, Button, Typography, Rating, Divider, List } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import AvatarDisplay from '../../components/AvatarDisplay/AvatarDisplay';
+import ProfileReview from '../../components/ProfileReview/ProfileReview';
+import ReviewsDialog from '../../components/ReviewsDialog/ReviewsDialog';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import RequestForm from './RequestForm/RequestForm';
 import useStyles from './useStyles';
@@ -9,10 +11,42 @@ import getProfile from '../../helpers/APICalls/getProfile';
 import { ProfileDetails as Profile } from '../../interface/Profile';
 import { useParams } from 'react-router-dom';
 import { useSnackBar } from '../../context/useSnackbarContext';
+import Review from '../../interface/Review';
 
 const mockPhotos = [
   'https://images.pexels.com/photos/3714060/pexels-photo-3714060.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
   'https://images.pexels.com/photos/6303371/pexels-photo-6303371.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+];
+
+const reviews: Review[] = [
+  {
+    rating: 4,
+    text: 'Great sitter!',
+    name: 'example',
+    photo: '',
+  },
+  {
+    rating: 5,
+    text: 'Did the job perfectly',
+    name: 'example',
+    photo: '',
+  },
+  {
+    rating: 3,
+    text: 'My dogs came back really dirty.',
+    name: 'example',
+    photo: '',
+  },
+  {
+    rating: 5,
+    name: 'example',
+    photo: '',
+  },
+  {
+    rating: 4,
+    name: 'example',
+    photo: '',
+  },
 ];
 
 export default function ProfileDetails(): JSX.Element {
@@ -20,6 +54,7 @@ export default function ProfileDetails(): JSX.Element {
   const { updateSnackBarMessage } = useSnackBar();
   const [isMounted, setIsMounted] = useState<boolean>(false);
   const [profile, setProfile] = useState<Profile | undefined>();
+  const [reviewsDialogOpen, setReviewsDialogOpen] = useState<boolean>(false);
 
   const { profileId } = useParams<{ profileId: string }>();
 
@@ -47,6 +82,16 @@ export default function ProfileDetails(): JSX.Element {
     window.addEventListener('resize', updateWindowWidth);
     return () => window.removeEventListener('resize', updateWindowWidth);
   });
+
+  const handleClickOpen = () => {
+    setReviewsDialogOpen(true);
+  };
+
+  const handleClose = () => {
+    setReviewsDialogOpen(false);
+  };
+
+  const previewReviews = reviews.slice(0, 3);
 
   return (
     <PageContainer>
@@ -129,6 +174,38 @@ export default function ProfileDetails(): JSX.Element {
             </Typography>
             <Rating sx={{ margin: 'auto' }} value={4} precision={0.5} readOnly />
             <RequestForm profileId={profileId} />
+            <Divider sx={{ width: '95%', margin: 'auto' }} />
+            <Box className={classes.reviewsContainer}>
+              <Typography component="h2" fontSize="1.1rem">
+                Reviews {reviews.length > 0 ? `(${reviews.length})` : null}
+              </Typography>
+              <List>
+                {reviews.length > 0 ? (
+                  previewReviews.map((review, i) => {
+                    return (
+                      <Box key={i} className={classes.review}>
+                        <ProfileReview review={review} />
+                      </Box>
+                    );
+                  })
+                ) : (
+                  <Typography>This user has no reviews</Typography>
+                )}
+              </List>
+              {reviews.length > 3 ? (
+                <>
+                  <Button onClick={handleClickOpen} sx={{ alignSelf: 'flex-end' }}>
+                    <Typography>See all reviews</Typography>
+                  </Button>
+                  <ReviewsDialog
+                    reviews={reviews}
+                    profileName={profile.name}
+                    open={reviewsDialogOpen}
+                    onClose={handleClose}
+                  />
+                </>
+              ) : null}
+            </Box>
           </Grid>
         ) : null}
       </Grid>

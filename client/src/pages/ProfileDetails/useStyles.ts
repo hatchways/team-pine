@@ -27,6 +27,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 10,
     marginRight: 20,
   },
+  reviewsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: `${theme.spacing(2)} ${theme.spacing(2)}`,
+    alignItems: 'flex-start',
+  },
+  review: {
+    padding: `${theme.spacing(1)} ${theme.spacing(1)}`,
+  },
 }));
 
 export default useStyles;
