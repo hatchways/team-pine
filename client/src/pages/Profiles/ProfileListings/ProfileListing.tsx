@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import useStyles from './useStyles';
 import PageContainer from '../../../components/PageContainer/PageContainer';
+import Pagination from '../../../components/Pagination/Pagination';
 import { Link as RouterLink } from 'react-router-dom';
 import { PinDrop } from '@mui/icons-material';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -35,6 +36,10 @@ export default function ProfileListing({}: Props): ReactElement {
   const classes = useStyles();
   const [date, setDate] = useState<Date | null>(null);
   const [location, setLocation] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [paginatedProfiles, setPaginatedProfiles] = useState<Profiles[]>([]);
+
+  const profilesPerPage = 6;
 
   useEffect(() => {
     const profile = {
@@ -47,8 +52,18 @@ export default function ProfileListing({}: Props): ReactElement {
       _id: '61df3960442e349d9200000',
       photo: 'fakeimage',
     };
-    const fakeProfiles = [profile, profile, profile, profile, profile];
+    const fakeProfiles = [profile, profile, profile, profile, profile, profile, profile, profile];
     setProfiles(fakeProfiles);
+    const paginatedProfilesTemp: Profiles[] = [[]];
+    for (let i = 0; i < fakeProfiles.length; i++) {
+      if (!paginatedProfilesTemp[Math.floor(i / profilesPerPage)]) {
+        paginatedProfilesTemp[Math.floor(i / profilesPerPage)] = [fakeProfiles[i]];
+      } else {
+        paginatedProfilesTemp[Math.floor(i / profilesPerPage)].push(fakeProfiles[i]);
+      }
+    }
+    console.log(paginatedProfilesTemp);
+    setPaginatedProfiles(paginatedProfilesTemp);
   }, []);
 
   return (
@@ -87,9 +102,10 @@ export default function ProfileListing({}: Props): ReactElement {
               </Grid>
             </Grid>
           </Box>
+          <Pagination page={page} count={paginatedProfiles.length} setPage={setPage} />
           <Grid container spacing={2}>
             {profiles.length > 0 &&
-              profiles.map((profile) => (
+              paginatedProfiles[page - 1].map((profile) => (
                 <Grid key={profile.userId} item md={'auto'}>
                   <Card className={classes.profileCard}>
                     <CardActionArea component={RouterLink} target="_blank" to={`/profile${profile._id}`}>
@@ -136,7 +152,8 @@ export default function ProfileListing({}: Props): ReactElement {
                 </Grid>
               ))}
           </Grid>
-          <Button
+          <Pagination page={page} count={paginatedProfiles.length} setPage={setPage} />
+          {/* <Button
             sx={{ margin: 'auto', display: 'block' }}
             color="inherit"
             className={classes.button}
@@ -144,7 +161,7 @@ export default function ProfileListing({}: Props): ReactElement {
           >
             {' '}
             Show more{' '}
-          </Button>
+          </Button> */}
         </Box>
       </LocalizationProvider>
     </PageContainer>
