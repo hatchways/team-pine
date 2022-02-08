@@ -1,9 +1,21 @@
 export interface Profile {
-  address?: string;
+  location?: string;
   birthday?: Date;
   description?: string;
   gender?: string;
   name?: string;
   photo?: string;
   telephone?: string;
+  userId: string;
+  payRate: string;
+  _id: string;
+}
+
+export interface ProfileDetails {
+  name: string;
+  description: string;
+  aboutMe: string;
+  payRate: string;
+  location: string;
+  photo: string;
 }

@@ -1,18 +1,5 @@
 const mongoose = require("mongoose");
 
-const petSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    maxLength: 50,
-    required: true,
-  },
-  description: {
-    type: String,
-    maxLength: 200,
-    required: true,
-  },
-});
-
 const requestSchema = new mongoose.Schema(
   {
     requester: {
@@ -24,12 +11,6 @@ const requestSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Profile",
       required: true,
-    },
-    petIds: {
-      // See petSchema above this schema for more details
-      type: [petSchema],
-      maxLength: 30,
-      minLength: [1, "Must include at least one pet in a request"],
     },
     startDate: {
       type: Date,
@@ -57,7 +38,7 @@ const requestSchema = new mongoose.Schema(
       trim: true,
       enum: ["accepted", "declined", "pending", "completed"],
     },
-    paid: { type: Boolean, default: False },
+    paid: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
