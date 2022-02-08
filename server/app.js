@@ -16,6 +16,7 @@ const profileRouter = require("./routes/profile");
 const uploadRouter = require("./routes/upload");
 const deleteRouter = require("./routes/delete");
 const availabilityRouter = require("./routes/availability");
+const notificationRouter = require("./routes/notification");
 
 const { json, urlencoded } = express;
 

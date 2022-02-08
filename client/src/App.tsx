@@ -14,6 +14,7 @@ import { SnackBarProvider } from './context/useSnackbarContext';
 import { Navbar } from './components/Navbar/Navbar';
 import Settings from './pages/Settings/Settings';
 import NotFound from './pages/NotFound/NotFound';
+import ProfileListing from './pages/Profiles/ProfileListings/ProfileListing';
 
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
@@ -30,8 +31,9 @@ function App(): JSX.Element {
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/signup" component={Signup} />
                 <ProtectedRoute exact path="/dashboard" component={Dashboard} />
-                <ProtectedRoute path="/profile/settings" component={Settings} />
                 <ProtectedRoute path="/bookings" component={Bookings} />
+                <Route path="/profile/settings" component={Settings} />
+                <Route path="/profile/list-profiles/:availability/:location/" component={ProfileListing} />
                 <Route path="*">
                   <NotFound />
                 </Route>

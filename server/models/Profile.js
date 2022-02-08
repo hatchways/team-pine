@@ -34,6 +34,16 @@ const profileSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  location: {
+    type: String,
+    default: "",
+    lowercase: true,
+    trim: true,
+  },
+  payRate: {
+    type: String,
+    default: "",
+  },
   activeSchedule: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Schedule",
