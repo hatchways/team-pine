@@ -45,7 +45,7 @@ exports.createReview = asyncHandler(async (req, res, next) => {
 // @desc get reviews for a profile
 // @access Public
 exports.getReviews = asyncHandler(async (req, res, next) => {
-  const reviews = await Review.where(req.params.profileId).populate('reviewer');
+  const reviews = await Review.where("reviewee", req.params.profileId).populate('reviewer');
 
   if (!reviews) {
     res.status(404);
