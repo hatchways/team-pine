@@ -51,20 +51,7 @@ const profileSchema = new mongoose.Schema({
   activeSchedule: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Schedule",
-  },
-  reviews: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Review",
-      default: [],
-    }
-  ],
-  rating: {
-    type: Number,
-    default: 2.5,
-    min: [1, "Rating must be between 1 and 5"],
-    max: [5, "Rating must be between 1 and 5"],
-  },
+  }
 });
 
 module.exports = Profile = mongoose.model("Profile", profileSchema);
