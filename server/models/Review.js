@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema({
+  reviewee: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Profile",
+    required: true,
+  },
   reviewer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Profile",

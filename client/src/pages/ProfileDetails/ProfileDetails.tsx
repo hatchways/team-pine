@@ -1,4 +1,4 @@
-import { Grid, Box, Button, Typography, Rating, Divider, List } from '@mui/material';
+import { Grid, Box, Button, Typography, Rating, Divider, List, Link } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import AvatarDisplay from '../../components/AvatarDisplay/AvatarDisplay';
 import ProfileReview from '../../components/ProfileReview/ProfileReview';
@@ -30,6 +30,8 @@ export default function ProfileDetails(): JSX.Element {
   const [profile, setProfile] = useState<Profile | undefined>();
   const [reviews, setReviews] = useState<Review[] | undefined>();
   const [reviewsDialogOpen, setReviewsDialogOpen] = useState<boolean>(false);
+  const [pageCount, setPageCount] = useState<number>(1);
+  const [reviewCount, setReviewCount] = useState<number>(0);
 
   const { profileId } = useParams<{ profileId: string }>();
 
@@ -39,9 +41,11 @@ export default function ProfileDetails(): JSX.Element {
       getProfile(profileId).then((res) => {
         if (!res.error) {
           setProfile(res.success.profile);
-          getReviews(profileId).then((res) => {
+          getReviews(profileId, 1).then((res) => {
             if (!res.error) {
               setReviews(res.success.reviews);
+              setReviewCount(res.success.count);
+              setPageCount(Math.floor(res.success.count / 10) + 1);
             } else {
               console.error(res.error);
               updateSnackBarMessage('Reviews not found');
@@ -167,7 +171,7 @@ export default function ProfileDetails(): JSX.Element {
             <Divider sx={{ width: '95%', margin: 'auto' }} />
             <Box className={classes.reviewsContainer}>
               <Typography component="h2" fontSize="1.1rem">
-                Reviews {reviews && reviews.length > 0 ? `(${reviews.length})` : null}
+                Reviews {reviews && reviews.length > 0 ? `(${reviewCount})` : null}
               </Typography>
               <List>
                 {reviews && reviews.length > 0 ? (
@@ -188,7 +192,8 @@ export default function ProfileDetails(): JSX.Element {
                     <Typography>See all reviews</Typography>
                   </Button>
                   <ReviewsDialog
-                    reviews={reviews}
+                    pageCount={pageCount}
+                    initialReviews={reviews}
                     profileName={profile.name}
                     open={reviewsDialogOpen}
                     onClose={handleClose}

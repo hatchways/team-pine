@@ -1,12 +1,13 @@
 import { FetchOptions } from './../../interface/FetchOptions';
 
-const getReviews = async (profileId: string) => {
+const getReviews = async (profileId: string, page: number) => {
+  // pagination?: { page: number; resultsPerPage: number }, ) => {
   const fetchOptions: FetchOptions = {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
   };
-  return await fetch(`/reviews/${profileId}`, fetchOptions)
+  return await fetch(`/reviews/${profileId}?page=${page}`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: {

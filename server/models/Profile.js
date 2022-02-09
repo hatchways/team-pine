@@ -52,13 +52,6 @@ const profileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Schedule",
   },
-  reviews: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Review",
-      default: [],
-    }
-  ],
   rating: {
     type: Number,
     default: 2.5,

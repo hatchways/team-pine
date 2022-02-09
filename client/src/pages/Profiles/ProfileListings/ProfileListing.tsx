@@ -54,17 +54,19 @@ export default function ProfileListing({}: Props): ReactElement {
     };
     const fakeProfiles = [profile, profile, profile, profile, profile, profile, profile, profile];
     setProfiles(fakeProfiles);
+  }, []);
+
+  useEffect(() => {
     const paginatedProfilesTemp: Profiles[] = [[]];
-    for (let i = 0; i < fakeProfiles.length; i++) {
+    for (let i = 0; i < profiles.length; i++) {
       if (!paginatedProfilesTemp[Math.floor(i / profilesPerPage)]) {
-        paginatedProfilesTemp[Math.floor(i / profilesPerPage)] = [fakeProfiles[i]];
+        paginatedProfilesTemp[Math.floor(i / profilesPerPage)] = [profiles[i]];
       } else {
-        paginatedProfilesTemp[Math.floor(i / profilesPerPage)].push(fakeProfiles[i]);
+        paginatedProfilesTemp[Math.floor(i / profilesPerPage)].push(profiles[i]);
       }
     }
-    console.log(paginatedProfilesTemp);
     setPaginatedProfiles(paginatedProfilesTemp);
-  }, []);
+  }, [profiles]);
 
   return (
     <PageContainer>
