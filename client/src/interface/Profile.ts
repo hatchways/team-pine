@@ -9,7 +9,7 @@ export interface ProfileDetails {
 }
 
 export interface Profile {
-  address?: string;
+  location?: string;
   birthday?: Date;
   description?: string;
   gender?: string;
@@ -17,6 +17,6 @@ export interface Profile {
   photo?: string;
   telephone?: string;
   userId: string;
-  pay: string;
+  payRate: string;
   _id: string;
 }

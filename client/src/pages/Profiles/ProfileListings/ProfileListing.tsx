@@ -15,12 +15,13 @@ import {
 } from '@mui/material';
 import useStyles from './useStyles';
 import PageContainer from '../../../components/PageContainer/PageContainer';
-import Pagination from '../../../components/Pagination/Pagination';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import { PinDrop } from '@mui/icons-material';
+import listProfiles from '../../../helpers/APICalls/listProfiles';
+import { useSnackBar } from '../../../context/useSnackbarContext';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DatePicker from '@mui/lab/DatePicker';
+import moment from 'moment';
 import { Profile } from '../../../interface/Profile';
 
 interface Props {
@@ -31,55 +32,75 @@ interface Props {
 
 type Profiles = Profile[];
 
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+  return debouncedValue;
+}
+
 export default function ProfileListing({}: Props): ReactElement {
   const [profiles, setProfiles] = useState<Profiles>([]);
   const classes = useStyles();
-  const [date, setDate] = useState<Date | null>(null);
-  const [location, setLocation] = useState<string>('');
-  const [page, setPage] = useState<number>(1);
-  const [paginatedProfiles, setPaginatedProfiles] = useState<Profiles[]>([]);
+  const { updateSnackBarMessage } = useSnackBar();
+  const [formDate, setFormDate] = useState<string>('');
+  const [formLocation, setFormLocation] = useState<string>('');
+  const [isMounted, setIsMounted] = useState<boolean>(false);
 
-  const profilesPerPage = 6;
+  const { availability, location } = useParams<{ availability?: string; location?: string }>();
 
-  useEffect(() => {
-    const profile = {
-      userId: '61df3960442e349d92bad441',
-      name: 'Roland Matheson',
-      description:
-        'I love dogcats Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis assumenda omnis obcaecati, cumque, nisi animi quam voluptatum tempora enim illo at id iusto! Iure eveniet cum in a, accusamus earum!',
-      address: 'Tokyo, Japan',
-      pay: '$99/Hour',
-      _id: '61df3960442e349d9200000',
-      photo: 'fakeimage',
-    };
-    const fakeProfiles = [profile, profile, profile, profile, profile, profile, profile, profile];
-    setProfiles(fakeProfiles);
-  }, []);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+
+  const debouncedFormLocation: string = useDebounce<string>(formLocation, 500);
+  const debouncedFormDate: string = useDebounce<string>(formDate.toLowerCase(), 500);
 
   useEffect(() => {
-    const paginatedProfilesTemp: Profiles[] = [[]];
-    for (let i = 0; i < profiles.length; i++) {
-      if (!paginatedProfilesTemp[Math.floor(i / profilesPerPage)]) {
-        paginatedProfilesTemp[Math.floor(i / profilesPerPage)] = [profiles[i]];
+    listProfiles(debouncedFormDate + '_' + debouncedFormDate, debouncedFormLocation).then((data) => {
+      if (data.error) {
+        updateSnackBarMessage(data.error.message);
+      } else if (data.success) {
+        const profiles = data.success.profiles;
+        setProfiles(profiles);
+        setIsSearching(false);
       } else {
-        paginatedProfilesTemp[Math.floor(i / profilesPerPage)].push(profiles[i]);
+        console.error({ data });
+        updateSnackBarMessage('An unexpected error occurred. Please try again');
       }
+    });
+  }, [debouncedFormLocation, debouncedFormDate, updateSnackBarMessage]);
+
+  useEffect(() => {
+    if (availability && location && !isMounted) {
+      setIsMounted(true);
+      listProfiles(availability, location).then((data) => {
+        if (data.error) {
+          updateSnackBarMessage(data.error.message);
+        } else if (data.success) {
+          const profiles = data.success.profiles;
+          setProfiles(profiles);
+        } else {
+          console.error({ data });
+          updateSnackBarMessage('An unexpected error occurred. Please try again');
+        }
+      });
     }
-    setPaginatedProfiles(paginatedProfilesTemp);
-  }, [profiles]);
+  }, [availability, location, updateSnackBarMessage, isMounted]);
 
   return (
     <PageContainer>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Box
-          sx={{
-            margin: 'auto',
-            maxWidth: '1300px',
-          }}
-        >
+        <Box margin={{ md: 10 }}>
           <Typography className={classes.header} variant="h3" component="div">
             {`Your search results`}
           </Typography>
+
           <Box
             component="form"
             sx={{
@@ -90,72 +111,90 @@ export default function ProfileListing({}: Props): ReactElement {
           >
             <Grid container spacing={2}>
               <Grid item xs={7}>
-                <TextField id="outlined-name" label="Location" value={location} fullWidth />
+                <TextField
+                  onChange={(event) => setFormLocation(event.target.value)}
+                  id="outlined-name"
+                  label="Location"
+                  value={formLocation}
+                  fullWidth
+                  required
+                />
               </Grid>
               <Grid item xs={5}>
-                <DatePicker
+                <TextField
+                  required
+                  onChange={(event) => setFormDate(moment(event.target.value).format('dddd'))}
+                  id="date"
                   label="Date"
-                  value={date}
-                  onChange={(newdate) => {
-                    setDate(newdate);
+                  type="date"
+                  defaultValue="2022-01-01"
+                  value={formDate}
+                  sx={{ width: 220 }}
+                  InputLabelProps={{
+                    shrink: true,
                   }}
-                  renderInput={(params) => <TextField {...params} />}
                 />
               </Grid>
             </Grid>
           </Box>
-          <Pagination page={page} count={paginatedProfiles.length} setPage={setPage} />
-          <Grid container spacing={2}>
-            {profiles.length > 0 &&
-              paginatedProfiles[page - 1].map((profile) => (
-                <Grid key={profile.userId} item md={'auto'}>
-                  <Card className={classes.profileCard}>
-                    <CardActionArea component={RouterLink} target="_blank" to={`/profile${profile._id}`}>
-                      <CardMedia>
-                        {' '}
-                        <Avatar
-                          sx={{ width: 80, height: 80 }}
-                          className={classes.profileAvatar}
-                          alt={`${profile.name} profile picture`}
-                          src={`someimageurl/${profile.photo}`}
-                        />{' '}
-                      </CardMedia>
-
-                      <CardContent>
-                        <Typography gutterBottom variant="h4" component="div">
-                          {`${profile.name}`}
-                        </Typography>
-
-                        <Rating name="half-rating" defaultValue={2.5} precision={0.5} readOnly />
-
-                        <Typography
-                          sx={{ fontWeight: 500, paddingTop: '5px', paddingBottom: '5px' }}
-                        >{`${profile.description?.substring(0, 80)}`}</Typography>
-                        <Divider />
-                        <Grid container spacing={2}>
+          {isSearching ? (
+            'searching...'
+          ) : (
+            <Grid sx={{ maxWidth: '1300px', margin: 'auto' }} container spacing={2}>
+              {profiles.length > 0 &&
+                profiles.map((profile) => (
+                  <Grid key={profile.userId} item md={'auto'}>
+                    <Card className={classes.profileCard}>
+                      <CardActionArea component={RouterLink} target="_blank" to={`/profile/${profile._id}`}>
+                        <CardMedia>
                           {' '}
-                          <Grid item xs={1}>
-                            <PinDrop color="primary" />
+                          <Avatar
+                            sx={{ width: 100, height: 100 }}
+                            className={classes.profileAvatar}
+                            alt={`${profile.name} profile picture`}
+                            src={`${profile.photo}`}
+                          />{' '}
+                        </CardMedia>
+
+                        <CardContent>
+                          <Typography gutterBottom variant="h4" component="div">
+                            {`${profile.name}`}
+                          </Typography>
+
+                          <Rating name="half-rating" defaultValue={2.5} precision={0.5} />
+
+                          <Typography
+                            sx={{ fontWeight: 500, paddingTop: '5px', paddingBottom: '5px' }}
+                          >{`${profile.description}`}</Typography>
+                          <Divider />
+                          <Grid container spacing={2}>
+                            {' '}
+                            <Grid item xs={1}>
+                              <PinDrop color="primary" />
+                            </Grid>
+                            <Grid item xs={4}>
+                              <Typography className={classes.profileAddress} color="text.secondary">
+                                {`${profile.location}`}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography
+                                sx={{ fontWeight: 1000 }}
+                                className={classes.profilePay}
+                                color="text.secondary"
+                              >
+                                {profile.payRate ? `${profile.payRate}$ /hr` : ''}
+                              </Typography>
+                            </Grid>
                           </Grid>
-                          <Grid item xs={4}>
-                            <Typography className={classes.profileAddress} color="text.secondary">
-                              {`${profile.address}`}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography sx={{ fontWeight: 1000 }} className={classes.profilePay} color="text.secondary">
-                              {`${profile.pay}`}
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </Grid>
-              ))}
-          </Grid>
-          <Pagination page={page} count={paginatedProfiles.length} setPage={setPage} />
-          {/* <Button
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                  </Grid>
+                ))}
+            </Grid>
+          )}
+          <Button
             sx={{ margin: 'auto', display: 'block' }}
             color="inherit"
             className={classes.button}
@@ -163,7 +202,7 @@ export default function ProfileListing({}: Props): ReactElement {
           >
             {' '}
             Show more{' '}
-          </Button> */}
+          </Button>
         </Box>
       </LocalizationProvider>
     </PageContainer>
