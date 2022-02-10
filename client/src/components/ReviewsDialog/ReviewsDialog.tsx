@@ -13,14 +13,21 @@ interface Props {
   profileName: string;
   open: boolean;
   onClose: () => void;
-  pageCount: number;
+  initialPageCount: number;
 }
 
-export default function ReviewsDialog({ profileName, open, onClose, initialReviews, pageCount }: Props): JSX.Element {
+export default function ReviewsDialog({
+  profileName,
+  open,
+  onClose,
+  initialReviews,
+  initialPageCount,
+}: Props): JSX.Element {
   const theme = useTheme();
   const { updateSnackBarMessage } = useSnackBar();
   const { profileId } = useParams<{ profileId: string }>();
   const [page, setPage] = useState<number>(1);
+  const [pageCount, setPageCount] = useState<number>(initialPageCount);
   const [reviewPages, setReviewPages] = useState<Record<number, Review[]>>({ 1: initialReviews });
 
   const firstUpdate = useRef(true);
@@ -34,6 +41,7 @@ export default function ReviewsDialog({ profileName, open, onClose, initialRevie
           const shallowReviewPages = { ...reviewPages };
           shallowReviewPages[page] = res.success.reviews;
           setReviewPages(shallowReviewPages);
+          setPageCount(res.success.count);
         } else {
           console.error(res.error);
           updateSnackBarMessage('Reviews not found');

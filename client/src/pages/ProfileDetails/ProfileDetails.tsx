@@ -192,7 +192,7 @@ export default function ProfileDetails(): JSX.Element {
                     <Typography>See all reviews</Typography>
                   </Button>
                   <ReviewsDialog
-                    pageCount={pageCount}
+                    initialPageCount={pageCount}
                     initialReviews={reviews}
                     profileName={profile.name}
                     open={reviewsDialogOpen}
