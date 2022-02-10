@@ -41,14 +41,14 @@ export default function ReviewsDialog({
           const shallowReviewPages = { ...reviewPages };
           shallowReviewPages[page] = res.success.reviews;
           setReviewPages(shallowReviewPages);
-          setPageCount(res.success.count);
+          setPageCount(Math.floor(res.success.count / 10) + 1);
         } else {
           console.error(res.error);
           updateSnackBarMessage('Reviews not found');
         }
       });
     }
-  }, [page, profileId, updateSnackBarMessage, reviewPages]);
+  }, [page, profileId, updateSnackBarMessage, reviewPages, pageCount]);
 
   useEffect(() => {
     if (firstUpdate.current) {
@@ -62,6 +62,10 @@ export default function ReviewsDialog({
       };
     }
   }, [page]);
+
+  useEffect(() => {
+    setPageCount(initialPageCount);
+  }, [initialPageCount]);
 
   return (
     <Dialog fullWidth={true} maxWidth="sm" onClose={onClose} open={open}>
@@ -78,6 +82,7 @@ export default function ReviewsDialog({
             })
           : null}
       </List>
+      {pageCount > 1 ? <Pagination count={pageCount} page={page} setPage={setPage} /> : null}
     </Dialog>
   );
 }
