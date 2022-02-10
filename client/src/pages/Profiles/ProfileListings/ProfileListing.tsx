@@ -43,7 +43,7 @@ export default function ProfileListing({}: Props): ReactElement {
       description:
         'I love dogcats Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis assumenda omnis obcaecati, cumque, nisi animi quam voluptatum tempora enim illo at id iusto! Iure eveniet cum in a, accusamus earum!',
       address: 'Tokyo, Japan',
-      payRate: '$99/Hour',
+      pay: '$99/Hour',
       _id: '61df3960442e349d9200000',
       photo: 'fakeimage',
     };
