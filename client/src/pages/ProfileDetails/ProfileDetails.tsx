@@ -1,4 +1,4 @@
-import { Grid, Box, Button, Typography, Rating, Divider, List, Link } from '@mui/material';
+import { Grid, Box, Button, Typography, Rating, Divider, List } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
 import AvatarDisplay from '../../components/AvatarDisplay/AvatarDisplay';
 import ProfileReview from '../../components/ProfileReview/ProfileReview';

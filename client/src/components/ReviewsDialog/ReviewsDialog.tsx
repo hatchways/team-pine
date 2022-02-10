@@ -21,37 +21,52 @@ export default function ReviewsDialog({ profileName, open, onClose, initialRevie
   const { updateSnackBarMessage } = useSnackBar();
   const { profileId } = useParams<{ profileId: string }>();
   const [page, setPage] = useState<number>(1);
-  const [reviews, setReviews] = useState<Review[]>(initialReviews);
+  const [reviewPages, setReviewPages] = useState<Review[][]>([initialReviews]);
 
   const firstUpdate = useRef(true);
+  const visitedPages = useRef([1]);
 
   useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-    } else {
+    if (!visitedPages.current.includes(page)) {
+      visitedPages.current.push(page);
       getReviews(profileId, page).then((res) => {
         if (!res.error) {
-          setReviews(res.success.reviews);
+          setReviewPages([...reviewPages, res.success.reviews]);
         } else {
           console.error(res.error);
           updateSnackBarMessage('Reviews not found');
         }
       });
     }
-  }, [page, profileId, updateSnackBarMessage]);
+  }, [page, profileId, updateSnackBarMessage, reviewPages]);
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+    } else {
+      const timeout = setTimeout(() => {
+        visitedPages.current = [];
+      }, 5000);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [page]);
 
   return (
     <Dialog fullWidth={true} maxWidth="sm" onClose={onClose} open={open}>
       <DialogTitle>Reviews for {profileName}</DialogTitle>
       {pageCount > 1 ? <Pagination count={pageCount} page={page} setPage={setPage} /> : null}
       <List>
-        {reviews.map((review, i) => {
-          return (
-            <Box sx={{ padding: `${theme.spacing(2)} ${theme.spacing(2)}` }} key={i}>
-              <ProfileReview review={review} />
-            </Box>
-          );
-        })}
+        {reviewPages.length >= page
+          ? reviewPages[page - 1].map((review, i) => {
+              return (
+                <Box sx={{ padding: `${theme.spacing(2)} ${theme.spacing(2)}` }} key={i}>
+                  <ProfileReview review={review} />
+                </Box>
+              );
+            })
+          : null}
       </List>
     </Dialog>
   );

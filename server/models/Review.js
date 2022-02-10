@@ -23,6 +23,16 @@ const reviewSchema = new mongoose.Schema({
     maxlength: [2000, "Review must be 2000 characters or less"],
   }
 },
-{ timestamps: true });
+  { timestamps: true });
+
+reviewSchema.index({ reviewee: 1, reviewer: 1 }, { unique: true });
+
+reviewSchema.post('save', (error, doc, next) => {
+  if (error.name === 'MongoServerError' && error.code === 11000) {
+    next(new Error('Duplicate key found'));
+  } else {
+    next();
+  }
+});
 
 module.exports = Review = mongoose.model("Review", reviewSchema);

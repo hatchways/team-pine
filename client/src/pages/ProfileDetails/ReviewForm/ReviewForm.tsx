@@ -24,8 +24,12 @@ export default function ReviewForm({ profileId, addReview }: Props): JSX.Element
   ) => {
     createReview(profileId, rating, reviewText).then((data) => {
       if (data.error) {
+        if (data.error.message == 'Duplicate key found') {
+          updateSnackBarMessage('You may only leave one review per profile');
+        } else {
+          updateSnackBarMessage(data.error.message);
+        }
         console.error({ error: data.error.message });
-        updateSnackBarMessage(data.error.message);
         setSubmitting(false);
       } else if (data.success) {
         updateSnackBarMessage('Review successfully created!');
