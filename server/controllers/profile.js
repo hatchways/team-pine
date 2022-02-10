@@ -1,5 +1,3 @@
-
-   
 const Profile = require("../models/Profile");
 const asyncHandler = require("express-async-handler");
 
@@ -40,19 +38,36 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @route GET /list-profiles/
+// @desc Show profiles on list page according to availability and location
+// @access Public
+exports.getProfileListings = asyncHandler(async (req, res, next) => {
+  const { availability, location } = req.query;
+
+  const profiles = await Profile.find(
+    { location: { $regex: `.*${location.toLowerCase()}.*` } },
+    { isSitter: true }
+  ).select("name description location photo payRate");
+
+  res.status(200).json({
+    success: {
+      profiles,
+    },
+  });
+});
 // @route GET /profile/load/:profileId
 // @route Get user profile data based on id
 // @access Public
 exports.loadProfileById = asyncHandler(async (req, res, next) => {
-  const profile = await Profile.findById(req.params.profileId)
+  const profile = await Profile.findById(req.params.profileId);
   if (!profile || !profile.isSitter) {
     res.status(403);
-    throw new Error ("Invalid profile")
+    throw new Error("Invalid profile");
   }
 
   res.status(200).json({
     success: {
-      profile
-    }
-  })
-})
+      profile,
+    },
+  });
+});
