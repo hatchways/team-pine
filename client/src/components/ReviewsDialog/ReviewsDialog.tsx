@@ -21,7 +21,7 @@ export default function ReviewsDialog({ profileName, open, onClose, initialRevie
   const { updateSnackBarMessage } = useSnackBar();
   const { profileId } = useParams<{ profileId: string }>();
   const [page, setPage] = useState<number>(1);
-  const [reviewPages, setReviewPages] = useState<Review[][]>([initialReviews]);
+  const [reviewPages, setReviewPages] = useState<Record<number, Review[]>>({ 1: initialReviews });
 
   const firstUpdate = useRef(true);
   const visitedPages = useRef([1]);
@@ -31,7 +31,9 @@ export default function ReviewsDialog({ profileName, open, onClose, initialRevie
       visitedPages.current.push(page);
       getReviews(profileId, page).then((res) => {
         if (!res.error) {
-          setReviewPages([...reviewPages, res.success.reviews]);
+          const shallowReviewPages = { ...reviewPages };
+          shallowReviewPages[page] = res.success.reviews;
+          setReviewPages(shallowReviewPages);
         } else {
           console.error(res.error);
           updateSnackBarMessage('Reviews not found');
@@ -58,8 +60,8 @@ export default function ReviewsDialog({ profileName, open, onClose, initialRevie
       <DialogTitle>Reviews for {profileName}</DialogTitle>
       {pageCount > 1 ? <Pagination count={pageCount} page={page} setPage={setPage} /> : null}
       <List>
-        {reviewPages.length >= page
-          ? reviewPages[page - 1].map((review, i) => {
+        {reviewPages[page]
+          ? reviewPages[page].map((review, i) => {
               return (
                 <Box sx={{ padding: `${theme.spacing(2)} ${theme.spacing(2)}` }} key={i}>
                   <ProfileReview review={review} />
