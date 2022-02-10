@@ -72,7 +72,7 @@ exports.validateScheduleSchema = [
 ];
 
 exports.validateReview = [
-  body("rating", "Rating is required").not().isEmpty().isInt({ min: 1, max: 5 }).withMessage("Rating must be a number between 1 and 5"),
+  body("rating", "Rating is required").not().isEmpty().isFloat({ min: 1, max: 5 }).withMessage("Rating must be a number between 1 and 5"),
   body("text", "Exceeded character limit").isLength({ max: 2000 }),
   (req, res, next) => {
     const errors = validationResult(req);
