@@ -45,7 +45,16 @@ exports.createReview = asyncHandler(async (req, res, next) => {
 // @desc get reviews for a profile
 // @access Public
 exports.getReviews = asyncHandler(async (req, res, next) => {
-  const reviews = await Review.where("reviewee", req.params.profileId).populate('reviewer');
+  const reviews = await Review.where("reviewee", req.params.profileId).populate('reviewer').sort({_id: -1});
+
+  let count = 0;
+  let ratingTotal = 0;
+  for (let review of reviews) {
+    count += 1;
+    ratingTotal += review.rating;
+  }
+
+  const rating = Math.round((ratingTotal / count) * 2) / 2;
 
   if (!reviews) {
     res.status(404);
@@ -54,6 +63,7 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: {
-      reviews
+      reviews,
+      rating
   }});
 });

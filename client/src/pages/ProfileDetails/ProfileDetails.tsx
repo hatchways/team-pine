@@ -29,6 +29,7 @@ export default function ProfileDetails(): JSX.Element {
   const [isMounted, setIsMounted] = useState<boolean>(false);
   const [profile, setProfile] = useState<Profile | undefined>();
   const [reviews, setReviews] = useState<Review[] | undefined>();
+  const [rating, setRating] = useState<number>(2.5);
   const [reviewsDialogOpen, setReviewsDialogOpen] = useState<boolean>(false);
 
   const { profileId } = useParams<{ profileId: string }>();
@@ -42,6 +43,7 @@ export default function ProfileDetails(): JSX.Element {
           getReviews(profileId).then((res) => {
             if (!res.error) {
               setReviews(res.success.reviews);
+              setRating(res.success.rating);
             } else {
               console.error(res.error);
               updateSnackBarMessage('Reviews not found');
@@ -162,7 +164,7 @@ export default function ProfileDetails(): JSX.Element {
             <Typography component="p" fontSize="1.1rem" fontWeight="bold" m="3rem auto 1rem auto">
               ${profile.payRate}/hr
             </Typography>
-            <Rating sx={{ margin: 'auto' }} value={profile.rating} precision={0.5} readOnly />
+            <Rating sx={{ margin: 'auto' }} value={rating} precision={0.5} readOnly />
             <RequestForm profileId={profileId} />
             <Divider sx={{ width: '95%', margin: 'auto' }} />
             <Box className={classes.reviewsContainer}>
