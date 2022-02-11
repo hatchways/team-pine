@@ -47,6 +47,13 @@ exports.createReview = asyncHandler(async (req, res, next) => {
 exports.getReviews = asyncHandler(async (req, res, next) => {
   const reviews = await Review.where(req.params.profileId).populate('reviewer');
 
+  var ratingTotal = 0;
+  for (let review of reviews) {
+    ratingTotal += review.rating;
+  }
+
+  const rating = Math.round((ratingTotal / count) * 2) / 2;
+
   if (!reviews) {
     res.status(404);
     throw new Error("Could not find reviews");
@@ -54,6 +61,7 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: {
-      reviews
+      reviews,
+      rating
   }});
 });
