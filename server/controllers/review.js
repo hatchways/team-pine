@@ -39,17 +39,26 @@ exports.createReview = asyncHandler(async (req, res, next) => {
 exports.getReviews = asyncHandler(async (req, res, next) => {
   const perPage = 10;
 
-  const count = await Review.estimatedDocumentCount({ reviewee: req.params.profileId });
   const reviews = await Review.find({ reviewee: req.params.profileId })
     .sort({ _id: -1 })
-    .skip((req.query.page - 1) * perPage)
-    .limit(perPage)
     .populate('reviewer');
+  
+  let count = 0
+  let ratingTotal = 0;
+  for (let review of reviews) {
+    count += 1;
+    ratingTotal += review.rating;
+  }
 
+  const rating = Math.round((ratingTotal / count) * 2) / 2;
+  
+  const pagedReviews = reviews.slice((req.query.page - 1) * perPage, (req.query.page - 1) * perPage + perPage);
+  
   res.status(200).json({
     success: {
-      reviews,
-      count
+      reviews: pagedReviews,
+      count,
+      rating
     }
   });
 });
