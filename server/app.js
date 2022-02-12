@@ -19,6 +19,7 @@ const requestRouter = require("./routes/request");
 const uploadRouter = require("./routes/upload");
 const deleteRouter = require("./routes/delete");
 const availabilityRouter = require("./routes/availability");
+const sgMail = require('@sendgrid/mail');
 
 const { json, urlencoded } = express;
 
@@ -31,6 +32,8 @@ const io = socketio(server, {
     origin: "*",
   },
 });
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 if (process.env.NODE_ENV === "development") {
   server.listen(process.env.PORT, (err, res) => {
