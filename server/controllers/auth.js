@@ -2,7 +2,9 @@ const User = require("../models/User");
 const Profile = require("../models/Profile");
 const asyncHandler = require("express-async-handler");
 const generateToken = require("../utils/generateToken");
-const { sgMail } = require("../app");
+const sgMail = require('@sendgrid/mail');
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // @route POST /auth/register
 // @desc Register user
@@ -128,10 +130,10 @@ exports.logoutUser = asyncHandler(async (req, res, next) => {
 // @desc Send password reset email to user
 // @access Public
 exports.sendPasswordResetEmail = asyncHandler(async (req, res, next) => {
-  const { userEmail } = req.body;
-  const user = await User.findOne({ email: userEmail });
+  const { email } = req.body;
+  const user = await User.findOne({ email });
   if (!user) {
-    res.status(403);
+    res.status(404);
     throw new Error("Email not found");
   }
 
@@ -151,7 +153,8 @@ exports.sendPasswordResetEmail = asyncHandler(async (req, res, next) => {
 
   await sgMail.send(msg)
   
-  res.cookie("reset", token, { httpOnly: true, maxAge: 1800 });
+  res.cookie("reset", token, { httpOnly: true, maxAge: 1800000, });
+  
   res.status(200).json({
     success: {
       message: "Password reset link successfully sent to email on your account"
