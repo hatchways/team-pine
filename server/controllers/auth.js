@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Profile = require("../models/Profile");
 const asyncHandler = require("express-async-handler");
 const generateToken = require("../utils/generateToken");
+const { sgMail } = require("../app");
 
 // @route POST /auth/register
 // @desc Register user
@@ -121,4 +122,39 @@ exports.logoutUser = asyncHandler(async (req, res, next) => {
   res.clearCookie("token");
 
   res.send("You have successfully logged out");
+});
+
+// @route POST /auth/send-password-reset
+// @desc Send password reset email to user
+// @access Public
+exports.sendPasswordResetEmail = asyncHandler(async (req, res, next) => {
+  const { userEmail } = req.body;
+  const user = await User.findOne({ email: userEmail });
+  if (!user) {
+    res.status(403);
+    throw new Error("Email not found");
+  }
+
+  const token = generateToken(user.id, "30m");
+  const link = `${req.protocol}://localhost:3000/reset-password/${token}`;
+
+  const msg = {
+    to: user.email,
+    from: "lovingsittertest@gmail.com",
+    subject: "Password Reset",
+    html: `
+    <div>You have requested a password reset. Click on the link to reset. This link will expire in 30 minutes.</div><br />
+    <div>Reset Link: ${link}</div><br />
+    <div>If you did not request this, please contact us immediately at support@lovingsitter.com</div>
+    `
+  }
+
+  await sgMail.send(msg)
+  
+  res.cookie("reset", token, { httpOnly: true, maxAge: 1800 });
+  res.status(200).json({
+    success: {
+      message: "Password reset link successfully sent to email on your account"
+    }
+  });
 });
