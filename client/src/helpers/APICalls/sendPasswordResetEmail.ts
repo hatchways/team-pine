@@ -4,7 +4,7 @@ const sendPasswordResetEmail = async (email: string) => {
   const fetchOptions: FetchOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
+    credentials: 'omit',
     body: JSON.stringify({ email }),
   };
   return await fetch(`/auth/send-password-reset`, fetchOptions)

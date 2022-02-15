@@ -16,16 +16,15 @@ const resetTokenSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 1800,
-    immutable: true
+    expires: '30m',
   }
 });
 
 resetTokenSchema.methods.matchToken = async function (enteredToken) {
-  return bcrypt.compare(enteredToken, this.token);
+  return await bcrypt.compare(enteredToken, this.token);
 };
 
-resetTokenSchema.pre("create", async function () {
+resetTokenSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(10);
   this.token = await bcrypt.hash(this.token, salt);
 });

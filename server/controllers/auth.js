@@ -140,7 +140,7 @@ exports.sendPasswordResetEmail = asyncHandler(async (req, res, next) => {
 
   const token = generateToken(user.id, "30m");
   await ResetToken.create({ token, user });
-  const link = `${req.protocol}://localhost:3000/reset-password/${token}`;
+  const link = `${req.protocol}://localhost:3000/password-reset/${email}/${token}`;
 
   const msg = {
     to: user.email,
@@ -160,4 +160,28 @@ exports.sendPasswordResetEmail = asyncHandler(async (req, res, next) => {
       message: "Password reset link successfully sent to email on your account"
     }
   });
+});
+
+// @route PUT /auth/reset-password
+// @desc Reset user password
+// @access Private
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  const { email, token, password } = req.body;
+
+  const user = await User.findOne({ email });
+  const resetToken = await ResetToken.findOne({ user });
+
+  if (resetToken && (await resetToken.matchToken(token))) {
+    user.set("password", password);
+    await user.save();
+    ResetToken.deleteMany({ user });
+    res.status(200).json({
+      success: {
+        message: "Password successfully updated. You may now login with the new password."
+      }
+    });
+  } else {
+    res.status(401);
+    throw new Error('Invalid token');
+  }
 });

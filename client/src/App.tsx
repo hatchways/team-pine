@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Bookings from './pages/Bookings/Bookings';
 import ProfileDetails from './pages/ProfileDetails/ProfileDetails';
 import SendPasswordReset from './pages/SendPasswordReset/SendPasswordReset';
+import PasswordReset from './pages/PasswordReset/PasswordReset';
 import { AuthProvider } from './context/useAuthContext';
 import { SocketProvider } from './context/useSocketContext';
 import { SnackBarProvider } from './context/useSnackbarContext';
@@ -39,6 +40,7 @@ function App(): JSX.Element {
                 <ProtectedRoute path="/profile/:profileId" component={ProfileDetails} />
                 <Route exact path="/profile-listings/" component={ProfileListing} />
                 <Route path="/send-password-reset" component={SendPasswordReset} />
+                <Route path="/password-reset/:email/:token" component={PasswordReset} />
                 <Route path="*">
                   <NotFound />
                 </Route>

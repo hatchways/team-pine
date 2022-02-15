@@ -2,19 +2,26 @@ import { Typography } from '@mui/material';
 import { FormikHelpers } from 'formik';
 import AuthPageWrapper from '../../components/AuthPageWrapper/AuthPageWrapper';
 import PageContainer from '../../components/PageContainer/PageContainer';
-import SendPasswordResetForm from './SendPasswordResetForm/SendPasswordResetForm';
-import sendPasswordResetEmail from '../../helpers/APICalls/sendPasswordResetEmail';
+import PasswordResetForm from './PasswordResetForm/PasswordResetForm';
+import resetPassword from '../../helpers/APICalls/resetPassword';
 import { useSnackBar } from '../../context/useSnackbarContext';
+import { useParams, useHistory } from 'react-router-dom';
 
 export default function SendPasswordReset(): JSX.Element {
   const { updateSnackBarMessage } = useSnackBar();
+  const { email, token } = useParams<{ email: string; token: string }>();
+  const history = useHistory();
 
-  const handleSubmit = ({ email }: { email: string }, { setSubmitting }: FormikHelpers<{ email: string }>) => {
-    sendPasswordResetEmail(email).then((data) => {
+  const handleSubmit = (
+    { password, confirmPassword }: { password: string; confirmPassword: string },
+    { setSubmitting }: FormikHelpers<{ password: string; confirmPassword: string }>,
+  ) => {
+    resetPassword(password, email, token).then((data) => {
       if (data.error) {
         updateSnackBarMessage(data.error.message);
       } else if (data.success) {
         updateSnackBarMessage(data.success.message);
+        history.push('/login');
       } else {
         // should not get here from backend but this catch is for an unknown issue
         console.error({ data });
@@ -29,10 +36,8 @@ export default function SendPasswordReset(): JSX.Element {
   return (
     <PageContainer>
       <AuthPageWrapper header="">
-        <Typography sx={{ fontWeight: 700, marginBottom: 3 }}>
-          Please enter the email for your account. A link to reset your password will be sent to you.
-        </Typography>
-        <SendPasswordResetForm handleSubmit={handleSubmit} />
+        <Typography sx={{ fontWeight: 700, marginBottom: 3 }}>Please enter your new password.</Typography>
+        <PasswordResetForm handleSubmit={handleSubmit} />
       </AuthPageWrapper>
     </PageContainer>
   );

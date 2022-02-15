@@ -7,7 +7,8 @@ const {
   loginUser,
   loadUser,
   logoutUser,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  resetPassword
 } = require("../controllers/auth");
 
 router.route("/register").post(validateRegister, registerUser);
@@ -18,6 +19,8 @@ router.route("/user").get(protect, loadUser);
 
 router.route("/logout").post(logoutUser);
 
-router.route("/send-password-reset").post(sendPasswordResetEmail)
+router.route("/send-password-reset").post(sendPasswordResetEmail);
+
+router.route("/reset-password").put(resetPassword);
 
 module.exports = router;
