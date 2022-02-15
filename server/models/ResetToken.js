@@ -4,22 +4,25 @@ const bcrypt = require("bcryptjs");
 const resetTokenSchema = new mongoose.Schema({
   token: {
     type: String,
-    required: true
+    required: true,
+    immutable: true
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
+    immutable: true
   },
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 1800
+    expires: 1800,
+    immutable: true
   }
 });
 
 resetTokenSchema.methods.matchToken = async function (enteredToken) {
-  return await bcrypt.compare(enteredToken, this.token);
+  return bcrypt.compare(enteredToken, this.token);
 };
 
 resetTokenSchema.pre("create", async function () {
