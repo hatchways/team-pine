@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Profile = require("../models/Profile");
+const ResetToken = require("../models/ResetToken");
 const asyncHandler = require("express-async-handler");
 const generateToken = require("../utils/generateToken");
 const sgMail = require('@sendgrid/mail');
@@ -138,6 +139,7 @@ exports.sendPasswordResetEmail = asyncHandler(async (req, res, next) => {
   }
 
   const token = generateToken(user.id, "30m");
+  await ResetToken.create({ token, user });
   const link = `${req.protocol}://localhost:3000/reset-password/${token}`;
 
   const msg = {
@@ -152,8 +154,6 @@ exports.sendPasswordResetEmail = asyncHandler(async (req, res, next) => {
   }
 
   await sgMail.send(msg)
-  
-  res.cookie("reset", token, { httpOnly: true, maxAge: 1800000, });
   
   res.status(200).json({
     success: {
