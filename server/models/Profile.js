@@ -46,7 +46,7 @@ const profileSchema = new mongoose.Schema({
     type: String,
     default: "",
     lowercase: true,
-    trim: true
+    trim: true,
   },
   activeSchedule: {
     type: mongoose.Schema.Types.ObjectId,

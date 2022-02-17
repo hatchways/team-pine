@@ -92,10 +92,10 @@ function onListening() {
 }
 
 io.use(async (socket, next) => {
-  const token = socket.handshake.headers.cookie
+  const token = socket.handshake.headers.cookie;
 
   if (!token) {
-    next(new Error('Invalid token'));
+    next(new Error("Invalid token"));
   }
 
   try {
@@ -108,11 +108,11 @@ io.use(async (socket, next) => {
       next(new Error("User not found"));
     }
 
-    socket.data.user = user
+    socket.data.user = user;
     next();
   } catch (err) {
     next(new Error("User authentication failed!"));
   }
 }).on("connection", (socket) => {
-  console.log(socket.data.user)
+  console.log(socket.data.user);
 });

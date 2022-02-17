@@ -7,21 +7,26 @@ const User = require("../models/User");
 // @desc Create new request
 // @access Public
 exports.createRequest = asyncHandler(async (req, res, next) => {
-  const profileId = await Profile.findOne({"userId": req.user.id})
-  const { sitter, startDate, endDate } = req.body
-  const request = await Request.create({ requester: profileId, sitter, startDate, endDate });
+  const profileId = await Profile.findOne({ userId: req.user.id });
+  const { sitter, startDate, endDate } = req.body;
+  const request = await Request.create({
+    requester: profileId,
+    sitter,
+    startDate,
+    endDate,
+  });
 
   if (request) {
     res.status(200).json({
       success: {
         request: {
-          ...request
-        }
-      }
-    })
+          ...request,
+        },
+      },
+    });
   } else {
     res.status(404);
-    throw new Error("Request does not exist")
+    throw new Error("Request does not exist");
   }
 });
 
@@ -35,10 +40,10 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
     res.status(404);
     throw new Error("Request doesn't exist");
   }
-  const profile = await Profile.findOne({'userId': req.user.id})
+  const profile = await Profile.findOne({ userId: req.user.id });
   if (request.sitter.toString() == profile._id.toString()) {
-    const { status } = req.body
-    request.set('status', status)
+    const { status } = req.body;
+    request.set("status", status);
     const updatedRequest = await request.save();
     res.status(200).json({
       success: {
@@ -57,8 +62,10 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
 exports.getUserRequests = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findOne({ userId: req.user.id });
   if (profile.isSitter) {
-    const requests = await Request.where('sitter', profile._id).populate('requester');
-    res.status(200).json({ requests: requests })
+    const requests = await Request.where("sitter", profile._id).populate(
+      "requester"
+    );
+    res.status(200).json({ requests: requests });
   } else {
     res.status(403);
     throw new Error("You are not authorized to perform this operation");

@@ -7,7 +7,7 @@ const {
   getReviews,
 } = require("../controllers/review");
 
-router.route("/:profileId").post(protect, validateReview, createReview);
+router.route("/").post(protect, validateReview, createReview);
 
 router.route("/:profileId").get(protect, getReviews);
 

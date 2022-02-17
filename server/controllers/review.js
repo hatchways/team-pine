@@ -2,7 +2,7 @@ const Review = require("../models/Review");
 const asyncHandler = require("express-async-handler");
 const Profile = require("../models/Profile");
 
-// @route POST /reviews/:profileId
+// @route POST /reviews
 // @desc create review for a single profile
 // @access Public
 
@@ -13,7 +13,7 @@ exports.createReview = asyncHandler(async (req, res, next) => {
     throw new Error("You are not authorized to perform this operation");
   }
 
-  const profile = await Profile.findById(req.params.profileId);
+  const profile = await Profile.findById(req.body.profileId);
 
   if (!profile) {
     res.status(404);
@@ -27,18 +27,11 @@ exports.createReview = asyncHandler(async (req, res, next) => {
   const { rating, text } = req.body;
   const review = await Review.create({ reviewee: profile, reviewer, rating, text });
 
-  if (!review) {
-    res.status(404);
-    throw new Error("Review not found");
-  } else {
-    res.status(200).json({
-      success: {
-        review
-      }
-    });
-  }
-
-
+  res.status(200).json({
+    success: {
+      review
+    }
+  });
 });
 
 // @route GET /reviews/:profileId
@@ -56,10 +49,12 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
 
   const rating = Math.round((ratingTotal / count) * 2) / 2;
 
-  if (!reviews) {
-    res.status(404);
-    throw new Error("Could not find reviews");
+  let ratingTotal = 0;
+  for (let review of reviews) {
+    ratingTotal += review.rating;
   }
+
+  const rating = Math.round((ratingTotal / count) * 2) / 2;
 
   res.status(200).json({
     success: {

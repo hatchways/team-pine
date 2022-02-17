@@ -1,15 +1,5 @@
-export interface ProfileDetails {
-  name: string;
-  description: string;
-  aboutMe: string;
-  payRate: string;
-  location: string;
-  photo: string;
-  rating: number;
-}
-
 export interface Profile {
-  address?: string;
+  location?: string;
   birthday?: Date;
   description?: string;
   gender?: string;
@@ -17,6 +7,15 @@ export interface Profile {
   photo?: string;
   telephone?: string;
   userId: string;
-  pay: string;
+  payRate: string;
   _id: string;
+}
+
+export interface ProfileDetails {
+  name: string;
+  description: string;
+  aboutMe: string;
+  payRate: string;
+  location: string;
+  photo: string;
 }
