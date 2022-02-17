@@ -29,8 +29,8 @@ export default function ReviewForm({ profileId, addReview }: Props): JSX.Element
         setSubmitting(false);
       } else if (data.success) {
         updateSnackBarMessage('Review successfully created!');
-        const { rating, text, reviewer } = data.success.review;
-        addReview({ rating, text, reviewer });
+        const { rating, text, reviewer, _id } = data.success.review;
+        addReview({ rating, text, reviewer, _id });
       } else {
         // should not get here from backend but this catch is for an unknown issue
         console.error({ data });

@@ -17,9 +17,9 @@ export default function ReviewsDialog({ profileName, open, onClose, reviews }: P
     <Dialog fullWidth={true} maxWidth="sm" onClose={onClose} open={open}>
       <DialogTitle>Reviews for {profileName}</DialogTitle>
       <List>
-        {reviews.map((review, i) => {
+        {reviews.map((review) => {
           return (
-            <Box sx={{ padding: `${theme.spacing(2)} ${theme.spacing(2)}` }} key={i}>
+            <Box sx={{ padding: `${theme.spacing(2)} ${theme.spacing(2)}` }} key={review._id}>
               <ProfileReview review={review} />
             </Box>
           );
