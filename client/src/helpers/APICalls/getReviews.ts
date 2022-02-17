@@ -1,7 +1,6 @@
 import { FetchOptions } from './../../interface/FetchOptions';
 
 const getReviews = async (profileId: string, page: number) => {
-  // pagination?: { page: number; resultsPerPage: number }, ) => {
   const fetchOptions: FetchOptions = {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
