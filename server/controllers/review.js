@@ -49,16 +49,10 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
 
   const rating = Math.round((ratingTotal / count) * 2) / 2;
 
-  let ratingTotal = 0;
-  for (let review of reviews) {
-    ratingTotal += review.rating;
-  }
-
-  const rating = Math.round((ratingTotal / count) * 2) / 2;
-
   res.status(200).json({
     success: {
       reviews,
-      rating
+      rating,
+      count
   }});
 });
