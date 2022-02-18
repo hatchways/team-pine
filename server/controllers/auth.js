@@ -50,6 +50,7 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
           name: user.name,
           email: user.email,
         },
+        profile
       },
     });
   } else {
@@ -67,6 +68,8 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
+    const profile = await Profile.findOne({ userId: user._id });
+
     const token = generateToken(user._id);
     const secondsInWeek = 604800;
 
@@ -82,6 +85,7 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
           name: user.name,
           email: user.email,
         },
+        profile
       },
     });
   } else {

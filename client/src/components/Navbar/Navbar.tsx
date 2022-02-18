@@ -18,6 +18,7 @@ import lovingSitterLogo from '../../images/logo.svg';
 import { useStyles } from './useStyles';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Settings, Logout, Person } from '@mui/icons-material';
+import AvatarDisplay from '../AvatarDisplay/AvatarDisplay';
 
 const NavbarButton = styled(Button)({
   padding: '15px 0',
@@ -95,7 +96,7 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { loggedInUser, logout } = useAuth();
+  const { loggedInUser, loggedInUserProfile, logout } = useAuth();
   const open = Boolean(anchorEl);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -114,8 +115,16 @@ const Navbar: React.FC = () => {
   const renderMenuItems = () => {
     // TODO: conditionally render based on profile type
     return menuItems.map((menu) => {
-      if (menu.authenticated) {
-        return loggedInUser && <MenuItem key={menu.resource} {...menu} />;
+      if (menu.authenticated && menu.canView) {
+        if (loggedInUserProfile && loggedInUserProfile.isSitter) {
+          return (
+            loggedInUser && menu.canView.includes(AccountType.PET_SITTER) && <MenuItem key={menu.resource} {...menu} />
+          );
+        } else {
+          return (
+            loggedInUser && menu.canView.includes(AccountType.PET_OWNER) && <MenuItem key={menu.resource} {...menu} />
+          );
+        }
       } else {
         return !loggedInUser && <MenuItem key={menu.resource} {...menu} />;
       }
@@ -146,7 +155,13 @@ const Navbar: React.FC = () => {
                   onClick={handleMenuOpen}
                   color="inherit"
                 >
-                  <img style={{ width: 50 }} src={`https://robohash.org/${loggedInUser.email}`} />
+                  <AvatarDisplay
+                    photoUrl={loggedInUserProfile ? loggedInUserProfile.photo : undefined}
+                    loggedIn
+                    width={50}
+                    height={50}
+                    user={loggedInUser}
+                  />
                 </IconButton>
                 <Menu
                   id="menu-appbar"
