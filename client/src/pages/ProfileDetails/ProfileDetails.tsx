@@ -52,7 +52,7 @@ export default function ProfileDetails(): JSX.Element {
       setReviews(reviewsResponse.success.reviews);
       setRating(reviewsResponse.success.rating);
       setReviewCount(reviewsResponse.success.count);
-      setPageCount(Math.floor((reviewsResponse.success.count * 2) / 10) / 2 + 1);
+      setPageCount(Math.floor(reviewsResponse.success.count / 10) + 1);
       setIsMounted(true);
     }
     if (!isMounted) {
