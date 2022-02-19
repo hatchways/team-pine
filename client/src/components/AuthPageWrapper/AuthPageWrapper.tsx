@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Paper } from '@mui/material';
 import AuthPageHeader from '../AuthPageHeader/AuthPageHeader';
+import { useState, useEffect } from 'react';
 
 interface AuthPageWrapperProps {
   header: string;
@@ -8,13 +9,24 @@ interface AuthPageWrapperProps {
 }
 
 const AuthPageWrapper: React.FC<AuthPageWrapperProps> = ({ header, children }) => {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const updateWindowWidth = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', updateWindowWidth);
+    return () => window.removeEventListener('resize', updateWindowWidth);
+  });
+
   return (
     <Box
       sx={{
         maxWidth: 800,
         minHeight: 700,
         margin: '0 auto',
-        padding: 10,
+        padding: windowWidth < 600 ? 0 : 10,
         backgroundColor: '#fff',
         borderRadius: 2,
         boxShadow:

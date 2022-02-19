@@ -1,30 +1,30 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const profileSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "User",
+    ref: 'User',
   },
   name: {
     type: String,
-    default: "",
+    default: '',
   },
   description: {
     type: String,
-    default: "",
+    default: '',
   },
   aboutMe: {
     type: String,
-    default: "",
+    default: '',
   },
   gender: {
     type: String,
-    default: "none",
+    default: 'none',
   },
   telephone: {
     type: String,
-    default: "",
+    default: '',
   },
   birthday: {
     type: Date,
@@ -32,7 +32,7 @@ const profileSchema = new mongoose.Schema({
   },
   photo: {
     type: String,
-    default: "",
+    default: '',
   },
   isSitter: {
     type: Boolean,
@@ -40,24 +40,18 @@ const profileSchema = new mongoose.Schema({
   },
   payRate: {
     type: String,
-    default: "",
+    default: '',
   },
   location: {
     type: String,
-    default: "",
+    default: '',
     lowercase: true,
     trim: true,
   },
   activeSchedule: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Schedule",
-  },
-  rating: {
-    type: Number,
-    default: 2.5,
-    min: [1, "Rating must be between 1 and 5"],
-    max: [5, "Rating must be between 1 and 5"],
+    ref: 'Schedule',
   },
 });
 
-module.exports = Profile = mongoose.model("Profile", profileSchema);
+module.exports = Profile = mongoose.model('Profile', profileSchema);

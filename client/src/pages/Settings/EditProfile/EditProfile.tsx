@@ -77,6 +77,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ header, currentUser, currentP
     <Box
       sx={{
         width: 600,
+        maxWidth: '100%',
         margin: '0 auto',
       }}
     >

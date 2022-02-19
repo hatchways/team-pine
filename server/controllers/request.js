@@ -1,7 +1,7 @@
-const Request = require("../models/Request");
-const Profile = require("../models/Profile");
-const asyncHandler = require("express-async-handler");
-const User = require("../models/User");
+const Request = require('../models/Request');
+const Profile = require('../models/Profile');
+const asyncHandler = require('express-async-handler');
+const User = require('../models/User');
 
 // @route POST /requests
 // @desc Create new request
@@ -26,7 +26,7 @@ exports.createRequest = asyncHandler(async (req, res, next) => {
     });
   } else {
     res.status(404);
-    throw new Error("Request does not exist");
+    throw new Error('Request does not exist');
   }
 });
 
@@ -43,7 +43,7 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findOne({ userId: req.user.id });
   if (request.sitter.toString() == profile._id.toString()) {
     const { status } = req.body;
-    request.set("status", status);
+    request.set('status', status);
     const updatedRequest = await request.save();
     res.status(200).json({
       success: {
@@ -52,7 +52,7 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
     });
   } else {
     res.status(403);
-    throw new Error("You are not authorized to perform this operation");
+    throw new Error('You are not authorized to perform this operation');
   }
 });
 
@@ -62,12 +62,12 @@ exports.editRequest = asyncHandler(async (req, res, next) => {
 exports.getUserRequests = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findOne({ userId: req.user.id });
   if (profile.isSitter) {
-    const requests = await Request.where("sitter", profile._id).populate(
-      "requester"
+    const requests = await Request.where('sitter', profile._id).populate(
+      'requester'
     );
     res.status(200).json({ requests: requests });
   } else {
     res.status(403);
-    throw new Error("You are not authorized to perform this operation");
+    throw new Error('You are not authorized to perform this operation');
   }
 });

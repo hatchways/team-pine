@@ -1,15 +1,15 @@
-const asyncHandler = require("express-async-handler");
-const { s3 } = require("../cloud storage/amazonS3");
-const multer = require("multer");
-const multerS3 = require("multer-s3");
-const Profile = require("../models/Profile");
-const { deleteFileFromS3bucket } = require("./delete");
+const asyncHandler = require('express-async-handler');
+const { s3 } = require('../cloud storage/amazonS3');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const Profile = require('../models/Profile');
+const { deleteFileFromS3bucket } = require('./delete');
 
 const imageFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image")) {
+  if (file.mimetype.startsWith('image')) {
     cb(null, true);
   } else {
-    cb("Not an image! Please upload images only.", false);
+    cb('Not an image! Please upload images only.', false);
   }
 };
 
@@ -43,12 +43,12 @@ exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
   const bucket = process.env.AWS_BUCKET_NAME;
 
   try {
-    const uploadSingle = upload(bucket, filename).single("image");
+    const uploadSingle = upload(bucket, filename).single('image');
 
     uploadSingle(req, res, async (err) => {
       if (err) return res.status(400).json({ error: { message: err } });
 
-      if (profile.photo !== "") {
+      if (profile.photo !== '') {
         try {
           deleteFileFromS3bucket(bucket, profile.photo);
         } catch (err) {
@@ -57,7 +57,7 @@ exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
       }
       if (!req.file) {
         res.status(404);
-        throw new Error("Unable to upload photo");
+        throw new Error('Unable to upload photo');
       }
       profile.set({ photo: req.file.location });
       const updatedProfile = await profile.save();

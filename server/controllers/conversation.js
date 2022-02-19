@@ -1,6 +1,6 @@
-const Conversation = require("../models/Conversation");
-const Message = require("../models/Message");
-const asyncHandler = require("express-async-handler");
+const Conversation = require('../models/Conversation');
+const Message = require('../models/Message');
+const asyncHandler = require('express-async-handler');
 
 // @route POST /
 // @desc create a new conversation
@@ -11,7 +11,7 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
 
   if (!description || !receiver) {
     res.status(400);
-    throw new Error("Bad request! Missing description or receiver!");
+    throw new Error('Bad request! Missing description or receiver!');
   }
 
   const message = await Message.create({
@@ -58,8 +58,8 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
   const { conversationId } = req.params;
 
   const conversation = await Conversation.findById(conversationId).populate({
-    path: "messages",
-    sort: { updatedAt: "desc" },
+    path: 'messages',
+    sort: { updatedAt: 'desc' },
   });
 
   if (
@@ -73,7 +73,7 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
     });
   } else {
     res.status(401);
-    throw new Error("Not authorized");
+    throw new Error('Not authorized');
   }
 });
 
@@ -84,9 +84,9 @@ exports.getAllMessages = asyncHandler(async (req, res, next) => {
 exports.sendMessage = asyncHandler(async (req, res, next) => {
   const { conversationId, description } = req.body;
 
-  if (!description || !receiver || !conversationId) {
+  if (!description || !conversationId) {
     res.status(400);
-    throw new Error("Bad request!");
+    throw new Error('Bad request!');
   }
 
   const conversation = await Conversation.findById(conversationId);
@@ -111,7 +111,7 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
     });
   } else {
     res.status(401);
-    throw new Error("Not authorized");
+    throw new Error('Not authorized');
   }
 });
 
@@ -122,10 +122,16 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
 exports.getAllConversations = asyncHandler(async (req, res, next) => {
   const conversations = await Conversation.find({
     participants: { $in: req.user.id },
-  }).populate({
-    path: "messages",
-    sort: { updatedAt: "desc" },
-  });
+  })
+    .populate({
+      path: 'messages',
+      sort: { updatedAt: 'desc' },
+      populate: {
+        path: 'sender',
+        model: 'User',
+      },
+    })
+    .populate('participants');
 
   res.status(200).json({
     success: {

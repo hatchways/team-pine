@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
   reviewee: {
@@ -35,4 +35,4 @@ reviewSchema.post('save', (error, doc, next) => {
   }
 });
 
-module.exports = Review = mongoose.model("Review", reviewSchema);
+module.exports = Review = mongoose.model('Review', reviewSchema);

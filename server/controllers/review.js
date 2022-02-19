@@ -1,8 +1,8 @@
-const Review = require("../models/Review");
-const asyncHandler = require("express-async-handler");
-const Profile = require("../models/Profile");
+const Review = require('../models/Review');
+const asyncHandler = require('express-async-handler');
+const Profile = require('../models/Profile');
 
-// @route POST /reviews/:profileId
+// @route POST /reviews
 // @desc create review for a single profile
 // @access Public
 
@@ -10,26 +10,32 @@ exports.createReview = asyncHandler(async (req, res, next) => {
   const reviewer = await Profile.findOne({ userId: req.user.id });
   if (reviewer.isSitter) {
     res.status(403);
-    throw new Error("You are not authorized to perform this operation");
+    throw new Error('You are not authorized to perform this operation');
   }
 
-  const profile = await Profile.findById(req.params.profileId);
+  const profile = await Profile.findById(req.body.profileId);
 
   if (!profile) {
     res.status(404);
-    throw new Error("Profile does not exist");
+    throw new Error('Profile does not exist');
   }
   if (!profile.isSitter) {
     res.status(400);
-    throw new Error("Invalid profile type");
+    throw new Error('Invalid profile type');
   }
+
   const { rating, text } = req.body;
-  const review = await Review.create({ reviewee: profile, reviewer, rating, text });
+  const review = await Review.create({
+    reviewee: profile,
+    reviewer,
+    rating,
+    text,
+  });
 
   res.status(200).json({
     success: {
-      review
-    }
+      review,
+    },
   });
 });
 
