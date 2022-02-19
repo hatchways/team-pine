@@ -1,7 +1,11 @@
-const User = require('../models/User');
-const Profile = require('../models/Profile');
-const asyncHandler = require('express-async-handler');
-const generateToken = require('../utils/generateToken');
+const User = require("../models/User");
+const Profile = require("../models/Profile");
+const ResetToken = require("../models/ResetToken");
+const asyncHandler = require("express-async-handler");
+const generateToken = require("../utils/generateToken");
+const sgMail = require('@sendgrid/mail');
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // @route POST /auth/register
 // @desc Register user
@@ -125,4 +129,63 @@ exports.logoutUser = asyncHandler(async (req, res, next) => {
   res.clearCookie('token');
 
   res.send('You have successfully logged out');
+});
+
+// @route POST /auth/send-password-reset
+// @desc Send password reset email to user
+// @access Public
+exports.sendPasswordResetEmail = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.status(404);
+    throw new Error("Email not found");
+  }
+
+  const token = generateToken(user.id, "30m");
+  await ResetToken.create({ token, user });
+  const link = `${req.protocol}://localhost:3000/password-reset/${email}/${token}`;
+
+  const msg = {
+    to: user.email,
+    from: "lovingsittertest@gmail.com",
+    subject: "Password Reset",
+    html: `
+    <div>You have requested a password reset. Click on the link to reset. This link will expire in 30 minutes.</div><br />
+    <div>Reset Link: ${link}</div><br />
+    <div>If you did not request this, please contact us immediately at support@lovingsitter.com</div>
+    `
+  }
+
+  await sgMail.send(msg)
+  
+  res.status(200).json({
+    success: {
+      message: "Password reset link successfully sent to email on your account"
+    }
+  });
+});
+
+// @route PUT /auth/reset-password
+// @desc Reset user password
+// @access Private
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  const { email, token, password } = req.body;
+
+  const user = await User.findOne({ email });
+  const resetToken = await ResetToken.findOne({ user });
+
+  if (resetToken && (await resetToken.matchToken(token))) {
+    user.set("password", password);
+    await user.save();
+    ResetToken.deleteMany({ user });
+    res.status(200).json({
+      success: {
+        message: "Password successfully updated. You may now login with the new password."
+      }
+    });
+  } else {
+    res.status(401);
+    throw new Error('Invalid token');
+  }
 });
