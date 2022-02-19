@@ -93,6 +93,17 @@ export default function ProfileListing({}: Props): ReactElement {
     }
   }, [availability, location, updateSnackBarMessage, isMounted]);
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const updateWindowWidth = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', updateWindowWidth);
+    return () => window.removeEventListener('resize', updateWindowWidth);
+  });
+
   return (
     <PageContainer>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -129,7 +140,9 @@ export default function ProfileListing({}: Props): ReactElement {
                   type="date"
                   defaultValue="2022-01-01"
                   value={formDate}
-                  sx={{ width: 220 }}
+                  sx={{
+                    width: windowWidth < 600 ? '100%' : 220,
+                  }}
                   InputLabelProps={{
                     shrink: true,
                   }}
