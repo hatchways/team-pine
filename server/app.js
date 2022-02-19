@@ -10,6 +10,7 @@ const { join } = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+const sgMail = require('@sendgrid/mail');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const profileRouter = require('./routes/profile');
@@ -33,7 +34,9 @@ const io = socketio(server, {
   },
 });
 
-if (process.env.NODE_ENV === 'development') {
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+if (process.env.NODE_ENV === "development") {
   server.listen(process.env.PORT, (err, res) => {
     if (err) return console.log(err);
     console.log('server is listening...');
