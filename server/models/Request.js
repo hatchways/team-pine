@@ -1,15 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const requestSchema = new mongoose.Schema(
   {
     requester: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Profile",
+      ref: 'Profile',
       required: true,
     },
     sitter: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Profile",
+      ref: 'Profile',
       required: true,
     },
     startDate: {
@@ -18,9 +18,9 @@ const requestSchema = new mongoose.Schema(
         validator: function (startDate) {
           return startDate < this.endDate;
         },
-        message: "Start date must begin before the end date.",
+        message: 'Start date must begin before the end date.',
       },
-      required: [true, "Must have a start date."],
+      required: [true, 'Must have a start date.'],
     },
     endDate: {
       type: Date,
@@ -28,19 +28,19 @@ const requestSchema = new mongoose.Schema(
         validator: function (endDate) {
           return this.startDate < endDate;
         },
-        message: "Start date must begin before the end date.",
+        message: 'Start date must begin before the end date.',
       },
-      required: [true, "Must have an end date."],
+      required: [true, 'Must have an end date.'],
     },
     status: {
       type: String,
-      default: "pending",
+      default: 'pending',
       trim: true,
-      enum: ["accepted", "declined", "pending", "completed"],
+      enum: ['accepted', 'declined', 'pending', 'completed'],
     },
     paid: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
-module.exports = Request = mongoose.model("Request", requestSchema);
+module.exports = Request = mongoose.model('Request', requestSchema);

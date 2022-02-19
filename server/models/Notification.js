@@ -1,31 +1,31 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const notificationSchema = new mongoose.Schema(
   {
     receiver: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "User",
+      ref: 'User',
     },
     sender: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "User",
+      ref: 'User',
     },
     type: {
       type: String,
-      enum: ["request", "payment", "message"],
+      enum: ['request', 'payment', 'message'],
       lowercase: true,
       required: true,
     },
     title: {
       type: String,
-      default: "",
+      default: '',
       required: true,
     },
     description: {
       type: String,
-      default: "",
+      default: '',
       required: true,
     },
     read: {
@@ -38,6 +38,6 @@ const notificationSchema = new mongoose.Schema(
 );
 
 module.exports = Notification = mongoose.model(
-  "Notification",
+  'Notification',
   notificationSchema
 );

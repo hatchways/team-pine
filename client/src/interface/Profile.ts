@@ -9,6 +9,7 @@ export interface Profile {
   userId: string;
   payRate: string;
   _id: string;
+  isSitter?: boolean;
 }
 
 export interface ProfileDetails {
