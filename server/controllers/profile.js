@@ -1,6 +1,6 @@
-const Profile = require("../models/Profile");
-const asyncHandler = require("express-async-handler");
-const Schedule = require("../models/Schedule");
+const Profile = require('../models/Profile');
+const asyncHandler = require('express-async-handler');
+
 // @route PUT /profile/edit
 // @desc edit user profile
 // @access Public
@@ -24,11 +24,11 @@ exports.editProfile = asyncHandler(async (req, res, next) => {
 // @desc Get user profile data
 // @access Private
 exports.loadProfile = asyncHandler(async (req, res, next) => {
-  const profile = await User.findById(req.user.id, "profile");
+  const profile = await User.findById(req.user.id, 'profile');
 
   if (!profile) {
     res.status(401);
-    throw new Error("Not authorized");
+    throw new Error('Not authorized');
   }
 
   res.status(200).json({
@@ -44,7 +44,7 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
 exports.getProfileListings = asyncHandler(async (req, res, next) => {
   const { availability, location } = req.query;
   const result = [];
-  const date = availability.split("_", 2);
+  const date = availability.split('_', 2);
   const dropInDate = date[0];
   const dropOffDate = date[1];
 
@@ -57,7 +57,7 @@ exports.getProfileListings = asyncHandler(async (req, res, next) => {
 
   try {
     const schedules = await Schedule.find()
-      .where("profileId")
+      .where('profileId')
       .in(profile)
       .exec();
 
@@ -75,13 +75,27 @@ exports.getProfileListings = asyncHandler(async (req, res, next) => {
     console.log(e);
   }
 
-  const foundProfiles = await Profile.find().where("_id").in(result).exec();
-
-  console.log(foundProfiles);
+  const foundProfiles = await Profile.find().where('_id').in(result).exec();
 
   res.status(200).json({
     success: {
       profiles: foundProfiles,
+    },
+  });
+});
+// @route GET /profile/load/:profileId
+// @route Get user profile data based on id
+// @access Public
+exports.loadProfileById = asyncHandler(async (req, res, next) => {
+  const profile = await Profile.findById(req.params.profileId);
+  if (!profile || !profile.isSitter) {
+    res.status(403);
+    throw new Error('Invalid profile');
+  }
+
+  res.status(200).json({
+    success: {
+      profile,
     },
   });
 });

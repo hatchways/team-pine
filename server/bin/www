@@ -1,35 +1,38 @@
 #!/usr/bin/env node
 
 /* Sets up the environment variables from your .env file*/
-require("dotenv").config();
+require('dotenv').config();
 
 /**
  * Module dependencies.
  */
 
-var app = require("../app").app;
-var http = require("http");
+var app = require('../app').app;
+var http = require('http');
+var io = require('../app').io;
+const Profile = require('../models/Profile');
+const jwt = require('jsonwebtoken');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || "3001");
-app.set("port", port);
+var port = normalizePort(process.env.PORT || '3001');
+app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = require("../app").server;
+var server = require('../app').server;
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
 server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
+server.on('error', onError);
+server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -56,20 +59,20 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== "listen") {
+  if (error.syscall !== 'listen') {
     throw error;
   }
 
-  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case "EACCES":
-      console.error(bind + " requires elevated privileges");
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
       process.exit(1);
       break;
-    case "EADDRINUSE":
-      console.error(bind + " is already in use");
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
       process.exit(1);
       break;
     default:
@@ -83,7 +86,33 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
 
   console.log(`Listening on ${bind}`.red.underline.bold);
 }
+
+io.use(async (socket, next) => {
+  const token = socket.handshake.headers.cookie;
+
+  if (!token) {
+    next(new Error('Invalid token'));
+  }
+
+  try {
+    const userToken = token.split('token=').join('');
+
+    const decodedUser = jwt.verify(userToken, process.env.JWT_SECRET);
+
+    const user = await User.findById(decodedUser.id);
+    if (!user) {
+      next(new Error('User not found'));
+    }
+
+    socket.data.user = user;
+    next();
+  } catch (err) {
+    next(new Error('User authentication failed!'));
+  }
+}).on('connection', (socket) => {
+  console.log(socket.data.user);
+});

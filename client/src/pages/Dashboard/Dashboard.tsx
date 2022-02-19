@@ -1,25 +1,20 @@
 import React, { useEffect } from 'react';
-import { useAuth } from '../../context/useAuthContext';
-import { useSocket } from '../../context/useSocketContext';
-import { useHistory } from 'react-router-dom';
-import { CircularProgress, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import PageContainer from '../../components/PageContainer/PageContainer';
+import { io } from 'socket.io-client';
+import { useAuth } from '../../context/useAuthContext';
 
 export default function Dashboard(): JSX.Element {
   const { loggedInUser } = useAuth();
-  const { initSocket } = useSocket();
-  const history = useHistory();
 
   useEffect(() => {
-    initSocket();
-  }, [initSocket]);
-
-  if (loggedInUser === undefined) return <CircularProgress />;
-  if (!loggedInUser) {
-    history.push('/login');
-    // loading for a split seconds until history.push works
-    return <CircularProgress />;
-  }
+    if (loggedInUser) {
+      const socket = io();
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [loggedInUser]);
 
   return (
     <PageContainer>
