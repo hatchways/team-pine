@@ -43,15 +43,43 @@ exports.loadProfile = asyncHandler(async (req, res, next) => {
 // @access Public
 exports.getProfileListings = asyncHandler(async (req, res, next) => {
   const { availability, location } = req.query;
+  const result = [];
+  const date = availability.split('_', 2);
+  const dropInDate = date[0];
+  const dropOffDate = date[1];
 
-  const profiles = await Profile.find(
-    { location: { $regex: `.*${location.toLowerCase()}.*` } },
-    { isSitter: true }
-  ).select('name description location photo payRate');
+  const profiles = await Profile.find({
+    location: { $regex: `.*${location.toLowerCase()}.*` },
+    isSitter: true,
+  });
+
+  const profile = profiles.map((profile) => profile._id.toString());
+
+  try {
+    const schedules = await Schedule.find()
+      .where('profileId')
+      .in(profile)
+      .exec();
+
+    for (const schedule of schedules) {
+      if (schedule.days[dropInDate] && schedule.days[dropOffDate]) {
+        if (
+          schedule.days[dropInDate].isAvailable === true &&
+          schedule.days[dropOffDate].isAvailable === true
+        ) {
+          result.push(schedule.profileId);
+        }
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  const foundProfiles = await Profile.find().where('_id').in(result).exec();
 
   res.status(200).json({
     success: {
-      profiles,
+      profiles: foundProfiles,
     },
   });
 });

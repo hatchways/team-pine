@@ -9,6 +9,7 @@ import Signup from './pages/SignUp/SignUp';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Bookings from './pages/Bookings/Bookings';
 import ProfileDetails from './pages/ProfileDetails/ProfileDetails';
+import LandingPage from './pages/Landing/LandingPage';
 import { AuthProvider } from './context/useAuthContext';
 import { SocketProvider } from './context/useSocketContext';
 import { SnackBarProvider } from './context/useSnackbarContext';
@@ -30,6 +31,7 @@ function App(): JSX.Element {
               <CssBaseline />
               <Navbar />
               <Switch>
+                <Route exact path="/" component={LandingPage} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/signup" component={Signup} />
                 <ProtectedRoute exact path="/dashboard" component={Dashboard} />
