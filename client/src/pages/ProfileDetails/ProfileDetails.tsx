@@ -109,7 +109,7 @@ export default function ProfileDetails(): JSX.Element {
                   width={window.innerWidth < 600 ? 100 : 150}
                   height={window.innerWidth < 600 ? 100 : 150}
                   loggedIn
-                  user={{ name: profile.name, email: 'example@example.com' }}
+                  name={profile.name}
                   photoUrl={profile.photo}
                 />
               </Box>

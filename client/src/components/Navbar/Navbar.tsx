@@ -167,7 +167,7 @@ const Navbar: React.FC = () => {
                       loggedIn
                       width={50}
                       height={50}
-                      user={loggedInUser}
+                      name={loggedInUser.name}
                     />
                   </IconButton>
                   <Menu

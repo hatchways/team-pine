@@ -12,11 +12,7 @@ export default function ProfileReview({ review }: Props): JSX.Element {
       <Rating value={review.rating} readOnly />
       <ListItem sx={{ padding: '0', alignItems: 'flex-start' }}>
         <ListItemAvatar>
-          <AvatarDisplay
-            loggedIn
-            user={{ name: review.reviewer.name, email: 'example@example.com' }}
-            photoUrl={review.reviewer.photo}
-          ></AvatarDisplay>
+          <AvatarDisplay loggedIn name={review.reviewer.name} photoUrl={review.reviewer.photo}></AvatarDisplay>
         </ListItemAvatar>
         {review.text ? <ListItemText>{review.text}</ListItemText> : null}
       </ListItem>
