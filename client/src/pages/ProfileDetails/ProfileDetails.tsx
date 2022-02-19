@@ -29,6 +29,8 @@ export default function ProfileDetails(): JSX.Element {
   const [reviews, setReviews] = useState<Review[] | undefined>();
   const [rating, setRating] = useState<number>(2.5);
   const [reviewsDialogOpen, setReviewsDialogOpen] = useState<boolean>(false);
+  const [pageCount, setPageCount] = useState<number>(1);
+  const [reviewCount, setReviewCount] = useState<number>(0);
 
   const { profileId } = useParams<{ profileId: string }>();
 
@@ -41,7 +43,7 @@ export default function ProfileDetails(): JSX.Element {
         return;
       }
       setProfile(profileResponse.success.profile);
-      const reviewsResponse = await getReviews(profileId);
+      const reviewsResponse = await getReviews(profileId, 1);
       if (reviewsResponse.error) {
         console.error(reviewsResponse.error);
         updateSnackBarMessage('Reviews not found');
@@ -49,6 +51,8 @@ export default function ProfileDetails(): JSX.Element {
       }
       setReviews(reviewsResponse.success.reviews);
       setRating(reviewsResponse.success.rating);
+      setReviewCount(reviewsResponse.success.count);
+      setPageCount(Math.floor(reviewsResponse.success.count / 10) + 1);
       setIsMounted(true);
     }
     if (!isMounted) {
@@ -169,7 +173,7 @@ export default function ProfileDetails(): JSX.Element {
             <Divider sx={{ width: '95%', margin: 'auto' }} />
             <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 2, alignItems: 'flex-start' }}>
               <Typography component="h2" fontSize="1.1rem">
-                Reviews {reviews && reviews.length > 0 ? `(${reviews.length})` : null}
+                Reviews {reviews && reviews.length > 0 ? `(${reviewCount})` : null}
               </Typography>
               <List>
                 {reviews && reviews.length > 0 ? (
@@ -190,7 +194,8 @@ export default function ProfileDetails(): JSX.Element {
                     <Typography>See all reviews</Typography>
                   </Button>
                   <ReviewsDialog
-                    reviews={reviews}
+                    initialPageCount={pageCount}
+                    initialReviews={reviews}
                     profileName={profile.name}
                     open={reviewsDialogOpen}
                     onClose={handleClose}

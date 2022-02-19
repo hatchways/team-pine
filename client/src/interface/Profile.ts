@@ -1,3 +1,12 @@
+export interface ProfileDetails {
+  name: string;
+  description: string;
+  aboutMe: string;
+  payRate: string;
+  location: string;
+  photo: string;
+}
+
 export interface Profile {
   location?: string;
   birthday?: Date;
@@ -10,13 +19,4 @@ export interface Profile {
   payRate: string;
   _id: string;
   isSitter?: boolean;
-}
-
-export interface ProfileDetails {
-  name: string;
-  description: string;
-  aboutMe: string;
-  payRate: string;
-  location: string;
-  photo: string;
 }
