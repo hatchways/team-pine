@@ -33,25 +33,26 @@ export default function ProfileDetails(): JSX.Element {
   const { profileId } = useParams<{ profileId: string }>();
 
   useEffect(() => {
-    if (!isMounted) {
+    async function fetchData() {
+      const profileResponse = await getProfile(profileId);
+      if (profileResponse.error) {
+        console.error(profileResponse.error);
+        updateSnackBarMessage('Profile not found');
+        return;
+      }
+      setProfile(profileResponse.success.profile);
+      const reviewsResponse = await getReviews(profileId);
+      if (reviewsResponse.error) {
+        console.error(reviewsResponse.error);
+        updateSnackBarMessage('Reviews not found');
+        return;
+      }
+      setReviews(reviewsResponse.success.reviews);
+      setRating(reviewsResponse.success.rating);
       setIsMounted(true);
-      getProfile(profileId).then((res) => {
-        if (!res.error) {
-          setProfile(res.success.profile);
-          getReviews(profileId).then((res) => {
-            if (!res.error) {
-              setReviews(res.success.reviews);
-              setRating(res.success.rating);
-            } else {
-              console.error(res.error);
-              updateSnackBarMessage('Reviews not found');
-            }
-          });
-        } else {
-          console.error(res.error);
-          updateSnackBarMessage('Profile not found');
-        }
-      });
+    }
+    if (!isMounted) {
+      fetchData();
     }
   }, [isMounted, profileId, updateSnackBarMessage]);
 
