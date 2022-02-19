@@ -36,6 +36,7 @@ export default function Bookings(): JSX.Element {
                 name: res.requests[i].requester.name,
                 email: res.requests[i].requester.email,
               },
+              photo: res.requests[i].requester.photo,
             });
           }
           if (userBookings.length > 0 && userBookings != undefined) {

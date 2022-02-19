@@ -40,7 +40,7 @@ const menuItems = [
   },
   {
     item: 'My Jobs',
-    resource: '/my-jobs',
+    resource: '/bookings',
     canView: [AccountType.PET_SITTER],
     authenticated: true,
   },
@@ -125,7 +125,6 @@ const Navbar: React.FC = () => {
   });
 
   const renderMenuItems = () => {
-    // TODO: conditionally render based on profile type
     return menuItems.map((menu) => {
       if (menu.authenticated && menu.canView) {
         if (loggedInUserProfile && loggedInUserProfile.isSitter) {
@@ -168,7 +167,7 @@ const Navbar: React.FC = () => {
                       loggedIn
                       width={50}
                       height={50}
-                      user={loggedInUser}
+                      name={loggedInUser.name}
                     />
                   </IconButton>
                   <Menu

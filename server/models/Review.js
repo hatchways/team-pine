@@ -29,4 +29,13 @@ const reviewSchema = new mongoose.Schema(
 
 reviewSchema.index({ reviewee: 1, reviewer: 1 }, { unique: true });
 
-module.exports = Review = mongoose.model('Review', reviewSchema);
+reviewSchema.post('save', (error, doc, next) => {
+  if (error.name === 'MongoServerError' && error.code === 11000) {
+    next(new Error('Duplicate key found'));
+  } else {
+    next();
+  }
+});
+
+
+module.exports = Review = mongoose.model("Review", reviewSchema);

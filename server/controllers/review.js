@@ -43,10 +43,12 @@ exports.createReview = asyncHandler(async (req, res, next) => {
 // @desc get reviews for a profile
 // @access Public
 exports.getReviews = asyncHandler(async (req, res, next) => {
-  const reviews = await Review.where(req.params.profileId).populate('reviewer');
+  const reviews = await Review.where("reviewee", req.params.profileId).populate('reviewer').sort({_id: -1});
 
+  let count = 0;
   let ratingTotal = 0;
   for (let review of reviews) {
+    count += 1;
     ratingTotal += review.rating;
   }
 
@@ -56,6 +58,6 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
     success: {
       reviews,
       rating,
-    },
-  });
+      count
+  }});
 });
