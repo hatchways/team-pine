@@ -80,7 +80,7 @@ export default function BookingCard({ booking, isNextBooking, isPastBooking }: P
     <>
       {topLine()}
       <Box sx={{ padding: '0', display: 'flex', alignItems: 'center', marginBottom: 0 }}>
-        <AvatarDisplay loggedIn={false} user={booking.user} />
+        <AvatarDisplay photoUrl={booking.photo} loggedIn={false} user={booking.user} />
         <Typography sx={{ textTransform: 'none', fontWeight: 'bold' }}>&nbsp;{booking.user.name}</Typography>
         <Typography
           sx={{
