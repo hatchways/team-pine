@@ -73,9 +73,9 @@ export default function ReviewsDialog({
       {pageCount > 1 ? <Pagination count={pageCount} page={page} setPage={setPage} /> : null}
       <List>
         {reviewPages[page]
-          ? reviewPages[page].map((review, i) => {
+          ? reviewPages[page].map((review) => {
               return (
-                <Box sx={{ padding: `${theme.spacing(2)} ${theme.spacing(2)}` }} key={i}>
+                <Box sx={{ padding: `${theme.spacing(2)} ${theme.spacing(2)}` }} key={review._id}>
                   <ProfileReview review={review} />
                 </Box>
               );

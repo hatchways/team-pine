@@ -13,7 +13,6 @@ import getReviews from '../../helpers/APICalls/getReviews';
 import { ProfileDetails as Profile } from '../../interface/Profile';
 import { useParams } from 'react-router-dom';
 import { useSnackBar } from '../../context/useSnackbarContext';
-import { useTheme } from '@mui/material';
 import Review from '../../interface/Review';
 
 const mockPhotos = [
@@ -23,7 +22,6 @@ const mockPhotos = [
 
 export default function ProfileDetails(): JSX.Element {
   const classes = useStyles();
-  const theme = useTheme();
 
   const { updateSnackBarMessage } = useSnackBar();
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -37,27 +35,28 @@ export default function ProfileDetails(): JSX.Element {
   const { profileId } = useParams<{ profileId: string }>();
 
   useEffect(() => {
-    if (!isMounted) {
+    async function fetchData() {
+      const profileResponse = await getProfile(profileId);
+      if (profileResponse.error) {
+        console.error(profileResponse.error);
+        updateSnackBarMessage('Profile not found');
+        return;
+      }
+      setProfile(profileResponse.success.profile);
+      const reviewsResponse = await getReviews(profileId, 1);
+      if (reviewsResponse.error) {
+        console.error(reviewsResponse.error);
+        updateSnackBarMessage('Reviews not found');
+        return;
+      }
+      setReviews(reviewsResponse.success.reviews);
+      setRating(reviewsResponse.success.rating);
+      setReviewCount(reviewsResponse.success.count);
+      setPageCount(Math.floor((reviewsResponse.success * 2) / 10) / 2);
       setIsMounted(true);
-      getProfile(profileId).then((res) => {
-        if (!res.error) {
-          setProfile(res.success.profile);
-          getReviews(profileId, 1).then((res) => {
-            if (!res.error) {
-              setReviews(res.success.reviews);
-              setReviewCount(res.success.count);
-              setPageCount(Math.floor(res.success.count / 10) + 1);
-              setRating(res.success.rating);
-            } else {
-              console.error(res.error);
-              updateSnackBarMessage('Reviews not found');
-            }
-          });
-        } else {
-          console.error(res.error);
-          updateSnackBarMessage('Profile not found');
-        }
-      });
+    }
+    if (!isMounted) {
+      fetchData();
     }
   }, [isMounted, profileId, updateSnackBarMessage]);
 
@@ -82,7 +81,7 @@ export default function ProfileDetails(): JSX.Element {
 
   const addReview = (review: Review) => {
     if (reviews) {
-      setReviews([review, ...reviews]);
+      setReviews((prevReviews) => prevReviews && [review, ...prevReviews]);
     } else {
       setReviews([review]);
     }
@@ -99,6 +98,7 @@ export default function ProfileDetails(): JSX.Element {
       >
         <Grid
           mb={windowWidth < 1200 ? 3 : 0}
+          p={windowWidth < 1200 ? 2 : 0}
           xs={12}
           lg={6}
           item
@@ -114,7 +114,7 @@ export default function ProfileDetails(): JSX.Element {
                   width={window.innerWidth < 600 ? 100 : 150}
                   height={window.innerWidth < 600 ? 100 : 150}
                   loggedIn
-                  user={{ name: profile.name, email: 'example@example.com' }}
+                  name={profile.name}
                   photoUrl={profile.photo}
                 />
               </Box>
@@ -156,7 +156,7 @@ export default function ProfileDetails(): JSX.Element {
         {windowWidth < 1200 ? <Divider sx={{ width: '100%' }} /> : null}
         {profile ? (
           <Grid
-            padding={theme.spacing(2)}
+            padding={2}
             xs={12}
             lg={4}
             item
@@ -171,15 +171,15 @@ export default function ProfileDetails(): JSX.Element {
             <Rating sx={{ margin: 'auto' }} value={rating} precision={0.5} readOnly />
             <RequestForm profileId={profileId} />
             <Divider sx={{ width: '95%', margin: 'auto' }} />
-            <Box className={classes.reviewsContainer}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 2, alignItems: 'flex-start' }}>
               <Typography component="h2" fontSize="1.1rem">
                 Reviews {reviews && reviews.length > 0 ? `(${reviewCount})` : null}
               </Typography>
               <List>
                 {reviews && reviews.length > 0 ? (
-                  reviews.slice(0, 3).map((review, i) => {
+                  reviews.slice(0, 3).map((review) => {
                     return (
-                      <Box key={i} className={classes.review}>
+                      <Box key={review._id} className={classes.review}>
                         <ProfileReview review={review} />
                       </Box>
                     );
