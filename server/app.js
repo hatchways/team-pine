@@ -13,9 +13,13 @@ const logger = require('morgan');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const profileRouter = require('./routes/profile');
-const uploadRouter = require('./routes/upload');
 const notificationRouter = require('./routes/notification');
 const conversationRouter = require('./routes/conversation');
+const requestRouter = require('./routes/request');
+const uploadRouter = require('./routes/upload');
+const deleteRouter = require('./routes/delete');
+const availabilityRouter = require('./routes/availability');
+const reviewRouter = require('./routes/review');
 
 const { json, urlencoded } = express;
 
@@ -27,10 +31,6 @@ const io = socketio(server, {
   cors: {
     origin: '*',
   },
-});
-
-io.on('connection', (socket) => {
-  console.log('connected');
 });
 
 if (process.env.NODE_ENV === 'development') {
@@ -53,9 +53,13 @@ app.use((req, res, next) => {
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/profile', profileRouter);
-app.use('/upload', uploadRouter);
 app.use('/notifications', notificationRouter);
 app.use('/conversations', conversationRouter);
+app.use('/requests', requestRouter);
+app.use('/upload', uploadRouter);
+app.use('/delete', deleteRouter);
+app.use('/availability', availabilityRouter);
+app.use('/reviews', reviewRouter);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/client/build')));
@@ -79,4 +83,4 @@ process.on('unhandledRejection', (err, promise) => {
   server.close(() => process.exit(1));
 });
 
-module.exports = { app, server };
+module.exports = { app, server, io };
