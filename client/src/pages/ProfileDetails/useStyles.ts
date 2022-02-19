@@ -27,6 +27,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 10,
     marginRight: 20,
   },
+  review: {
+    padding: `${theme.spacing(1)} ${theme.spacing(1)}`,
+  },
+  reviewForm: {
+    marginTop: theme.spacing(2),
+    width: '100%',
+  },
 }));
 
 export default useStyles;

@@ -1,6 +1,6 @@
-const Notification = require("../models/Notification");
-const User = require("../models/User");
-const asyncHandler = require("express-async-handler");
+const Notification = require('../models/Notification');
+const User = require('../models/User');
+const asyncHandler = require('express-async-handler');
 
 // @route POST /notifications/
 // @desc create a new notification
@@ -12,7 +12,7 @@ exports.createNotification = asyncHandler(async (req, res, next) => {
   if (!type || !title || !description || !receiver) {
     res.status(400);
     throw new Error(
-      "Bad request! Missing type, title, description or receiver"
+      'Bad request! Missing type, title, description or receiver'
     );
   }
 

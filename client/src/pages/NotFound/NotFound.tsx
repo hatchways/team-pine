@@ -3,6 +3,7 @@ import PageContainer from '../../components/PageContainer/PageContainer';
 
 import dogNotFound from '../../images/notFound/dog_not_found.png';
 import { makeStyles } from '@mui/styles';
+import { useEffect, useState } from 'react';
 
 const useStyles = makeStyles({
   image: {
@@ -12,10 +13,20 @@ const useStyles = makeStyles({
 
 export default function NotFound(): JSX.Element {
   const classes = useStyles();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const updateWindowWidth = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', updateWindowWidth);
+    return () => window.removeEventListener('resize', updateWindowWidth);
+  });
 
   return (
     <PageContainer>
-      <Box sx={{ width: '50%', margin: '0 auto', textAlign: 'center' }}>
+      <Box sx={{ width: windowWidth < 600 ? '100%' : '50%', margin: '0 auto', textAlign: 'center' }}>
         <Typography
           sx={{
             color: 'primary.main',
@@ -25,7 +36,7 @@ export default function NotFound(): JSX.Element {
         >
           Sorry we couldn&apos;t get that page.
         </Typography>
-        <Box sx={{ width: 600, margin: '20px auto' }}>
+        <Box sx={{ width: windowWidth < 600 ? 300 : 600, margin: '20px auto' }}>
           <img className={classes.image} src={dogNotFound} />
         </Box>
       </Box>

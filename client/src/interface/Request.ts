@@ -6,4 +6,5 @@ export interface Request {
   endDate: Date;
   status: string;
   user: User;
+  photo: string;
 }
