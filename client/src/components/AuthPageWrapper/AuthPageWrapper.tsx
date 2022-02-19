@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Paper } from '@mui/material';
 import AuthPageHeader from '../AuthPageHeader/AuthPageHeader';
-import { useState, useEffect } from 'react';
 
 interface AuthPageWrapperProps {
   header: string;
