@@ -23,7 +23,6 @@ export default function Bookings(): JSX.Element {
     if (!mounted) {
       setMounted(true);
       getRequests().then((res) => {
-        console.log(res);
         if (!res.error) {
           const userBookings: Request[] = [];
           for (let i = 0; i < res.requests.length; i++) {
@@ -50,13 +49,16 @@ export default function Bookings(): JSX.Element {
   }, [mounted, nextBooking, pastBookings, sortedBookings]);
 
   function getPastBookings(bookingsArray: Request[]) {
-    bookingsArray = bookingsArray.filter((value, index, arr) => {
-      if (value.startDate < new Date(Date.now())) {
-        arr.splice(index, 1);
+    let modIndex = 0;
+    const bookingsCopy = [...bookingsArray];
+    const pastBookings = bookingsCopy.filter((value) => {
+      if (value.startDate.getTime() < Date.now()) {
+        bookingsArray.splice(modIndex, 1);
         return true;
       }
+      modIndex += 1;
     });
-    return bookingsArray;
+    return pastBookings;
   }
 
   function sortBookingDates(bookingsArray: Request[]) {

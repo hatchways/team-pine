@@ -20,7 +20,7 @@ export default function RequestForm({ profileId }: { profileId: string }): JSX.E
     createRequest(profileId, startDate, endDate).then((data) => {
       if (data.error) {
         console.error({ error: data.error.message });
-        updateSnackBarMessage(data.error);
+        updateSnackBarMessage(data.error.message);
       } else if (data.success) {
         updateSnackBarMessage('Request successfully created!');
       } else {

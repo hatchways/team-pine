@@ -15,6 +15,11 @@ export const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 10000,
     boxShadow: 'none',
     background: 'none',
+    '& a': {
+      '@media(min-width:600px)': {
+        color: 'white',
+      },
+    },
   },
   navbarItemLanding: {
     fontWeight: 700,
@@ -35,9 +40,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
     transition: 'color 120ms ease-in-out',
     '&:hover': {
       color: theme.palette.primary.main,
-    },
-    '@media(min-width:600px)': {
-      color: 'white',
     },
   },
   unreadNotification: {
