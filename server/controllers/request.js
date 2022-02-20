@@ -7,10 +7,18 @@ const User = require('../models/User');
 // @desc Create new request
 // @access Public
 exports.createRequest = asyncHandler(async (req, res, next) => {
-  const profileId = await Profile.findOne({ userId: req.user.id });
+  const profile = await Profile.findOne({ userId: req.user.id });
   const { sitter, startDate, endDate } = req.body;
+  
+  console.log(sitter, profile);
+
+  if (profile._id == sitter) {
+    res.status(403);
+    throw new Error("You are not authorized to perform this operation");
+  }
+
   const request = await Request.create({
-    requester: profileId,
+    requester: profile,
     sitter,
     startDate,
     endDate,
