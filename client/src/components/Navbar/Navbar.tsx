@@ -143,7 +143,10 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <Box className={clsx(classes.navbar, location.pathname === '/' && classes.transparentNavbar)}>
+    <Box
+      sx={{ width: '100%' }}
+      className={clsx(classes.navbar, location.pathname === '/' && windowWidth > 600 && classes.transparentNavbar)}
+    >
       <Grid justifyContent="space-between" alignItems="center" container>
         <Grid xs={3} md={6} item>
           <img className={classes.navbarLogo} src={lovingSitterLogo} />

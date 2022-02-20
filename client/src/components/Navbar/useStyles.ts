@@ -36,6 +36,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       color: theme.palette.primary.main,
     },
+    '@media(min-width:600px)': {
+      color: 'white',
+    },
   },
   unreadNotification: {
     backgroundColor: '#FFFFFF',
