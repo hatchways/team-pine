@@ -23,8 +23,6 @@ const reviewRouter = require('./routes/review');
 
 const { json, urlencoded } = express;
 
-console.log(process.env.PORT);
-
 connectDB();
 const app = express();
 const server = http.createServer(app);
@@ -64,6 +62,8 @@ app.use('/availability', availabilityRouter);
 app.use('/reviews', reviewRouter);
 
 if (process.env.NODE_ENV === 'production') {
+  server.listen(process.env.PORT);
+
   app.use(express.static(path.join(__dirname, '/client/build')));
 
   app.get('*', (req, res) =>
