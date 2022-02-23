@@ -23,6 +23,8 @@ const reviewRouter = require('./routes/review');
 
 const { json, urlencoded } = express;
 
+console.log(process.env.PORT);
+
 connectDB();
 const app = express();
 const server = http.createServer(app);

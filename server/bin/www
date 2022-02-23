@@ -17,6 +17,7 @@ const jwt = require('jsonwebtoken');
  * Get port from environment and store in Express.
  */
 
+console.log(process.env.PORT);
 var port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
 
