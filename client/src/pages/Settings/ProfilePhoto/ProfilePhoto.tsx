@@ -96,7 +96,7 @@ const ProfilePhoto: React.FC<ProfilePhotoProps> = ({ header, currentUser, curren
             <AvatarDisplay
               width={170}
               height={170}
-              user={currentUser}
+              name={currentUser.name}
               photoUrl={currentProfile ? currentProfile.photo : ''}
               loggedIn={!!currentUser}
             />

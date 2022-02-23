@@ -64,7 +64,14 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
         } else {
           // don't need to provide error feedback as this just means user doesn't have saved cookies or the cookies have not been authenticated on the backend
           setLoggedInUser(null);
-          if (!(history.location.pathname === '/signup')) {
+          const pathName = history.location.pathname;
+          if (
+            !(
+              pathName === '/signup' ||
+              pathName === '/send-password-reset' ||
+              pathName.match(/\/password-reset\/.+\/.+/)
+            )
+          ) {
             history.push('/login');
           }
         }

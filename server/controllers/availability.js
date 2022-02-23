@@ -1,6 +1,6 @@
-const asyncHandler = require("express-async-handler");
-const Profile = require("../models/Profile");
-const Schedule = require("../models/Schedule");
+const asyncHandler = require('express-async-handler');
+const Profile = require('../models/Profile');
+const Schedule = require('../models/Schedule');
 
 exports.createSchedule = asyncHandler(async (req, res, next) => {
   if (req.profile === undefined) {
@@ -25,7 +25,7 @@ exports.createSchedule = asyncHandler(async (req, res, next) => {
   const savedSchedule = await newSchedule.save();
   if (!savedSchedule) {
     res.status(500);
-    throw new Error("Unexpected Error: Unable to save new schedule");
+    throw new Error('Unexpected Error: Unable to save new schedule');
   }
   if (req.profile.activeSchedule === undefined) {
     req.profile.set({ activeSchedule: savedSchedule.id });
@@ -40,7 +40,7 @@ exports.createSchedule = asyncHandler(async (req, res, next) => {
 exports.getSchedule = asyncHandler(async (req, res, next) => {
   const scheduleId = req.params.scheduleId;
   const schedule = await Schedule.findOne({ _id: scheduleId })
-    .where("profileId")
+    .where('profileId')
     .equals(req.profile.id);
   if (schedule) {
     res.status(200);

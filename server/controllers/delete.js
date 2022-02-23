@@ -1,6 +1,6 @@
-const asyncHandler = require("express-async-handler");
-const Profile = require("../models/Profile");
-const { s3 } = require("../cloud storage/amazonS3");
+const asyncHandler = require('express-async-handler');
+const Profile = require('../models/Profile');
+const { s3 } = require('../cloud storage/amazonS3');
 
 const deleteFileFromS3bucket = (bucketName, fileName) => {
   s3.deleteObject({ Bucket: bucketName, Key: fileName }, (err, res) => {
@@ -17,15 +17,15 @@ exports.deleteProfilePic = asyncHandler(async (req, res, next) => {
     res.status(404);
     throw new Error("Profile doesn't exist");
   }
-  if (profile.photo === "") {
+  if (profile.photo === '') {
     res.status(404);
-    throw new Error("Profile photo is not exists!!!");
+    throw new Error('Profile photo is not exists!!!');
   }
   const filename = profile.photo;
   const bucket = process.env.AWS_BUCKET_NAME;
   try {
     deleteFileFromS3bucket(bucket, filename);
-    profile.set({ photo: "" });
+    profile.set({ photo: '' });
     const updatedProfile = await profile.save();
     res.status(200);
     res.json({

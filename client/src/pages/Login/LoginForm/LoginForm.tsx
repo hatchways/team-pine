@@ -1,5 +1,5 @@
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+import { Button, Box, Link, Typography } from '@mui/material';
+import { Link as RouteLink } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
@@ -74,6 +74,12 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
             value={values.password}
             onChange={handleChange}
           />
+          <Typography fontWeight="700">
+            Forgot Password?{' '}
+            <Link component={RouteLink} to={'/send-password-reset'}>
+              Click here
+            </Link>
+          </Typography>
 
           <Box textAlign="center" marginTop={5}>
             <Button

@@ -4,12 +4,34 @@ import { makeStyles } from '@mui/styles';
 export const useStyles = makeStyles((theme: Theme) => ({
   navbar: {
     boxShadow: '4px 4px 13px 7px rgba(217,217,217,0.26)',
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     background: 'white',
+    '@media(min-width:600px)': {
+      padding: theme.spacing(2),
+    },
   },
   transparentNavbar: {
+    position: 'fixed',
+    zIndex: 10000,
     boxShadow: 'none',
     background: 'none',
+    '& a': {
+      '@media(min-width:600px)': {
+        color: 'white',
+      },
+    },
+  },
+  navbarItemLanding: {
+    fontWeight: 700,
+    textDecoration: 'none',
+    color: 'white !important',
+    transition: 'color 120ms ease-in-out',
+    '& .MuiButton-root': {
+      color: 'white',
+    },
+    '&:hover': {
+      color: theme.palette.primary.main,
+    },
   },
   navbarItem: {
     color: theme.palette.grey[900],
@@ -20,7 +42,27 @@ export const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.primary.main,
     },
   },
+  unreadNotification: {
+    backgroundColor: '#FFFFFF',
+    fontWeight: 700,
+    textDecoration: 'none',
+  },
+  readNotification: {
+    backgroundColor: theme.palette.grey[300],
+    fontWeight: 700,
+    textDecoration: 'none',
+  },
+  badge: {
+    '& .MuiBadge-standard': {
+      backgroundColor: '#4caf50',
+      left: '1px',
+      top: '-10px',
+    },
+  },
   navbarLogo: {
-    width: 180,
+    width: 130,
+    '@media(min-width:600px)': {
+      width: 180,
+    },
   },
 }));
