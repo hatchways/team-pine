@@ -7,7 +7,7 @@ const sendPasswordResetEmail = async (email: string) => {
     credentials: 'omit',
     body: JSON.stringify({ email }),
   };
-  return await fetch(`/auth/send-password-reset`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/auth/send-password-reset`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },

@@ -6,7 +6,7 @@ const getReviews = async (profileId: string, page: number) => {
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
   };
-  return await fetch(`/reviews/${profileId}?page=${page}`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/reviews/${profileId}?page=${page}`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: {

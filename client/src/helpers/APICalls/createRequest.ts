@@ -7,7 +7,7 @@ const createRequest = async (sitter: string, startDate: Date, endDate: Date) => 
     credentials: 'include',
     body: JSON.stringify({ sitter, startDate, endDate }),
   };
-  return await fetch(`/requests/`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/requests/`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },

@@ -6,7 +6,7 @@ export const getActiveSchedule = async (): Promise<ScheduleApiData> => {
     method: 'GET',
     credentials: 'include',
   };
-  return await fetch(`/availability/active`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/availability/active`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },
@@ -20,7 +20,7 @@ export const createNewSchedule = async (newSchedule: Schedule): Promise<Schedule
     body: JSON.stringify(newSchedule),
     credentials: 'include',
   };
-  return await fetch(`/availability`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/availability`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },
@@ -32,7 +32,7 @@ export const fetchListOfAllSchedule = async (): Promise<ScheduleListApiData> => 
     method: 'GET',
     credentials: 'include',
   };
-  return await fetch(`/availability`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/availability`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },
@@ -44,7 +44,7 @@ export const setScheduleActive = async (scheduleId: string): Promise<ScheduleApi
     method: 'PATCH',
     credentials: 'include',
   };
-  return await fetch(`/availability/${scheduleId}/activate`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/availability/${scheduleId}/activate`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },

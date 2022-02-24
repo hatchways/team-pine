@@ -5,7 +5,7 @@ const getConversations = async () => {
     method: 'GET',
     credentials: 'include',
   };
-  return await fetch(`/conversations/all`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/conversations/all`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },

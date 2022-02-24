@@ -5,7 +5,10 @@ const listProfiles = async (availability?: string, location?: string) => {
     method: 'GET',
     credentials: 'omit',
   };
-  return await fetch(`/profile/list-profiles/?availability=${availability}&location=${location}`, fetchOptions)
+  return await fetch(
+    `${process.env.REACT_APP_API_ENDPOINT}/profile/list-profiles/?availability=${availability}&location=${location}`,
+    fetchOptions,
+  )
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },

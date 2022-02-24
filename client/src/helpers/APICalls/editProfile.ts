@@ -16,7 +16,7 @@ const editProfile = async (data: {
     body: JSON.stringify(data),
     credentials: 'include',
   };
-  return await fetch(`/profile/edit`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/profile/edit`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },

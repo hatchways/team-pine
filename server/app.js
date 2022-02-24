@@ -20,11 +20,25 @@ const uploadRouter = require('./routes/upload');
 const deleteRouter = require('./routes/delete');
 const availabilityRouter = require('./routes/availability');
 const reviewRouter = require('./routes/review');
+const cors = require('cors');
 
 const { json, urlencoded } = express;
 
 connectDB();
+
+const whitelist = ['http://localhost:3000', 'https://loving-sitter.web.app']
 const app = express();
+app.use(cors({
+  credentials: true,
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
+
 const server = http.createServer(app);
 
 const io = socketio(server, {

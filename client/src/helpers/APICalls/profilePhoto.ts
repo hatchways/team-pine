@@ -9,7 +9,7 @@ export const profilePhotoUpload = async (file: File): Promise<ProfileApiData> =>
     body: formData,
     credentials: 'include',
   };
-  return await fetch(`/upload/profile-pic`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/upload/profile-pic`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },
@@ -21,7 +21,7 @@ export const profilePhotoDelete = async (): Promise<ProfileApiData> => {
     method: 'DELETE',
     credentials: 'include',
   };
-  return await fetch(`/delete/profile-pic`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/delete/profile-pic`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },

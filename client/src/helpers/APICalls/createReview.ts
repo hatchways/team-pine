@@ -7,7 +7,7 @@ const createReview = async (profileId: string, rating: number, text: string) => 
     credentials: 'include',
     body: JSON.stringify({ profileId, rating, text }),
   };
-  return await fetch(`/reviews`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/reviews`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },

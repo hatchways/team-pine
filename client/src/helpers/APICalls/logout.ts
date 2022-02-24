@@ -6,7 +6,7 @@ const logout = async (): Promise<AuthApiData> => {
     method: 'POST',
     credentials: 'include',
   };
-  return await fetch(`/auth/logout`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/auth/logout`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },

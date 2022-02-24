@@ -6,7 +6,7 @@ const getRequests = async () => {
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
   };
-  return await fetch(`/requests`, fetchOptions)
+  return await fetch(`${process.env.REACT_APP_API_ENDPOINT}/requests`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: 'Unable to connect to server. Please try again' },
