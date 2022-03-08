@@ -45,6 +45,7 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
     res.cookie('token', token, {
       httpOnly: true,
       maxAge: secondsInWeek * 1000,
+      SameSite: 'none'
     });
 
     res.status(201).json({
