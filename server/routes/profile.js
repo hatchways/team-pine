@@ -5,6 +5,7 @@ const {
   editProfile,
   loadProfile,
   loadProfileById,
+  getProfileListings,
 } = require('../controllers/profile');
 
 router.route('/edit').put(protect, editProfile);
@@ -12,5 +13,7 @@ router.route('/edit').put(protect, editProfile);
 router.route('/load').get(protect, loadProfile);
 
 router.route('/load/:profileId').get(protect, loadProfileById);
+
+router.route('/list-profiles').get(getProfileListings);
 
 module.exports = router;
