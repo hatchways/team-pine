@@ -26,7 +26,7 @@ const { json, urlencoded } = express;
 
 connectDB();
 
-const whitelist = ['http://localhost:3000', 'https://loving-sitter-client.herokuapp.com/']
+const whitelist = ['http://localhost:3000', 'https://loving-sitter-client.herokuapp.com']
 const app = express();
 app.use(cors({
   credentials: true,
