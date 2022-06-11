@@ -50,7 +50,11 @@ exports.getClientSecret = asyncHandler(async (req, res, next) => {
     throw new Error("Unable proccess payment setup");
   }
   res.status(200);
-  res.send({ client_secret: setupIntent.client_secret });
+  res.send({
+    success: {
+      client_secret: setupIntent.client_secret,
+    },
+  });
 });
 
 // @route GET /payments/saved-cards
@@ -73,7 +77,7 @@ exports.getListOfPaymentSources = asyncHandler(async (req, res, next) => {
   res.status(200);
   res.send({
     success: {
-      cards: cards.data,
+      payment_methods: cards.data,
     },
   });
 });
@@ -87,7 +91,7 @@ exports.chargeSavedPaymentMethod = asyncHandler(async (req, res, next) => {
     res.status(400);
     throw new Error("Please provide a request id to process payment");
   }
-  const request = await Request.findById(requestId).populate('requester');
+  const request = await Request.findById(requestId).populate("requester");
   if (!request) {
     res.status(404);
     throw new Error("Request Not Found!!");

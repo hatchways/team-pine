@@ -32,7 +32,6 @@ app.use(
   cors({
     credentials: true,
     origin: function (origin, callback) {
-      console.log(origin);
       if (process.env.ALLOWED_ORIGINS.indexOf(origin) !== -1 || !origin) {
         callback(null, true);
       } else {
@@ -76,6 +75,7 @@ app.use("/requests", requestRouter);
 app.use("/upload", uploadRouter);
 app.use("/delete", deleteRouter);
 app.use("/availability", availabilityRouter);
+app.use("/payments", paymentsRoute);
 app.use("/reviews", reviewRouter);
 
 if (process.env.NODE_ENV === "production") {
